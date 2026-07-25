@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+title: "CeraMetric: herramienta de análisis morfométrico de tiestos cerámicos"
+message: "Si usás CeraMetric en tu investigación, por favor citalo como se indica."
+type: software
+authors:
+  - family-names: "Villafañez"
+    given-names: "Emilio A."
+    affiliation: "LATDAA, Escuela de Arqueología, Universidad Nacional de Catamarca / CONICET / Fundación de Historia Natural Félix de Azara"
+repository-code: "https://github.com/emilios81/cerametric"
+url: "https://emilios81.github.io/cerametric/"
+abstract: >-
+  Aplicación web para el análisis morfométrico de fragmentos cerámicos a partir de
+  fotografías con escala gráfica. Calcula área, largo y ancho (lados del rectángulo de
+  área mínima), diámetro máximo de Feret, perímetro (contorno 8-conectado con corrección
+  de Vossepoel-Smeulders), circularidad, elongación, solidez y color promedio. Detección
+  automática por umbral o selección manual por polígonos. Exporta a XLSX, CSV, JSON e
+  imagen anotada. Funciona íntegramente en el navegador, sin instalación ni envío de
+  datos a servidores.
+keywords:
+  - arqueología
+  - cerámica
+  - morfometría
+  - análisis de imagen
+  - arqueología digital
+  - archaeology
+  - pottery
+  - morphometrics
+license: MIT
+version: "1.1"
+date-released: "2026-07-25"

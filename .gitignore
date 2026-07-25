@@ -1,0 +1,18 @@
+# Exportaciones generadas por la app
+cerametric_v*.xlsx
+cerametric_v*.csv
+cerametric_v*.json
+cerametric_anotado*.png
+
+# Fotos de trabajo (no versionar lotes de campo)
+fotos/
+pruebas/
+
+# Herramientas locales
+.claude/
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
+*~
