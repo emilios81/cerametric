@@ -17,7 +17,7 @@ Dr. Emilio A. Villafañez · Escuela de Arqueología · Universidad Nacional de 
 
 ## ¿Qué es CeraMetric?
 
-CeraMetric mide fragmentos cerámicos a partir de una fotografía con escala gráfica. Calibrás la escala con dos clics, la aplicación detecta los tiestos y devuelve área, largo, ancho, perímetro, color promedio y tres índices de forma, listos para exportar a Excel, CSV o JSON. El largo y el ancho son los que se toman con calibre: la mayor distancia entre dos puntos de la pieza y la menor abertura que todavía la abraza.
+CeraMetric mide fragmentos cerámicos a partir de una fotografía con escala gráfica. Calibrás la escala con dos clics, la aplicación detecta los tiestos y devuelve área, largo, ancho, perímetro, color promedio y tres índices de forma, listos para exportar a Excel, CSV o JSON. El largo y el ancho se toman de extremo a extremo, como a mano: la mayor distancia entre dos puntos de la pieza y su extensión perpendicular a esa dirección.
 
 Está pensada para reemplazar la medición manual con regla y calibre en el análisis de lotes cerámicos: en una sola foto se pueden medir decenas de tiestos con criterios uniformes y reproducibles.
 
@@ -106,8 +106,8 @@ Exportá en **Excel (.xlsx)**, **CSV**, **JSON** o como **imagen anotada** (la f
 | Métrica | Definición |
 |---|---|
 | **Área** (cm²) | Conteo de píxeles del tiesto / px·cm⁻² |
-| **Largo** (cm) | Mayor distancia entre dos puntos de la pieza — el calibre abierto todo lo que da (diámetro de Feret máximo) |
-| **Ancho** (cm) | Menor abertura con la que el calibre todavía abraza la pieza, probando todas las orientaciones (Feret mínimo) |
+| **Largo** (cm) | Mayor distancia entre dos puntos de la pieza, de punta a punta (diámetro de Feret máximo) |
+| **Ancho** (cm) | Extensión de la pieza perpendicular a ese largo, de un extremo al otro |
 | **Largo rect.** y **Ancho rect.** (cm) | Lados del rectángulo de área mínima que encierra la pieza (rotating calipers sobre el casco convexo) |
 | **Perímetro** (cm) | Contorno 8-conectado (vecindad de Moore) con corrección de Vossepoel–Smeulders |
 | **Circularidad** | 4π·A / P² |
@@ -117,26 +117,33 @@ Exportá en **Excel (.xlsx)**, **CSV**, **JSON** o como **imagen anotada** (la f
 
 ### Notas metodológicas
 
-**Largo y ancho: son las medidas del calibre.** El largo es la **mayor distancia entre dos puntos de la pieza**: el calibre abierto todo lo que da, apoyado en los dos extremos. El ancho es la **menor abertura con la que el calibre todavía la abraza**, girándolo hasta encontrar la posición en que entra más justa. Es la medición que se hace en gabinete, y ninguna de las dos depende de cómo esté girado el tiesto en la fotografía.
+**Largo y ancho: se miden de extremo a extremo.** El largo es la **mayor distancia entre dos puntos de la pieza**, de punta a punta. El ancho es la **extensión perpendicular a ese largo**, cruzando la pieza de un extremo al otro. Es la medición de gabinete de toda la vida, y ninguna de las dos depende de cómo esté girado el tiesto en la fotografía.
 
-Sus dos direcciones **no son perpendiculares entre sí**: son mediciones independientes, igual que cuando medís a mano.
+La aplicación informa además un segundo par, **Largo rect. · Ancho rect.**, que son los lados del rectángulo de área mínima que encierra la pieza. El algoritmo prueba todas las orientaciones y se queda con aquella cuyo rectángulo tiene **el área más chica** — criterio que optimiza superficie, no longitud.
 
-La aplicación informa además un segundo par, **Largo rect. · Ancho rect.**, que son los lados del rectángulo de área mínima que encierra la pieza. El algoritmo prueba todas las orientaciones y se queda con aquella cuyo rectángulo tiene **el área más chica** — criterio que optimiza superficie, no longitud. Sirve para dos cosas:
+Cada par falla en un caso distinto, y conviene saber cuál:
 
-- En piezas **rectangulares** es el par correcto. En un rectángulo, la mayor distancia entre dos puntos es la diagonal, así que ahí el *Largo* de calibre da la diagonal y no el lado. Para verificar la medición con una tarjeta de dimensiones conocidas hay que mirar *Largo rect. · Ancho rect.*
-- La diferencia entre los dos pares es un dato en sí mismo: cuánto se aparta la pieza de una forma rectangular.
+- El **rectángulo mínimo** falla en **tiestos poco alargados**. Como optimiza superficie, gira a una orientación donde su lado mayor queda *por debajo del largo real de la pieza*.
+- El **largo y ancho directos** fallan en figuras con **esquinas vivas**, como una tarjeta de calibración: ahí la mayor distancia entre dos puntos es la diagonal, y el par se va con ella.
 
-Medidos sobre `ejemplo/imagen_de_prueba.png`:
+Los tiestos son formas redondeadas sin esquinas vivas, así que el par directo es el correcto para el material arqueológico. Verificado sobre elipses sintéticas, el ancho da **exacto** en cualquier elongación:
+
+| Elipse | Largo | Ancho medido | Ancho real |
+|---|---|---|---|
+| 8 × 6.7 | 8.00 | 6.70 | 6.70 |
+| 8 × 4.0 | 8.00 | 4.00 | 4.00 |
+| 8 × 1.6 | 8.00 | 1.60 | 1.60 |
+
+Y sobre las figuras de `ejemplo/imagen_de_prueba.png`, que sí tienen esquinas:
 
 | Figura | Largo | Ancho | Largo rect. | Ancho rect. |
 |---|---|---|---|---|
-| Rectángulo 8.5 × 5.4 | 10.06 ⟵ *diagonal* | 5.43 | **8.53** | **5.43** |
-| Círculo ⌀ 4 | 4.02 | 4.00 | 4.00 | 4.00 |
-| Triángulo 6 × 4 | 5.96 | 3.97 | 5.93 | 3.98 |
-| Barra fina 5 × 0.9 | 5.12 | 0.93 | 5.08 | 0.93 |
-| Irregular equidimensional | **9.01** | 7.37 | 8.17 ⟵ *0.84 cm menos* | 7.50 |
+| Rectángulo 8.5 × 5.4 | 10.06 ⟵ *diagonal* | 9.09 ⟵ *inflado* | **8.53** | **5.43** |
+| Círculo ⌀ 4 | 4.02 | 4.02 | 4.00 | 4.00 |
+| Triángulo 6 × 4 | 5.96 | 3.98 | 5.93 | 3.98 |
+| Barra fina 5 × 0.9 | 5.12 | 1.74 ⟵ *inflado* | 5.08 | **0.93** |
 
-Fijate en la última fila, que es el caso de un tiesto real poco alargado: el rectángulo mínimo gira a una orientación donde su lado mayor queda **por debajo del largo real de la pieza**. Por eso el largo se informa con el criterio del calibre. Se cumple siempre que `Largo ≥ Largo rect.` y `Ancho ≤ Ancho rect.`
+En resumen: para **tiestos**, `Largo` y `Ancho`. Para **objetos rectangulares de control**, `Largo rect.` y `Ancho rect.`
 
 Los ejes dibujados sobre la imagen muestran de dónde sale cada número, y con el selector podés superponer el rectángulo mínimo para ver cuánto se separan en cada pieza.
 
@@ -171,7 +178,7 @@ La carpeta [`ejemplo/`](ejemplo/) trae una **imagen de prueba** con figuras de d
 
 Con tus propias fotos, el control equivalente es incluir en la toma un objeto rectangular de dimensiones conocidas (una tarjeta de 8.5 × 5.4 cm sirve) y medirlo con la app.
 
-> **Ojo con qué columna mirás en ese control.** Como el objeto es un rectángulo, su mayor distancia entre dos puntos es la **diagonal**: el `Largo` va a dar ~10.1 cm, que es correcto pero no es el lado. Para verificar la calibración compará contra **`Largo rect.` y `Ancho rect.`**, que tienen que coincidir con los 8.5 × 5.4 reales dentro de un par de décimas de milímetro. El `Ancho` de calibre también da bien (5.4), porque en un rectángulo la menor abertura del calibre es el lado corto.
+> **Ojo con qué columnas mirás en ese control.** Como el objeto es un rectángulo, su mayor distancia entre dos puntos es la **diagonal**, y el par `Largo · Ancho` se va con ella: da ~10.1 × 9.1 cm. Eso es correcto para la definición, pero no son los lados. Para verificar la calibración compará contra **`Largo rect.` y `Ancho rect.`**, que tienen que coincidir con los 8.5 × 5.4 reales dentro de un par de décimas de milímetro.
 
 Si `Largo rect.` y `Ancho rect.` no dan, revisá la calibración y la perpendicularidad de la cámara.
 
@@ -198,7 +205,7 @@ SheetJS se distribuye bajo su propia licencia; ver [THIRD-PARTY.md](THIRD-PARTY.
 
 ## English summary
 
-**CeraMetric** is an offline-capable, browser-based tool for the morphometric analysis of ceramic sherds. From a single photograph containing a graphic scale, it measures area, length and width as taken with callipers (maximum and minimum Feret diameters, orientation-independent), the sides of the minimum-area bounding rectangle as a secondary pair, perimeter (Moore-neighbourhood contour tracing with the three-parameter Vossepoel–Smeulders correction), circularity, elongation, solidity and mean RGB colour. Sherds can be segmented automatically (Gaussian blur, morphological closing, hole filling, Otsu-assisted thresholding) or outlined by hand. Measurement axes are drawn over each sherd as dimension lines — amber for length, blue for width, solid for the calliper pair and dashed for the rectangle — so it is always clear which segment each figure comes from. Results export to XLSX, CSV, JSON and as an annotated image.
+**CeraMetric** is an offline-capable, browser-based tool for the morphometric analysis of ceramic sherds. From a single photograph containing a graphic scale, it measures area, length and width end-to-end as measured by hand (maximum Feret diameter and the extent perpendicular to it, both orientation-independent), the sides of the minimum-area bounding rectangle as a secondary pair for pieces with sharp corners, perimeter (Moore-neighbourhood contour tracing with the three-parameter Vossepoel–Smeulders correction), circularity, elongation, solidity and mean RGB colour. Sherds can be segmented automatically (Gaussian blur, morphological closing, hole filling, Otsu-assisted thresholding) or outlined by hand. Measurement axes are drawn over each sherd as dimension lines — amber for length, blue for width, solid for the calliper pair and dashed for the rectangle — so it is always clear which segment each figure comes from. Results export to XLSX, CSV, JSON and as an annotated image.
 
 No installation, no server, no data upload — all processing happens in the browser. **[Launch the app](https://emilios81.github.io/cerametric/)** or download the repository and open `index.html` locally (keep `xlsx.full.min.js` in the same folder).
 

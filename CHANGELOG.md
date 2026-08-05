@@ -4,48 +4,50 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [1.2] — 2026-08-05
 
-> ⚠ **El `Largo` cambió de definición.** Antes era el lado mayor del rectángulo de área
-> mínima; ahora es la mayor distancia entre dos puntos de la pieza, que es lo que se mide
-> con un calibre. Los lotes de v1.0 y v1.1 **no son comparables columna a columna** con los
-> nuevos. La definición vieja sigue disponible en la columna `Largo rect.`, así que un
-> lote nuevo se puede comparar con uno viejo usando esa columna. El `Ancho` también cambió
-> de definición, pero en la práctica los valores casi no se mueven (ver abajo). El área, el
-> perímetro, la circularidad y el color no cambiaron.
+> ⚠ **El `Largo` y el `Ancho` cambiaron de definición.** Antes eran los lados del
+> rectángulo de área mínima; ahora se miden de extremo a extremo, como a mano. Los lotes de
+> v1.0 y v1.1 **no son comparables columna a columna** con los nuevos. Las definiciones
+> viejas siguen disponibles en `Largo rect.` y `Ancho rect.`, así que un lote nuevo se puede
+> comparar con uno viejo usando esas dos columnas. El área, el perímetro, la circularidad,
+> la solidez y el color no cambiaron.
 
 ### Cambiado
 
-- **`Largo` y `Ancho` ahora son las medidas del calibre**, no los lados del rectángulo
-  mínimo. `Largo` = mayor distancia entre dos puntos de la pieza, con el calibre abierto a
-  fondo. `Ancho` = menor abertura con la que el calibre todavía la abraza, girándolo hasta
-  la posición en que entra más justa. Son las dos medidas que se toman en gabinete y no
-  dependen de cómo esté girada la pieza en la foto. Sus direcciones no son perpendiculares
-  entre sí: son mediciones independientes.
+- **`Largo` y `Ancho` ahora se miden de extremo a extremo**, no como lados del rectángulo
+  mínimo. `Largo` = mayor distancia entre dos puntos de la pieza, de punta a punta.
+  `Ancho` = extensión de la pieza perpendicular a ese largo, cruzándola de un extremo al
+  otro. Es la medición de gabinete, y ninguna depende de cómo esté girada la pieza.
 
   El motivo: el rectángulo de área mínima optimiza **superficie, no longitud**. En un
   tiesto poco alargado gira a una orientación donde su lado mayor queda **por debajo del
-  largo real de la pieza**. En la figura irregular del ejemplo la diferencia es de 0.84 cm
-  (10 %), y se detectó midiendo un tiesto real donde el largo informado era 6.73 cm cuando
-  la pieza medía 7.8 cm de punta a punta.
+  largo real de la pieza**. Se detectó midiendo un tiesto real donde el largo informado era
+  6.73 cm cuando la pieza medía 7.8 cm de punta a punta.
 
 - **Los lados del rectángulo mínimo siguen disponibles** como `Largo rect.` y `Ancho rect.`
-  Son el par correcto en piezas rectangulares: en un rectángulo la mayor distancia entre
-  dos puntos es la diagonal, así que ahí el `Largo` de calibre da la diagonal y no el lado.
-  **La verificación con una tarjeta de dimensiones conocidas hay que hacerla contra estas
-  dos columnas.**
+  Son el par correcto en piezas con **esquinas vivas**: en un rectángulo la mayor distancia
+  entre dos puntos es la diagonal, así que ahí el par directo se va con ella (10.06 × 9.09
+  en una figura de 8.5 × 5.4). **La verificación con una tarjeta de dimensiones conocidas
+  hay que hacerla contra estas dos columnas.**
 
 - **`Elongación`** pasa a ser `Largo / Ancho` con las definiciones nuevas.
 
-  Medido sobre `ejemplo/imagen_de_prueba.png`:
+  En formas redondeadas sin esquinas — o sea, tiestos — el par directo da exacto en
+  cualquier elongación. Verificado sobre elipses sintéticas:
+
+  | Elipse | Largo | Ancho medido | Ancho real |
+  |---|---|---|---|
+  | 8 × 6.7 | 8.00 | 6.70 | 6.70 |
+  | 8 × 4.0 | 8.00 | 4.00 | 4.00 |
+  | 8 × 1.6 | 8.00 | 1.60 | 1.60 |
+
+  Sobre las figuras con esquinas de `ejemplo/imagen_de_prueba.png`:
 
   | Figura | Largo | Ancho | Largo rect. | Ancho rect. |
   |---|---|---|---|---|
-  | Rectángulo 8.5 × 5.4 | 10.06 *(diagonal)* | 5.43 | 8.53 | 5.43 |
-  | Círculo ⌀ 4 | 4.02 | 4.00 | 4.00 | 4.00 |
-  | Triángulo 6 × 4 | 5.96 | 3.97 | 5.93 | 3.98 |
-  | Barra fina 5 × 0.9 | 5.12 | 0.93 | 5.08 | 0.93 |
-  | Irregular equidimensional | 9.01 | 7.37 | 8.17 | 7.50 |
-
-  Se cumple siempre que `Largo ≥ Largo rect.` y `Ancho ≤ Ancho rect.`
+  | Rectángulo 8.5 × 5.4 | 10.06 *(diagonal)* | 9.09 *(inflado)* | 8.53 | 5.43 |
+  | Círculo ⌀ 4 | 4.02 | 4.02 | 4.00 | 4.00 |
+  | Triángulo 6 × 4 | 5.96 | 3.98 | 5.93 | 3.98 |
+  | Barra fina 5 × 0.9 | 5.12 | 1.74 *(inflado)* | 5.08 | 0.93 |
 
 El área, el perímetro, la circularidad, la solidez y el color **no cambiaron**: verificado
 contra la imagen de prueba, dan los mismos valores que en v1.1 hasta el último decimal.
@@ -95,7 +97,7 @@ contra la imagen de prueba, dan los mismos valores que en v1.1 hasta el último 
 
 - Los archivos pasan a llamarse `cerametric_v12.xlsx` / `.csv` / `.json`, y la versión que
   figura en la hoja **Metadatos** y en el JSON es `CeraMetric v1.2`.
-- La columna `Feret_max_cm` **desaparece**: pasó a ser `Largo_cm`. En su lugar están
+- La columna `Feret_max_cm` **desaparece**: su valor pasó a ser `Largo_cm`. En su lugar están
   `Rect_largo_cm` y `Rect_ancho_cm` (`rect_largo_cm` / `rect_ancho_cm` en el JSON), que son
   el par del rectángulo mínimo — o sea, el `Largo_cm` y el `Ancho_cm` de v1.1.
   El orden de columnas queda: `Código, Tipo, Area_cm2, Largo_cm, Ancho_cm, Perimetro_cm,
