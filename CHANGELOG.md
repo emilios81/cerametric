@@ -65,6 +65,16 @@ contra la imagen de prueba, dan los mismos valores que en v1.1 hasta el último 
 - **Nota metodológica sobre largo y ancho** en el README, con la tabla comparativa de los
   dos pares medidos sobre la imagen de prueba y la aclaración de contra qué columnas hay
   que verificar la calibración con una tarjeta.
+- **Explicación dentro de la aplicación**, en el panel de resultados: qué se está midiendo,
+  por qué las cotas terminan donde terminan y qué pasa en piezas con esquinas vivas. Se
+  pliega con un clic para no empujar la lista de tiestos.
+
+### Corregido en la interfaz
+
+- **Contraste de los textos.** Los párrafos explicativos, las etiquetas de los campos y los
+  nombres de las métricas usaban un azul grisado que daba **2.6:1** sobre el fondo oscuro,
+  por debajo del mínimo legible de 4.5:1, y en cuerpos de 9 px en cursiva. Ahora están en
+  **5.9:1** y sin cursiva.
 - **`CeraMetric.bat`** para abrir la aplicación con doble clic en Windows, sin tener que
   buscar el `index.html`. Avisa si el archivo quedó separado de la carpeta o si falta
   `xlsx.full.min.js`.

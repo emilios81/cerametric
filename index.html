@@ -246,7 +246,7 @@ header::after {
 /* ─── FORM ELEMENTS ──────────────────────────────── */
 label {
   font-size: 10px;
-  color: var(--t3);
+  color: var(--t2);
   display: block;
   margin-bottom: 2px;
   letter-spacing: .03em;
@@ -358,7 +358,7 @@ select option { background: var(--ink-2); }
 }
 
 .rr { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; }
-.rk { color: var(--t3); }
+.rk { color: var(--t2); }
 .rv { font-family: var(--fc); font-size: 10px; color: var(--teal); }
 .rv.hi { color: var(--t1); font-size: 13px; font-weight: 500; font-family: var(--fc); }
 
@@ -379,8 +379,10 @@ select option { background: var(--ink-2); }
 .sid { font-family: var(--fc); font-size: 11.5px; color: var(--teal); font-weight: 500; }
 .sid.m { color: var(--manual); }
 .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.tag { display: inline-flex; background: rgba(36,60,82,.8); border: 1px solid var(--line); border-radius: 20px; padding: 1px 7px; font-size: 9px; color: var(--t3); font-family: var(--fc); }
-.tip { font-size: 9px; color: var(--t3); font-style: italic; line-height: 1.5; margin-top: 1px; }
+.tag { display: inline-flex; background: rgba(36,60,82,.8); border: 1px solid var(--line); border-radius: 20px; padding: 1px 7px; font-size: 9px; color: var(--t2); font-family: var(--fc); }
+/* --t3 sobre el fondo oscuro daba 2.6:1 de contraste, ilegible en cuerpos chicos.
+   Los textos explicativos van en --t2 (5.9:1) y sin cursiva. */
+.tip { font-size: 10px; color: var(--t2); line-height: 1.55; margin-top: 2px; }
 
 /* ─── EJES DE MEDICIÓN ───────────────────────────── */
 .axbox {
@@ -416,14 +418,51 @@ select option { background: var(--ink-2); }
   align-items: center;
   gap: 5px;
   font-family: var(--fc);
-  font-size: 9px;
-  color: var(--t3);
+  font-size: 9.5px;
+  color: var(--t2);
   letter-spacing: .04em;
 }
 
 .axleg i { width: 13px; height: 2px; border-radius: 1px; flex-shrink: 0; background: var(--c); }
 .axleg i.dash { background: repeating-linear-gradient(90deg, var(--c) 0 4px, transparent 4px 7px); }
-.info { font-size: 10px; color: var(--t3); line-height: 1.55; }
+
+.axhelp {
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.axhelp > summary {
+  font-family: var(--fc);
+  font-size: 8.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  color: var(--teal);
+  opacity: .85;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.axhelp > summary::-webkit-details-marker { display: none; }
+.axhelp > summary::before { content: '▾'; font-size: 8px; opacity: .8; }
+.axhelp:not([open]) > summary::before { content: '▸'; }
+.axhelp > summary:hover { opacity: 1; }
+
+.axhelp p { font-size: 10.5px; line-height: 1.6; color: var(--t2); margin-top: 7px; }
+.axhelp b { font-weight: 500; color: var(--t1); }
+.axhelp b.la { color: var(--amber); }
+.axhelp b.an { color: var(--crop); }
+
+.axhelp .warn {
+  border-left: 2px solid rgba(212,162,89,.4);
+  padding-left: 8px;
+  margin-top: 1px;
+}
+.info { font-size: 10px; color: var(--t2); line-height: 1.55; }
 .egrid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
 .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
 
@@ -796,7 +835,13 @@ kbd {
       <span><i style="--c:#8FAEC0"></i>llena = medida directa (L · A)</span>
       <span><i class="dash" style="--c:#8FAEC0"></i>punteada = rectángulo (Lr · Ar)</span>
     </div>
-    <p class="tip" style="margin-top:6px"><b>L</b> es la mayor distancia entre dos puntos de la pieza, de punta a punta. <b>A</b> es su extensión perpendicular a ese largo, cruzada de un extremo al otro. Es lo que se mide a mano. <b>Lr · Ar</b> son los lados del rectángulo de área mínima: en piezas con esquinas vivas — una tarjeta de calibración — <b>L · A</b> se van a la diagonal y hay que usar estas dos.</p>
+    <details class="axhelp" open>
+      <summary>Cómo se toman las medidas</summary>
+      <p><b class="la">Largo</b> — los <b>dos puntos del borde más separados entre sí</b>. La cota termina ahí porque ningún otro par de puntos del tiesto da una distancia mayor.</p>
+      <p><b class="an">Ancho</b> — cruza la pieza <b>perpendicular al largo</b>, por su parte más ancha, tocando los dos bordes opuestos.</p>
+      <p>Es lo mismo que medirlo con calibre sobre la mesa, y no cambia si el tiesto está girado en la foto.</p>
+      <p class="warn"><b>Esquinas vivas.</b> En un rectángulo — una tarjeta, la barra de escala — los puntos más separados son las esquinas opuestas, así que el largo da la <b>diagonal</b>. Para esas piezas usá <b>Largo rect.</b> y <b>Ancho rect.</b>, los lados de la caja más chica que las envuelve; son también las columnas contra las que se verifica la escala.</p>
+    </details>
   </div>
   <div id="noRes" class="info" style="padding:4px 0;opacity:.7">Los resultados aparecerán aquí al detectar o trazar tiestos.</div>
   <div id="sherdList" style="display:flex;flex-direction:column;gap:6px"></div>
