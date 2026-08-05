@@ -28,13 +28,23 @@ esquina a esquina.
   apenas en unos pocos puntos del borde. Reemplaza al rectángulo alineado a los ejes de la
   fotografía que se dibujaba antes, que no correspondía a ninguna medida informada y hacía
   pensar que el largo se tomaba en horizontal.
-- **Columna `Cruce ⊥ máx`**, la línea más larga que atraviesa la pieza perpendicular al
-  Feret máximo, con las dos puntas apoyadas sobre el contorno. Junto a `Feret máx` forma el
-  par de **medidas cruzadas**, que muestra hasta dónde llega la pieza más allá de la caja.
-  En un tiesto redondeado poco alargado el Feret máximo puede superar al largo por varios
-  milímetros — en la figura irregular del ejemplo, 0.84 cm — porque el rectángulo de área
-  mínima optimiza superficie y no longitud. Tenerlo a la vista evita confundir una cosa con
-  la otra.
+- **Dos métodos de medición, a elección.** Un selector decide cómo se toman el largo y el
+  ancho:
+  - **Por caja** — los lados del rectángulo de área mínima. Es el método de v1.0 a v1.1.
+  - **Por contorno** — la mayor distancia entre dos puntos del borde y la travesía más
+    larga perpendicular a ella, que es lo que se obtiene con un calibre.
+
+  Los dos se calculan siempre y **los dos se exportan**, en las columnas `Largo_caja_cm`,
+  `Ancho_caja_cm`, `Largo_contorno_cm` y `Ancho_contorno_cm`. El elegido va además en
+  `Largo_cm` y `Ancho_cm`, y una columna **`Metodo`** deja constancia en cada fila de cuál
+  se usó, para que una planilla no quede ambigua. La `Elongación` se calcula con el par del
+  método elegido. En la hoja *Metadatos* del `.xlsx` y en el JSON también queda registrado.
+
+  En un tiesto redondeado el largo por contorno suele dar algo más que el de la caja
+  — 0.84 cm en la figura irregular del ejemplo — porque la caja optimiza superficie y no
+  longitud. En una pieza rectangular pasa al revés: el largo por contorno se va a la
+  diagonal. Ninguno es más correcto; con el selector en *"los dos métodos"* se dibujan
+  ambos superpuestos para comparar pieza por pieza.
 - **Nota metodológica sobre largo y ancho** en el README, con la tabla comparativa de los
   dos pares medidos sobre la imagen de prueba.
 - **Explicación dentro de la aplicación**, en el panel de resultados: qué se está midiendo,
@@ -79,11 +89,15 @@ esquina a esquina.
 
 - Los archivos pasan a llamarse `cerametric_v12.xlsx` / `.csv` / `.json`, y la versión que
   figura en la hoja **Metadatos** y en el JSON es `CeraMetric v1.2`.
-- **Columna nueva** `Cruce_perp_cm` (`cruce_perp_cm` en el JSON), justo después
-  de `Feret_max_cm`. Las demás columnas conservan nombre, orden y significado, así que una
-  planilla de v1.1 se puede apilar con una de v1.2 agregándole esa columna vacía. El orden
-  queda: `Código, Tipo, Area_cm2, Largo_cm, Ancho_cm, Perimetro_cm, Feret_max_cm,
-  Cruce_perp_cm, Circularidad, Elongacion, Solidez, Color_hex`.
+- **Columnas nuevas**: `Metodo`, `Largo_caja_cm`, `Ancho_caja_cm`, `Largo_contorno_cm` y
+  `Ancho_contorno_cm`. La columna `Feret_max_cm` de v1.1 pasa a llamarse
+  `Largo_contorno_cm` — mismo valor, nombre coherente con el método al que pertenece. El
+  orden queda: `Código, Tipo, Metodo, Area_cm2, Largo_cm, Ancho_cm, Perimetro_cm,
+  Largo_caja_cm, Ancho_caja_cm, Largo_contorno_cm, Ancho_contorno_cm, Circularidad,
+  Elongacion, Solidez, Color_hex`.
+- Con el método **por caja** —el que viene por defecto— `Largo_cm`, `Ancho_cm` y
+  `Elongacion` valen exactamente lo mismo que en v1.1, así que los lotes viejos siguen
+  siendo comparables sin tocar nada.
 - El CSV termina las filas con CRLF, como indica la norma.
 
 ## [1.1] — 2026-07-25

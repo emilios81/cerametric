@@ -75,10 +75,10 @@ Sobre cada tiesto se dibujan las **cotas** de las que salen sus medidas, con el 
 
 El **color** dice qué dimensión es y el **trazo** con qué criterio se tomó:
 
-| | Línea llena — lados de la caja | Línea punteada — cruzadas |
+| | Línea llena — método elegido | Línea punteada — el otro método |
 |---|---|---|
-| 🟠 **Ámbar** | `L` largo | `Máx` Feret máximo |
-| 🔵 **Celeste** | `A` ancho | `Cruce` travesía ⊥ al máximo |
+| 🟠 **Ámbar** | `L` largo | `L caja` o `L cont` |
+| 🔵 **Celeste** | `A` ancho | `A caja` o `A cont` |
 
 Sirve para no confundir cuál número es cuál en piezas irregulares, y para ver de un vistazo cuánto se separan los dos criterios en cada tiesto (ver [Notas metodológicas](#notas-metodológicas)). Con el selector de abajo mostrás un par, el otro o los dos. Las cotas se apagan con la casilla **Ejes de medición sobre la imagen** y salen también en la imagen anotada que se exporta.
 
@@ -106,9 +106,9 @@ Exportá en **Excel (.xlsx)**, **CSV**, **JSON** o como **imagen anotada** (la f
 | Métrica | Definición |
 |---|---|
 | **Área** (cm²) | Conteo de píxeles del tiesto / px·cm⁻² |
-| **Largo** y **Ancho** (cm) | Lados del rectángulo de área mínima que encierra la pieza — la caja más chica que la contiene, probando todos los ángulos (rotating calipers sobre el casco convexo) |
-| **Feret máx.** (cm) | Mayor distancia entre dos puntos del contorno, en cualquier dirección; en un rectángulo, la diagonal |
-| **Cruce ⊥ máx.** (cm) | La línea más larga que atraviesa la pieza perpendicular al Feret máximo, con las dos puntas sobre el contorno |
+| **Largo** y **Ancho** (cm) | Según el **método** elegido, ver abajo |
+| **Largo · Ancho caja** (cm) | Lados del rectángulo de área mínima que encierra la pieza (rotating calipers sobre el casco convexo) |
+| **Largo · Ancho contorno** (cm) | Mayor distancia entre dos puntos del contorno (Feret máximo) y la travesía más larga perpendicular a ella |
 | **Perímetro** (cm) | Contorno 8-conectado (vecindad de Moore) con corrección de Vossepoel–Smeulders |
 | **Circularidad** | 4π·A / P² |
 | **Elongación** | Largo / Ancho |
@@ -117,25 +117,29 @@ Exportá en **Excel (.xlsx)**, **CSV**, **JSON** o como **imagen anotada** (la f
 
 ### Notas metodológicas
 
-**Largo y ancho: los lados de la caja.** Alrededor de cada tiesto se dibuja una **caja punteada**: es la más chica que lo contiene, y la aplicación la encuentra probando todos los ángulos y quedándose con la de menor superficie. El largo y el ancho son **los lados de esa caja**, dibujados por el medio y no de esquina a esquina.
+**Dos métodos para el largo y el ancho.** El selector *Cómo se toman el largo y el ancho*, arriba de la lista de resultados, decide cuál de los dos manda. Los dos se calculan siempre y los dos se exportan; el elegido es el que va en las columnas `Largo` y `Ancho`, y la exportación deja constancia de cuál usaste.
 
-En un objeto rectangular la caja calza con la pieza y los lados son los reales. En un tiesto deforme, que no tiene lados claros, es la manera de decidir cuál es el largo. Ninguna de las dos medidas depende de cómo esté girada la pieza en la fotografía: el mismo tiesto rotado 45° da los mismos números.
+**Por caja.** Se encierra el tiesto en la **caja rectangular más chica que lo contenga**, probando todos los ángulos, y se miden los lados de esa caja. La caja se dibuja punteada alrededor de la pieza. En un objeto rectangular calza con la pieza y los lados son los reales; en un tiesto deforme, que no tiene lados claros, es la manera de decidir cuál es el largo.
 
-> **Por qué a veces la cota se sale del tiesto.** Un fragmento irregular no llena su caja: la toca apenas en unos pocos puntos del borde, y entre esos puntos queda aire. La cota, que va por el medio y mide el lado completo, puede entonces pasar por fuera de la pieza en algún tramo. No es un error: está midiendo la caja, que es lo mismo que apoyar la regla y leer de punta a punta. Con la caja dibujada se ve de dónde sale cada línea.
+> **Por qué a veces la cota se sale del tiesto.** Un fragmento irregular no llena su caja: la toca apenas en unos pocos puntos del borde, y entre esos puntos queda aire. La cota, que va por el medio y mide el lado completo, puede entonces pasar por fuera de la pieza en algún tramo. No es un error: está midiendo la caja. Con la caja dibujada se ve de dónde sale cada línea.
 
-**Las medidas cruzadas.** La aplicación informa además dos líneas que atraviesan la pieza de borde a borde: **Feret máx**, la mayor distancia entre dos puntos del contorno en cualquier dirección — en un rectángulo, la diagonal de esquina a esquina —, y **Cruce ⊥ máx**, la línea más larga que la atraviesa perpendicular a la anterior. Las dos tienen las puntas apoyadas sobre el contorno, así que se ve exactamente por dónde pasan.
+**Por contorno.** Se mide directamente entre puntos del borde, como con un calibre. El largo es la **mayor distancia entre dos puntos de la pieza**; el ancho, la **travesía más larga perpendicular** a esa. Las dos cotas apoyan sus puntas en el contorno, así que se ve exactamente por dónde pasan.
 
-Sirven para ver **cuánto sobresale la pieza de su caja**, y ahí hay un detalle que conviene tener presente: como el rectángulo mínimo optimiza *superficie* y no *longitud*, en un tiesto redondeado poco alargado puede girar a una orientación donde su lado mayor queda por debajo de la dimensión máxima real. Medido sobre las figuras de `ejemplo/imagen_de_prueba.png` y sobre un polígono irregular equidimensional:
+Ninguno de los dos es más correcto: responden a preguntas distintas. Medidos sobre las figuras de `ejemplo/imagen_de_prueba.png` y sobre un polígono irregular equidimensional:
 
-| Figura | Largo | Ancho | Feret máx | Cruce ⊥ máx |
-|---|---|---|---|---|
-| Rectángulo 8.5 × 5.4 | **8.53** | **5.43** | 10.06 ⟵ *diagonal* | 6.43 |
-| Círculo ⌀ 4 | 4.00 | 4.00 | 4.02 | 4.02 |
-| Triángulo 6 × 4 | 5.93 | 3.98 | 5.96 | 3.97 |
-| Barra fina 5 × 0.9 | 5.08 | 0.93 | 5.12 | 0.94 |
-| Irregular equidimensional | 8.17 | 7.50 | **9.01** ⟵ *0.84 cm más* | 7.48 |
+| Figura | Largo · Ancho **caja** | Largo · Ancho **contorno** |
+|---|---|---|
+| Rectángulo 8.5 × 5.4 | **8.53 · 5.43** | 10.06 · 6.43 ⟵ *diagonal* |
+| Círculo ⌀ 4 | 4.00 · 4.00 | 4.02 · 4.02 |
+| Triángulo 6 × 4 | 5.93 · 3.98 | 5.96 · 3.97 |
+| Barra fina 5 × 0.9 | 5.08 · 0.93 | 5.12 · 0.94 |
+| Irregular equidimensional | 8.17 · 7.50 | **9.01** · 7.48 ⟵ *0.84 cm más* |
 
-> **¿Y la otra diagonal?** En un rectángulo las dos diagonales miden lo mismo, así que no hay una segunda medida que informar: `Feret máx` ya es esa. El `Cruce` es la travesía más larga **perpendicular** a ella. En un **cuadrado** las dos diagonales sí son perpendiculares entre sí, y entonces el `Cruce` da exactamente la otra diagonal: en un cuadrado de 2 × 2 cm, `Máx` y `Cruce` dan 2.83 los dos. En un rectángulo alargado las diagonales no son perpendiculares, así que el `Cruce` queda algo más corto.
+En un tiesto redondeado el largo por contorno suele dar **algo más** que el de la caja, porque la caja optimiza superficie y no longitud. En una pieza rectangular pasa al revés: el largo por contorno se va a la **diagonal**. Elegí un método y usalo para todo el lote.
+
+> **¿Y la otra diagonal?** En un rectángulo las dos diagonales miden lo mismo, así que el largo por contorno ya es esa medida y no hay una segunda que informar. El ancho por contorno es la travesía más larga **perpendicular** a ella. En un **cuadrado** las dos diagonales sí son perpendiculares entre sí, y entonces el ancho por contorno da exactamente la otra diagonal: en uno de 2 × 2 cm, largo y ancho dan 2.83 los dos.
+
+La **elongación** se calcula con el par del método elegido, así que también cambia al cambiarlo.
 
 En la última fila el Feret máximo supera al largo por 0.84 cm. No es un error de ninguno de los dos: son dos preguntas distintas. El largo responde *cuánto mide la pieza*; el Feret máximo, *cuál es la mayor distancia entre dos de sus puntos*.
 

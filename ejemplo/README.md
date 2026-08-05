@@ -48,13 +48,14 @@ dependen de la orientación de la pieza en la fotografía. Notá también que el
 de esa figura (10.06 cm) es su **diagonal**, no su largo: por eso el largo y el ancho se
 calculan con el rectángulo mínimo y el Feret se informa aparte.
 
-**Las medidas cruzadas.** `Feret máx` y `Cruce ⊥ máx` muestran hasta dónde llega la pieza
-más allá de su caja. En estas figuras regulares casi coinciden con el largo y el ancho, pero
-en un tiesto redondeado poco alargado el Feret máximo puede superar al largo por varios
-milímetros, porque la caja de área mínima gira a una orientación que no es la del eje más
-largo. Para verlo, trazá a mano con el **Lápiz** un polígono irregular y más o menos redondo
-y compará `Largo` con `Feret máx` en la lista de resultados: la diferencia puede pasar el
-10 %. La nota metodológica del README principal lo explica en detalle.
+**Los dos métodos.** La aplicación mide el largo y el ancho de dos maneras y vos elegís cuál
+usar: **por caja** (los lados del rectángulo mínimo, que es lo que se muestra en la tabla de
+arriba) o **por contorno** (entre puntos del borde, como con calibre). En estas figuras
+regulares casi coinciden, pero en un tiesto redondeado poco alargado el largo por contorno
+puede superar al de la caja por varios milímetros, porque la caja optimiza superficie y no
+longitud. Para verlo, trazá a mano con el **Lápiz** un polígono irregular y más o menos
+redondo, poné el selector de ejes en *"los dos métodos"* y comparalos: la diferencia puede
+pasar el 10 %. La nota metodológica del README principal lo explica en detalle.
 
 ## Si los valores no dan
 
