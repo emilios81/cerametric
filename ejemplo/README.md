@@ -48,7 +48,7 @@ dependen de la orientación de la pieza en la fotografía. Notá también que el
 de esa figura (10.06 cm) es su **diagonal**, no su largo: por eso el largo y el ancho se
 calculan con el rectángulo mínimo y el Feret se informa aparte.
 
-**Las medidas cruzadas.** `Feret máx` y `Ancho ⊥ Feret` muestran hasta dónde llega la pieza
+**Las medidas cruzadas.** `Feret máx` y `Cruce ⊥ máx` muestran hasta dónde llega la pieza
 más allá de su caja. En estas figuras regulares casi coinciden con el largo y el ancho, pero
 en un tiesto redondeado poco alargado el Feret máximo puede superar al largo por varios
 milímetros, porque la caja de área mínima gira a una orientación que no es la del eje más

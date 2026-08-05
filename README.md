@@ -78,7 +78,7 @@ El **color** dice qué dimensión es y el **trazo** con qué criterio se tomó:
 | | Línea llena — lados de la caja | Línea punteada — cruzadas |
 |---|---|---|
 | 🟠 **Ámbar** | `L` largo | `Máx` Feret máximo |
-| 🔵 **Celeste** | `A` ancho | `Perp` ancho ⊥ Feret |
+| 🔵 **Celeste** | `A` ancho | `Cruce` travesía ⊥ al máximo |
 
 Sirve para no confundir cuál número es cuál en piezas irregulares, y para ver de un vistazo cuánto se separan los dos criterios en cada tiesto (ver [Notas metodológicas](#notas-metodológicas)). Con el selector de abajo mostrás un par, el otro o los dos. Las cotas se apagan con la casilla **Ejes de medición sobre la imagen** y salen también en la imagen anotada que se exporta.
 
@@ -108,7 +108,7 @@ Exportá en **Excel (.xlsx)**, **CSV**, **JSON** o como **imagen anotada** (la f
 | **Área** (cm²) | Conteo de píxeles del tiesto / px·cm⁻² |
 | **Largo** y **Ancho** (cm) | Lados del rectángulo de área mínima que encierra la pieza — la caja más chica que la contiene, probando todos los ángulos (rotating calipers sobre el casco convexo) |
 | **Feret máx.** (cm) | Mayor distancia entre dos puntos del contorno, en cualquier dirección; en un rectángulo, la diagonal |
-| **Ancho ⊥ Feret** (cm) | Extensión de la pieza perpendicular a esa dirección |
+| **Cruce ⊥ máx.** (cm) | La línea más larga que atraviesa la pieza perpendicular al Feret máximo, con las dos puntas sobre el contorno |
 | **Perímetro** (cm) | Contorno 8-conectado (vecindad de Moore) con corrección de Vossepoel–Smeulders |
 | **Circularidad** | 4π·A / P² |
 | **Elongación** | Largo / Ancho |
@@ -121,17 +121,19 @@ Exportá en **Excel (.xlsx)**, **CSV**, **JSON** o como **imagen anotada** (la f
 
 En un objeto rectangular la caja calza con la pieza y los lados son los reales. En un tiesto deforme, que no tiene lados claros, es la manera de decidir cuál es el largo. Ninguna de las dos medidas depende de cómo esté girada la pieza en la fotografía: el mismo tiesto rotado 45° da los mismos números.
 
-**Las medidas cruzadas.** La aplicación informa además **Feret máx** — la mayor distancia entre dos puntos del contorno, en cualquier dirección — y **Ancho ⊥ Feret**, su extensión perpendicular. En un rectángulo, el Feret máximo es la diagonal de esquina a esquina.
+**Las medidas cruzadas.** La aplicación informa además dos líneas que atraviesan la pieza de borde a borde: **Feret máx**, la mayor distancia entre dos puntos del contorno en cualquier dirección — en un rectángulo, la diagonal de esquina a esquina —, y **Cruce ⊥ máx**, la línea más larga que la atraviesa perpendicular a la anterior. Las dos tienen las puntas apoyadas sobre el contorno, así que se ve exactamente por dónde pasan.
 
 Sirven para ver **cuánto sobresale la pieza de su caja**, y ahí hay un detalle que conviene tener presente: como el rectángulo mínimo optimiza *superficie* y no *longitud*, en un tiesto redondeado poco alargado puede girar a una orientación donde su lado mayor queda por debajo de la dimensión máxima real. Medido sobre las figuras de `ejemplo/imagen_de_prueba.png` y sobre un polígono irregular equidimensional:
 
-| Figura | Largo | Ancho | Feret máx | Ancho ⊥ Feret |
+| Figura | Largo | Ancho | Feret máx | Cruce ⊥ máx |
 |---|---|---|---|---|
-| Rectángulo 8.5 × 5.4 | **8.53** | **5.43** | 10.06 ⟵ *diagonal* | 9.09 |
+| Rectángulo 8.5 × 5.4 | **8.53** | **5.43** | 10.06 ⟵ *diagonal* | 6.43 |
 | Círculo ⌀ 4 | 4.00 | 4.00 | 4.02 | 4.02 |
-| Triángulo 6 × 4 | 5.93 | 3.98 | 5.96 | 3.98 |
-| Barra fina 5 × 0.9 | 5.08 | 0.93 | 5.12 | 1.74 |
-| Irregular equidimensional | 8.17 | 7.50 | **9.01** ⟵ *0.84 cm más* | 7.57 |
+| Triángulo 6 × 4 | 5.93 | 3.98 | 5.96 | 3.97 |
+| Barra fina 5 × 0.9 | 5.08 | 0.93 | 5.12 | 0.94 |
+| Irregular equidimensional | 8.17 | 7.50 | **9.01** ⟵ *0.84 cm más* | 7.48 |
+
+> **¿Y la otra diagonal?** En un rectángulo las dos diagonales miden lo mismo, así que no hay una segunda medida que informar: `Feret máx` ya es esa. El `Cruce` es la travesía más larga **perpendicular** a ella. En un **cuadrado** las dos diagonales sí son perpendiculares entre sí, y entonces el `Cruce` da exactamente la otra diagonal: en un cuadrado de 2 × 2 cm, `Máx` y `Cruce` dan 2.83 los dos. En un rectángulo alargado las diagonales no son perpendiculares, así que el `Cruce` queda algo más corto.
 
 En la última fila el Feret máximo supera al largo por 0.84 cm. No es un error de ninguno de los dos: son dos preguntas distintas. El largo responde *cuánto mide la pieza*; el Feret máximo, *cuál es la mayor distancia entre dos de sus puntos*.
 
@@ -195,7 +197,7 @@ SheetJS se distribuye bajo su propia licencia; ver [THIRD-PARTY.md](THIRD-PARTY.
 
 ## English summary
 
-**CeraMetric** is an offline-capable, browser-based tool for the morphometric analysis of ceramic sherds. From a single photograph containing a graphic scale, it measures area, length and width (sides of the minimum-area bounding rectangle, orientation-independent), the maximum Feret diameter and the extent perpendicular to it as a secondary pair showing how far the piece reaches beyond that box, perimeter (Moore-neighbourhood contour tracing with the three-parameter Vossepoel–Smeulders correction), circularity, elongation, solidity and mean RGB colour. Sherds can be segmented automatically (Gaussian blur, morphological closing, hole filling, Otsu-assisted thresholding) or outlined by hand. Measurement axes are drawn over each sherd as dimension lines — amber for length, blue for width, solid for the box sides and dashed for the crossing pair — so it is always clear which segment each figure comes from. Results export to XLSX, CSV, JSON and as an annotated image.
+**CeraMetric** is an offline-capable, browser-based tool for the morphometric analysis of ceramic sherds. From a single photograph containing a graphic scale, it measures area, length and width (sides of the minimum-area bounding rectangle, orientation-independent), the maximum Feret diameter and the longest chord perpendicular to it as a secondary pair showing how far the piece reaches beyond that box, perimeter (Moore-neighbourhood contour tracing with the three-parameter Vossepoel–Smeulders correction), circularity, elongation, solidity and mean RGB colour. Sherds can be segmented automatically (Gaussian blur, morphological closing, hole filling, Otsu-assisted thresholding) or outlined by hand. Measurement axes are drawn over each sherd as dimension lines — amber for length, blue for width, solid for the box sides and dashed for the crossing pair — so it is always clear which segment each figure comes from. Results export to XLSX, CSV, JSON and as an annotated image.
 
 No installation, no server, no data upload — all processing happens in the browser. **[Launch the app](https://emilios81.github.io/cerametric/)** or download the repository and open `index.html` locally (keep `xlsx.full.min.js` in the same folder).
 

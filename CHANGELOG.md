@@ -22,12 +22,13 @@ esquina a esquina.
   una pieza irregular no había forma de saber cuál de los dos números era cuál; ahora se ve
   entre qué puntos se tomó cada uno. Un selector permite mostrar un par, el otro o los dos.
   Las cotas aparecen también en la **imagen anotada** que se exporta.
-- **Columna `Ancho ⊥ Feret`**, la extensión de la pieza perpendicular al Feret máximo.
-  Junto a `Feret máx` forma el par de **medidas cruzadas**, que muestra hasta dónde llega la
-  pieza más allá de la caja. En un tiesto redondeado poco alargado el Feret máximo puede
-  superar al largo por varios milímetros — en la figura irregular del ejemplo, 0.84 cm —
-  porque el rectángulo de área mínima optimiza superficie y no longitud. Tenerlo a la vista
-  evita confundir una cosa con la otra.
+- **Columna `Cruce ⊥ máx`**, la línea más larga que atraviesa la pieza perpendicular al
+  Feret máximo, con las dos puntas apoyadas sobre el contorno. Junto a `Feret máx` forma el
+  par de **medidas cruzadas**, que muestra hasta dónde llega la pieza más allá de la caja.
+  En un tiesto redondeado poco alargado el Feret máximo puede superar al largo por varios
+  milímetros — en la figura irregular del ejemplo, 0.84 cm — porque el rectángulo de área
+  mínima optimiza superficie y no longitud. Tenerlo a la vista evita confundir una cosa con
+  la otra.
 - **Nota metodológica sobre largo y ancho** en el README, con la tabla comparativa de los
   dos pares medidos sobre la imagen de prueba.
 - **Explicación dentro de la aplicación**, en el panel de resultados: qué se está midiendo,
@@ -72,11 +73,11 @@ esquina a esquina.
 
 - Los archivos pasan a llamarse `cerametric_v12.xlsx` / `.csv` / `.json`, y la versión que
   figura en la hoja **Metadatos** y en el JSON es `CeraMetric v1.2`.
-- **Columna nueva** `Ancho_perp_Feret_cm` (`ancho_perp_feret_cm` en el JSON), justo después
+- **Columna nueva** `Cruce_perp_cm` (`cruce_perp_cm` en el JSON), justo después
   de `Feret_max_cm`. Las demás columnas conservan nombre, orden y significado, así que una
   planilla de v1.1 se puede apilar con una de v1.2 agregándole esa columna vacía. El orden
   queda: `Código, Tipo, Area_cm2, Largo_cm, Ancho_cm, Perimetro_cm, Feret_max_cm,
-  Ancho_perp_Feret_cm, Circularidad, Elongacion, Solidez, Color_hex`.
+  Cruce_perp_cm, Circularidad, Elongacion, Solidez, Color_hex`.
 - El CSV termina las filas con CRLF, como indica la norma.
 
 ## [1.1] — 2026-07-25
