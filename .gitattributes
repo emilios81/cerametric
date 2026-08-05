@@ -1,0 +1,3 @@
+# Los .bat tienen que llegar con CRLF: cmd.exe no interpreta bien un batch con
+# saltos de línea LF (se come el primer carácter de cada línea).
+*.bat text eol=crlf

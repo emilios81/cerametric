@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CeraMetric v1.1 — LATDAA</title>
+<title>CeraMetric v1.2 — LATDAA</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -381,6 +381,48 @@ select option { background: var(--ink-2); }
 .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .tag { display: inline-flex; background: rgba(36,60,82,.8); border: 1px solid var(--line); border-radius: 20px; padding: 1px 7px; font-size: 9px; color: var(--t3); font-family: var(--fc); }
 .tip { font-size: 9px; color: var(--t3); font-style: italic; line-height: 1.5; margin-top: 1px; }
+
+/* ─── EJES DE MEDICIÓN ───────────────────────────── */
+.axbox {
+  background: rgba(36,60,82,.5);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 9px;
+  margin-bottom: 8px;
+}
+
+.axtog {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10.5px;
+  color: var(--t2);
+  margin-bottom: 0;
+  cursor: pointer;
+  letter-spacing: .01em;
+}
+
+.axtog input { accent-color: var(--teal); width: 12px; height: 12px; cursor: pointer; flex-shrink: 0; }
+
+.axleg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 5px;
+}
+
+.axleg span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--fc);
+  font-size: 9px;
+  color: var(--t3);
+  letter-spacing: .04em;
+}
+
+.axleg i { width: 13px; height: 2px; border-radius: 1px; flex-shrink: 0; background: var(--c); }
+.axleg i.dash { background: repeating-linear-gradient(90deg, var(--c) 0 4px, transparent 4px 7px); }
 .info { font-size: 10px; color: var(--t3); line-height: 1.55; }
 .egrid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
 .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
@@ -543,7 +585,7 @@ kbd {
     </div>
     <div class="logo-text">
       <h1>CeraMetric</h1>
-      <span class="ver">morphometric analysis · v1.1</span>
+      <span class="ver">morphometric analysis · v1.2</span>
     </div>
   </div>
   <div class="hdr-right">
@@ -739,6 +781,23 @@ kbd {
 <!-- ══ RIGHT PANEL ══ -->
 <div class="panel panel-r">
   <div class="st">Resultados</div>
+  <div class="axbox">
+    <label class="axtog"><input type="checkbox" id="axChk" checked onchange="toggleAxes(this.checked)">Ejes de medición sobre la imagen</label>
+    <select id="axMode" onchange="setAxMode(this.value)" style="margin-top:7px">
+      <option value="main">Largo y ancho (L · A)</option>
+      <option value="both">Agregar rectángulo mínimo (Lr · Ar)</option>
+      <option value="rect">Solo rectángulo mínimo (Lr · Ar)</option>
+    </select>
+    <div class="axleg">
+      <span><i style="--c:#D4A259"></i>ámbar = largo</span>
+      <span><i style="--c:#7EB8D8"></i>celeste = ancho</span>
+    </div>
+    <div class="axleg">
+      <span><i style="--c:#8FAEC0"></i>llena = calibre (L · A)</span>
+      <span><i class="dash" style="--c:#8FAEC0"></i>punteada = rectángulo (Lr · Ar)</span>
+    </div>
+    <p class="tip" style="margin-top:6px"><b>L</b> es la mayor distancia entre dos puntos de la pieza — el calibre abierto a fondo — y <b>A</b> la menor abertura con la que el calibre todavía la abraza, girándolo. Es lo que se anota en ficha. <b>Lr · Ar</b> son los lados del rectángulo de área mínima: es el par correcto en piezas rectangulares (ahí <b>L</b> da la diagonal), pero en un tiesto irregular <b>Lr</b> puede quedar por debajo del largo real.</p>
+  </div>
   <div id="noRes" class="info" style="padding:4px 0;opacity:.7">Los resultados aparecerán aquí al detectar o trazar tiestos.</div>
   <div id="sherdList" style="display:flex;flex-direction:column;gap:6px"></div>
   <div class="dvd"></div>
@@ -776,8 +835,10 @@ kbd {
     <div class="rr"><span class="rk">Área</span><span class="rv">Conteo px / ppc²</span></div>
     <div class="rr" style="margin-top:3px"><span class="rk">Perímetro</span><span class="rv">Contorno 8-con.</span></div>
     <p class="tip">Trazado del contorno con corrección de Vossepoel–Smeulders (0.980·rectos + 1.406·diagonales − 0.091·esquinas). Preciso para bordes curvos.</p>
-    <div class="rr" style="margin-top:4px"><span class="rk">Largo · Ancho</span><span class="rv">Rect. mínimo</span></div>
-    <p class="tip">Lados del rectángulo de área mínima que encierra la pieza, en cualquier orientación — equivale a medirla con regla. El diámetro de Feret (distancia máxima entre dos puntos, p. ej. la diagonal) se informa aparte.</p>
+    <div class="rr" style="margin-top:4px"><span class="rk">Largo · Ancho</span><span class="rv">Calibre (Feret)</span></div>
+    <p class="tip">Largo = mayor distancia entre dos puntos de la pieza (calibre abierto a fondo). Ancho = menor abertura con la que el calibre todavía la abraza, probando todas las orientaciones. No dependen de cómo esté girada en la foto.</p>
+    <div class="rr" style="margin-top:4px"><span class="rk">Largo · Ancho rect.</span><span class="rv">Rect. mínimo</span></div>
+    <p class="tip">Lados del rectángulo de área mínima. Es el par correcto en piezas rectangulares — ahí el largo de calibre da la diagonal —, pero en un tiesto irregular poco alargado se queda por debajo del largo real.</p>
     <div class="rr" style="margin-top:4px"><span class="rk">Circularidad</span><span class="rv">4π·A / P²</span></div>
     <div class="rr" style="margin-top:3px"><span class="rk">Elongación</span><span class="rv">Largo / Ancho</span></div>
     <div class="rr" style="margin-top:3px"><span class="rk">Solidez</span><span class="rv">A / A_hull</span></div>
@@ -791,13 +852,13 @@ kbd {
   <div class="sdi"><div class="sd" id="dC"></div><span id="sC">Sin calibrar</span></div>
   <div class="sdi"><div class="sd" id="dD"></div><span id="sD">Sin detección</span></div>
   <div style="flex:1"></div>
-  <span id="sMsg" style="color:var(--t3)">CeraMetric v1.1</span>
+  <span id="sMsg" style="color:var(--t3)">CeraMetric v1.2</span>
 </div>
 
 <canvas id="pc" style="display:none"></canvas>
 <script src="xlsx.full.min.js"></script>
 <script>
-const S={img:null,origImg:null,tx:0,ty:0,sc:1,isc:1,vpW:0,vpH:0,tool:'pan',pan:{on:false,sx:0,sy:0,tx:0,ty:0},ctrl:false,mpos:{ix:0,iy:0},calPts:[],calDone:false,pxPerCm:null,calCm:null,prevPpc:null,rgba:null,seq:0,sherds:[],manualSherds:[],poly:[],polyClosed:false,otsuT:null,grayCache:null,crop:{on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false}};
+const S={img:null,origImg:null,tx:0,ty:0,sc:1,isc:1,vpW:0,vpH:0,tool:'pan',pan:{on:false,sx:0,sy:0,tx:0,ty:0},ctrl:false,mpos:{ix:0,iy:0},calPts:[],calDone:false,pxPerCm:null,calCm:null,prevPpc:null,rgba:null,seq:0,manSeq:0,showAxes:true,axMode:'main',sherds:[],manualSherds:[],poly:[],polyClosed:false,otsuT:null,grayCache:null,crop:{on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false}};
 const COLS=['#5BBFB0','#7EC8FF','#A0D080','#D0A0F0','#F0C840','#80D0C8','#9EC8FF','#B0E09A','#F08080','#C8B880'];
 const MCOL='#E8956A';
 const mc=document.getElementById('mc'),oc=document.getElementById('oc'),pc=document.getElementById('pc');
@@ -805,12 +866,12 @@ const ctx=mc.getContext('2d'),octx=oc.getContext('2d'),pctx=pc.getContext('2d');
 const vp=document.getElementById('vp');
 function resizeVP(){const r=vp.getBoundingClientRect();S.vpW=r.width;S.vpH=r.height;mc.width=oc.width=r.width;mc.height=oc.height=r.height;render();}
 window.addEventListener('resize',resizeVP);resizeVP();
-function resetAll(){S.calPts=[];S.calDone=false;S.pxPerCm=null;S.calCm=null;S.prevPpc=null;S.rgba=null;document.getElementById('btnOrig').classList.add('hidden');S.sherds=[];S.manualSherds=[];S.poly=[];S.polyClosed=false;S.otsuT=null;S.grayCache=null;S.crop={on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false};document.getElementById('calInfo').textContent='';document.getElementById('calRes').classList.add('hidden');document.getElementById('oChip').classList.add('hidden');document.getElementById('manInfo').textContent='';document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;document.getElementById('btnRec').disabled=true;document.getElementById('cropBar').classList.remove('v');ndot('s2','p');ndot('s3','p');ndot('sM','p');setDot('C','','Sin calibrar');setDot('D','','Sin detección');renderResults();disableStep3();disableExport();}
-function clearAll(){S.sherds=[];S.manualSherds=[];S.poly=[];S.polyClosed=false;document.getElementById('manInfo').textContent='';document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;ndot('s3','p');ndot('sM','p');setDot('D','','Sin detección');renderResults();disableExport();render();setMsg('Selecciones limpiadas.');}
+function resetAll(){S.calPts=[];S.calDone=false;S.pxPerCm=null;S.calCm=null;S.prevPpc=null;S.rgba=null;document.getElementById('btnOrig').classList.add('hidden');S.sherds=[];S.manualSherds=[];S.manSeq=0;S.poly=[];S.polyClosed=false;S.otsuT=null;S.grayCache=null;S.crop={on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false};document.getElementById('calInfo').textContent='';document.getElementById('calRes').classList.add('hidden');document.getElementById('oChip').classList.add('hidden');document.getElementById('manInfo').textContent='';document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;document.getElementById('btnRec').disabled=true;document.getElementById('cropBar').classList.remove('v');ndot('s2','p');ndot('s3','p');ndot('sM','p');setDot('C','','Sin calibrar');setDot('D','','Sin detección');renderResults();disableStep3();disableExport();}
+function clearAll(){S.sherds=[];S.manualSherds=[];S.manSeq=0;S.poly=[];S.polyClosed=false;document.getElementById('manInfo').textContent='';document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;ndot('s3','p');ndot('sM','p');setDot('D','','Sin detección');renderResults();disableExport();render();setMsg('Selecciones limpiadas.');}
 function i2s(ix,iy){return{sx:ix*S.sc+S.tx,sy:iy*S.sc+S.ty}}
 function s2i(sx,sy){return{ix:(sx-S.tx)/S.sc,iy:(sy-S.ty)/S.sc}}
 function snapAx(p0,p1){return Math.abs(p1.ix-p0.ix)>Math.abs(p1.iy-p0.iy)?{ix:p1.ix,iy:p0.iy}:{ix:p0.ix,iy:p1.iy}}
-function render(){ctx.clearRect(0,0,mc.width,mc.height);octx.clearRect(0,0,oc.width,oc.height);if(!S.img)return;ctx.save();ctx.translate(S.tx,S.ty);ctx.scale(S.sc,S.sc);ctx.drawImage(S.img,0,0);ctx.restore();drawSherds();drawManualSherds();drawCal();drawPoly();drawCropRect();}
+function render(){ctx.clearRect(0,0,mc.width,mc.height);octx.clearRect(0,0,oc.width,oc.height);if(!S.img)return;ctx.save();ctx.translate(S.tx,S.ty);ctx.scale(S.sc,S.sc);ctx.drawImage(S.img,0,0);ctx.restore();drawSherds();drawManualSherds();drawAxes();drawCal();drawPoly();drawCropRect();}
 function drawSherds(){S.sherds.forEach(sh=>{if(sh.borderPts&&sh.borderPts.length){const ps=Math.max(1.5,S.sc);sh.borderPts.forEach(([bx,by])=>{const{sx,sy}=i2s(bx,by);octx.fillStyle=sh.color+'CC';octx.fillRect(sx,sy,ps,ps);});}const{minX,maxX,minY,maxY}=sh.bbox;const a=i2s(minX,minY),b=i2s(maxX,maxY);octx.save();octx.strokeStyle=sh.color;octx.lineWidth=1.2;octx.setLineDash([4,3]);octx.strokeRect(a.sx,a.sy,b.sx-a.sx,b.sy-a.sy);octx.setLineDash([]);octx.fillStyle=sh.color;octx.font='500 10px DM Mono,monospace';octx.fillText(sh.id,a.sx+3,a.sy-4);octx.restore();});}
 function drawManualSherds(){S.manualSherds.forEach(sh=>{const pts=sh.polygon;if(!pts.length)return;octx.save();octx.strokeStyle=MCOL;octx.fillStyle='rgba(232,149,106,.14)';octx.lineWidth=1.6;octx.beginPath();const s0=i2s(pts[0].ix,pts[0].iy);octx.moveTo(s0.sx,s0.sy);for(let i=1;i<pts.length;i++){const sp=i2s(pts[i].ix,pts[i].iy);octx.lineTo(sp.sx,sp.sy);}octx.closePath();octx.fill();octx.stroke();octx.fillStyle=MCOL;octx.font='500 10px DM Mono,monospace';octx.fillText(sh.id,s0.sx+3,s0.sy-4);octx.restore();});}
 function drawCal(){const pts=S.calPts;if(!pts.length)return;const s0=i2s(pts[0].ix,pts[0].iy);drawPt(octx,s0.sx,s0.sy,'#5BBFB0','1');if(S.calDone&&pts.length===2){const s1=i2s(pts[1].ix,pts[1].iy);drawPt(octx,s1.sx,s1.sy,'#5BBFB0','2');drawLn(octx,s0.sx,s0.sy,s1.sx,s1.sy,'#5BBFB0',[5,3]);const mx=(s0.sx+s1.sx)/2,my=(s0.sy+s1.sy)/2;octx.fillStyle='#5BBFB0';octx.font='500 10px DM Mono,monospace';octx.fillText(`${S.calCm} cm`,mx+5,my-5);return;}if(S.tool==='calibrate'&&pts.length===1){let{ix,iy}=S.mpos;if(S.ctrl){const sn=snapAx(pts[0],{ix,iy});ix=sn.ix;iy=sn.iy;}const sm=i2s(ix,iy);drawLn(octx,s0.sx,s0.sy,sm.sx,sm.sy,'#5BBFB0',[4,3]);octx.beginPath();octx.arc(sm.sx,sm.sy,4,0,Math.PI*2);octx.fillStyle='rgba(91,191,176,.4)';octx.fill();if(S.pxPerCm){const d=Math.hypot(ix-pts[0].ix,iy-pts[0].iy);octx.fillStyle='rgba(91,191,176,.8)';octx.font='10px DM Mono,monospace';octx.fillText(`${(d/S.pxPerCm).toFixed(2)} cm`,sm.sx+7,sm.sy-7);}}}
@@ -818,8 +879,30 @@ function drawPoly(){const pts=S.poly;if(!pts.length)return;octx.save();octx.stro
 function drawCropRect(){const c=S.crop;if(!c.on&&!c.confirmed)return;const a=i2s(c.sx,c.sy),b=i2s(c.ex,c.ey);const x=Math.min(a.sx,b.sx),y=Math.min(a.sy,b.sy);const w=Math.abs(b.sx-a.sx),h=Math.abs(b.sy-a.sy);octx.save();octx.fillStyle='rgba(13,27,42,.55)';octx.fillRect(0,0,oc.width,oc.height);octx.clearRect(x,y,w,h);octx.strokeStyle='#7EB8D8';octx.lineWidth=1.5;octx.setLineDash([6,3]);octx.strokeRect(x,y,w,h);octx.setLineDash([]);[[x,y],[x+w,y],[x,y+h],[x+w,y+h]].forEach(([cx2,cy2])=>{octx.strokeStyle='#7EB8D8';octx.lineWidth=2.5;octx.beginPath();octx.arc(cx2,cy2,4,0,Math.PI*2);octx.stroke();});if(S.pxPerCm){octx.fillStyle='#7EB8D8';octx.font='10px DM Mono,monospace';octx.fillText(`${r2(Math.abs(c.ex-c.sx)/S.pxPerCm)} × ${r2(Math.abs(c.ey-c.sy)/S.pxPerCm)} cm`,x+4,y+h+14);}octx.restore();}
 function drawPt(c,x,y,col,label){c.beginPath();c.arc(x,y,5,0,Math.PI*2);c.fillStyle=col;c.fill();c.strokeStyle='rgba(255,255,255,.7)';c.lineWidth=1.5;c.stroke();if(label){c.fillStyle='#fff';c.font='500 10px DM Mono,monospace';c.fillText(label,x+7,y-4);}}
 function drawLn(c,x1,y1,x2,y2,col,dash){c.save();c.strokeStyle=col;c.lineWidth=1.5;if(dash)c.setLineDash(dash);c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();c.restore();}
+/* ─── EJES DE MEDICIÓN ────────────────────────────
+   Dibuja sobre cada tiesto los segmentos de los que salen el largo, el ancho y el
+   los lados del rectángulo mínimo, como cotas de dibujo técnico (línea + marcas en los
+   extremos). Sin esto no hay forma de saber cuál de los dos números es cuál en una
+   pieza irregular. Las coordenadas viven en px de la imagen, así que no dependen
+   de la calibración: recalibrar no las mueve. */
+/* Código visual: el COLOR dice qué dimensión es (ámbar = largo, celeste = ancho) y el
+   TRAZO dice con qué criterio se tomó. Línea LLENA = largo y ancho de calibre (Feret
+   máximo y mínimo), que es lo que se anota en ficha. Línea PUNTEADA = lados del
+   rectángulo mínimo, referencia secundaria. Ver la nota metodológica del README. */
+const AXL='#D4A259',AXW='#7EB8D8',DASH=[5,4];
+/* El largo y el ancho se cruzan en el centro del rectángulo mínimo, así que si las
+   etiquetas fueran al punto medio de cada cota caerían una encima de la otra. Por eso
+   `t` las corre a lo largo de su propia línea: el largo a un cuarto, el ancho a tres
+   cuartos. */
+function dimLine(a,b,col,dash,lbl,t){const A=i2s(a[0],a[1]),B=i2s(b[0],b[1]);const dx=B.sx-A.sx,dy=B.sy-A.sy,len=Math.hypot(dx,dy);if(len<2)return;const nx=-dy/len,ny=dx/len,k=5;octx.save();octx.strokeStyle=col;octx.lineWidth=1.6;if(dash)octx.setLineDash(dash);octx.beginPath();octx.moveTo(A.sx,A.sy);octx.lineTo(B.sx,B.sy);octx.stroke();octx.setLineDash([]);octx.beginPath();octx.moveTo(A.sx-nx*k,A.sy-ny*k);octx.lineTo(A.sx+nx*k,A.sy+ny*k);octx.moveTo(B.sx-nx*k,B.sy-ny*k);octx.lineTo(B.sx+nx*k,B.sy+ny*k);octx.stroke();if(lbl&&len>55){const f=t==null?0.5:t,mx=A.sx+dx*f,my=A.sy+dy*f;octx.font='500 10px DM Mono,monospace';const tw=octx.measureText(lbl).width;octx.fillStyle='rgba(13,27,42,.82)';octx.fillRect(mx-tw/2-3,my-7,tw+6,14);octx.fillStyle=col;octx.textAlign='center';octx.textBaseline='middle';octx.fillText(lbl,mx,my);octx.textAlign='start';octx.textBaseline='alphabetic';}octx.restore();}
+function drawAxes(){if(!S.showAxes)return;const m=S.axMode;[...S.sherds,...S.manualSherds].forEach(sh=>{const g=sh.geo;if(!g)return;
+  if(m==='both'){if(g.axW)dimLine(g.axW[0],g.axW[1],AXW,DASH,`Ar ${sh.rectA_cm}`,0.25);if(g.axL)dimLine(g.axL[0],g.axL[1],AXL,DASH,`Lr ${sh.rectL_cm}`,0.75);}
+  if(m!=='rect'){if(g.axFA)dimLine(g.axFA[0],g.axFA[1],AXW,null,`A ${sh.ancho_cm}`,0.75);if(g.feret)dimLine(g.feret[0],g.feret[1],AXL,null,`L ${sh.largo_cm}`,0.25);}
+  else{if(g.axW)dimLine(g.axW[0],g.axW[1],AXW,DASH,`Ar ${sh.rectA_cm}`,0.75);if(g.axL)dimLine(g.axL[0],g.axL[1],AXL,DASH,`Lr ${sh.rectL_cm}`,0.25);}});}
+function toggleAxes(v){S.showAxes=v;render();}
+function setAxMode(v){S.axMode=v;render();}
 document.getElementById('fi').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>loadImg(ev.target.result);r.readAsDataURL(f);e.target.value='';});
-document.getElementById('cm').addEventListener('input',()=>{if(!S.calDone||S.calPts.length!==2)return;const cm=parseFloat(document.getElementById('cm').value);if(!(cm>0)){document.getElementById('calInfo').textContent='⚠ Medida real inválida (cm > 0).';return;}const[p0,p1]=S.calPts;const pxD=Math.hypot(p1.ix-p0.ix,p1.iy-p0.iy);const old=S.pxPerCm;S.calCm=cm;S.pxPerCm=pxD/cm;document.getElementById('pxCm').textContent=S.pxPerCm.toFixed(2);document.getElementById('calInfo').textContent=`✓ ${pxD.toFixed(1)} px = ${cm} cm`;setDot('C','on',`${S.pxPerCm.toFixed(1)} px/cm`);if(old&&old!==S.pxPerCm&&rescaleMetrics(old/S.pxPerCm))setMsg('Medida real cambiada — escala y métricas recalculadas.');else setMsg('Medida real cambiada — escala recalculada.');render();});
+document.getElementById('cm').addEventListener('input',()=>{if(!S.calDone||S.calPts.length!==2)return;const cm=parseFloat(document.getElementById('cm').value);if(!(cm>0)){document.getElementById('calInfo').textContent='⚠ Medida real inválida (cm > 0).';return;}const[p0,p1]=S.calPts;const pxD=Math.hypot(p1.ix-p0.ix,p1.iy-p0.iy);const old=S.pxPerCm;S.calCm=cm;S.pxPerCm=pxD/cm;document.getElementById('pxCm').textContent=S.pxPerCm.toFixed(2);document.getElementById('calInfo').textContent=`✓ ${pxD.toFixed(1)} px = ${cm} cm`;setDot('C','on',`${S.pxPerCm.toFixed(1)} px/cm`);if(old!==S.pxPerCm&&recomputeCm())setMsg('Medida real cambiada — escala y métricas recalculadas.');else setMsg('Medida real cambiada — escala recalculada.');render();});
 function loadImg(src){const img=new Image();img.onerror=()=>{setMsg('⚠ No se pudo cargar la imagen — formato no soportado por el navegador (usá JPG o PNG).');};img.onload=()=>{S.img=img;S.origImg=img;resetAll();pc.width=img.width;pc.height=img.height;pctx.drawImage(img,0,0);const id=pctx.getImageData(0,0,img.width,img.height);S.grayCache=computeGray(id);S.rgba=id.data;S.otsuT=otsuCalc(S.grayCache,img.width*img.height);document.getElementById('otsuV').textContent=S.otsuT;document.getElementById('oChip').classList.remove('hidden');resizeVP();resetZoom();document.getElementById('ph').classList.add('hidden');document.getElementById('imgBadge').textContent=`${img.width}×${img.height}`;document.getElementById('imgBadge').classList.remove('hidden');setDot('I','on',`${img.width}×${img.height}`);enableBaseUI();ndot('s1','d');setTool('calibrate');setMsg('Imagen cargada — iniciá la calibración.');};img.src=src;}
 function resetZoom(){if(!S.img)return;const r=vp.getBoundingClientRect();const sc=Math.min(r.width/S.img.width,r.height/S.img.height,1)*0.92;S.sc=S.isc=sc;S.tx=(r.width-S.img.width*sc)/2;S.ty=(r.height-S.img.height*sc)/2;zlbl();render();}
 function zoomBy(f,cx,cy){if(!S.img)return;cx=cx??S.vpW/2;cy=cy??S.vpH/2;const ns=Math.max(0.05,Math.min(S.sc*f,30));const rat=ns/S.sc;S.tx=cx-rat*(cx-S.tx);S.ty=cy-rat*(cy-S.ty);S.sc=ns;zlbl();render();}
@@ -835,8 +918,17 @@ document.addEventListener('keydown',e=>{if(e.key==='Control'){S.ctrl=true;docume
 document.addEventListener('keyup',e=>{if(e.key==='Control'){S.ctrl=false;document.getElementById('snapInd').classList.remove('v');render();}});
 function setTool(t){if(t==='manual'&&!S.pxPerCm){setMsg('Calibrá la escala antes de usar la selección manual.');return;}S.tool=t;const map={pan:'tbPan',calibrate:'tbCal',manual:'tbMan',crop:'tbCrop'};Object.values(map).forEach(id=>{const b=document.getElementById(id);if(b){b.classList.remove('on','crop-on');}});if(map[t]){const b=document.getElementById(map[t]);if(b)b.classList.add(t==='crop'?'crop-on':'on');}const msgs={pan:'',calibrate:'Calibración  ·  clic pt.1  ·  clic pt.2  ·  Ctrl = línea recta',manual:'Selección manual  ·  clic = vértice  ·  doble-clic = cerrar polígono',crop:'Recortar  ·  arrastrá para seleccionar  ·  Enter = aplicar'};const mb=document.getElementById('mb');mb.textContent=msgs[t]||'';mb.className='mbadge'+(t!=='pan'?' v':'')+(t==='crop'?' crop-mode':'');oc.style.cursor=t==='pan'?'grab':'crosshair';if(t!=='crop')cancelCrop();render();}
 function handleCal(ix,iy){if(S.calDone){S.prevPpc=S.pxPerCm||S.prevPpc;S.calPts=[];S.calDone=false;S.pxPerCm=null;document.getElementById('calRes').classList.add('hidden');ndot('s2','p');setDot('C','','Recalibrando…');document.getElementById('calInfo').textContent='Recalibrando — marcá los dos puntos de nuevo.';}if(S.ctrl&&S.calPts.length===1){const sn=snapAx(S.calPts[0],{ix,iy});ix=sn.ix;iy=sn.iy;}S.calPts.push({ix,iy});if(S.calPts.length===2)finishCal();render();}
-function rescaleMetrics(k){const all=[...S.sherds,...S.manualSherds];if(!all.length)return false;const k2=k*k;all.forEach(s=>{s.area_cm2=r2(s.area_cm2*k2);s.perimeter_cm=r2(s.perimeter_cm*k);s.largo_cm=r2(s.largo_cm*k);s.ancho_cm=r2(s.ancho_cm*k);s.feret_cm=r2(s.feret_cm*k);});renderResults();return true;}
-function finishCal(){const[p0,p1]=S.calPts;const pxD=Math.hypot(p1.ix-p0.ix,p1.iy-p0.iy);const cm=parseFloat(document.getElementById('cm').value);if(!(cm>0)||!(pxD>0)){S.calPts=[];document.getElementById('calInfo').textContent='⚠ Medida real inválida — ingresá un valor en cm mayor a 0 y volvé a marcar.';render();return;}S.calDone=true;S.calCm=cm;S.pxPerCm=pxD/cm;document.getElementById('pxCm').textContent=S.pxPerCm.toFixed(2);document.getElementById('calDist').textContent=pxD.toFixed(1)+' px';document.getElementById('calRes').classList.remove('hidden');document.getElementById('calInfo').textContent=`✓ ${pxD.toFixed(1)} px = ${cm} cm`;document.getElementById('btnRec').disabled=false;ndot('s2','d');setDot('C','on',`${S.pxPerCm.toFixed(1)} px/cm`);enableStep3();document.getElementById('tbMan').disabled=false;if(S.prevPpc&&S.prevPpc!==S.pxPerCm&&rescaleMetrics(S.prevPpc/S.pxPerCm))setMsg('Calibración lista — métricas existentes reescaladas a la nueva escala.');else setMsg('Calibración lista.');S.prevPpc=null;setTool('pan');}
+/* Cada tiesto guarda sus métricas crudas en píxeles (s.px) y los centímetros se
+   derivan de S.pxPerCm. Recalibrar re-deriva desde el original en vez de reescalar
+   valores ya redondeados: si no, cada pulsación de tecla en "Medida real" perdía
+   cifras significativas (v1.1). Circularidad, elongación y solidez son
+   adimensionales — no dependen de la escala y no se recalculan.
+   Desde v1.2 el LARGO es el Feret máximo y el ANCHO el Feret mínimo — las dos medidas
+   que se toman con un calibre. Los lados del rectángulo mínimo se siguen calculando y
+   se informan como rectL/rectA, porque son el par correcto en piezas rectangulares. */
+function deriveCm(s){const ppc=S.pxPerCm;if(!ppc||!s.px)return s;const q=s.px;s.area_cm2=r2(q.area/(ppc*ppc));s.perimeter_cm=r2(q.perim/ppc);s.largo_cm=r2(q.feret/ppc);s.ancho_cm=r2(q.fw/ppc);s.rectL_cm=r2(q.L/ppc);s.rectA_cm=r2(q.W/ppc);return s;}
+function recomputeCm(){const all=[...S.sherds,...S.manualSherds];if(!all.length)return false;all.forEach(deriveCm);renderResults();return true;}
+function finishCal(){const[p0,p1]=S.calPts;const pxD=Math.hypot(p1.ix-p0.ix,p1.iy-p0.iy);const cm=parseFloat(document.getElementById('cm').value);if(!(cm>0)||!(pxD>0)){S.calPts=[];document.getElementById('calInfo').textContent='⚠ Medida real inválida — ingresá un valor en cm mayor a 0 y volvé a marcar.';render();return;}S.calDone=true;S.calCm=cm;S.pxPerCm=pxD/cm;document.getElementById('pxCm').textContent=S.pxPerCm.toFixed(2);document.getElementById('calDist').textContent=pxD.toFixed(1)+' px';document.getElementById('calRes').classList.remove('hidden');document.getElementById('calInfo').textContent=`✓ ${pxD.toFixed(1)} px = ${cm} cm`;document.getElementById('btnRec').disabled=false;ndot('s2','d');setDot('C','on',`${S.pxPerCm.toFixed(1)} px/cm`);enableStep3();document.getElementById('tbMan').disabled=false;if(S.prevPpc&&S.prevPpc!==S.pxPerCm&&recomputeCm())setMsg('Calibración lista — métricas existentes reescaladas a la nueva escala.');else setMsg('Calibración lista.');S.prevPpc=null;setTool('pan');}
 function resetCal(){S.prevPpc=S.pxPerCm||S.prevPpc;S.calPts=[];S.calDone=false;S.pxPerCm=null;document.getElementById('calInfo').textContent='';document.getElementById('calRes').classList.add('hidden');ndot('s2','p');setDot('C','','Sin calibrar');setTool('calibrate');render();}
 function computeGray(id){const d=id.data,n=id.width*id.height,g=new Float32Array(n);for(let i=0;i<n;i++)g[i]=0.299*d[i*4]+0.587*d[i*4+1]+0.114*d[i*4+2];return g;}
 function boxBlur(g,w,h,r){if(r<=0)return g;const out=new Float32Array(g.length),tmp=new Float32Array(g.length),d=2*r+1;for(let y=0;y<h;y++){const o=y*w;let s=g[o]*(r+1);for(let x=1;x<=r;x++)s+=g[o+Math.min(x,w-1)];tmp[o]=s/d;for(let x=1;x<w;x++){s+=g[o+Math.min(x+r,w-1)]-g[o+Math.max(x-r-1,0)];tmp[o+x]=s/d;}}for(let x=0;x<w;x++){let s=tmp[x]*(r+1);for(let y=1;y<=r;y++)s+=tmp[Math.min(y,h-1)*w+x];out[x]=s/d;for(let y=1;y<h;y++){s+=tmp[Math.min(y+r,h-1)*w+x]-tmp[Math.max(y-r-1,0)*w+x];out[y*w+x]=s/d;}}return out;}
@@ -856,16 +948,21 @@ function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;',
 function tracePerim(pixSet,w,h,startP){const nb=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];const fg=(x,y)=>x>=0&&x<w&&y>=0&&y<h&&pixSet.has(y*w+x);const sx=startP%w,sy=(startP-sx)/w;let any=false;for(const[dx,dy]of nb)if(fg(sx+dx,sy+dy)){any=true;break;}if(!any)return Math.PI;let cx=sx,cy=sy,bx=sx-1,by=sy,ns=0,nd=0,nc=0,pm=-1,firstMove=-1,it=0;const maxIt=8*pixSet.size+16;while(it++<maxIt){let kb=4;for(let k=0;k<8;k++)if(cx+nb[k][0]===bx&&cy+nb[k][1]===by){kb=k;break;}let found=-1;for(let i=1;i<=8;i++){const k=(kb+i)%8,nx=cx+nb[k][0],ny=cy+nb[k][1];if(fg(nx,ny)){found=k;break;}bx=nx;by=ny;}if(found<0)break;if(firstMove<0)firstMove=found;else if(cx===sx&&cy===sy&&found===firstMove)break;if(found%2===0)ns++;else nd++;if(pm>=0&&found!==pm)nc++;pm=found;cx+=nb[found][0];cy+=nb[found][1];}return Math.max(0,0.980*ns+1.406*nd-0.091*nc);}
 function convexHull(pts){if(pts.length<3)return pts.slice();const p=pts.slice().sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cross=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);const lo=[];for(const q of p){while(lo.length>=2&&cross(lo[lo.length-2],lo[lo.length-1],q)<=0)lo.pop();lo.push(q);}const up=[];for(let i=p.length-1;i>=0;i--){const q=p[i];while(up.length>=2&&cross(up[up.length-2],up[up.length-1],q)<=0)up.pop();up.push(q);}lo.pop();up.pop();return lo.concat(up);}
 function polyAreaPx(pts){let a=0;for(let i=0;i<pts.length;i++){const j=(i+1)%pts.length;a+=pts[i][0]*pts[j][1]-pts[j][0]*pts[i][1];}return Math.abs(a)/2;}
-/* Diámetros de Feret sobre el casco convexo: fmax = distancia máxima entre dos
-   puntos del contorno (largo máximo, como con calibre); fmin = ancho mínimo
-   perpendicular. Independientes de la orientación del tiesto en la foto. */
-function feretDims(hull){if(hull.length<2)return{fmax:0,fmin:0};let fmax=0;for(let i=0;i<hull.length;i++)for(let j=i+1;j<hull.length;j++){const d=Math.hypot(hull[i][0]-hull[j][0],hull[i][1]-hull[j][1]);if(d>fmax)fmax=d;}let fmin=Infinity;for(let i=0;i<hull.length;i++){const j=(i+1)%hull.length;const ex=hull[j][0]-hull[i][0],ey=hull[j][1]-hull[i][1];const len=Math.hypot(ex,ey);if(len===0)continue;let mx=0;for(const p of hull){const d=Math.abs((p[0]-hull[i][0])*ey-(p[1]-hull[i][1])*ex)/len;if(d>mx)mx=d;}if(mx<fmin)fmin=mx;}if(!isFinite(fmin))fmin=0;return{fmax,fmin};}
+/* Diámetros de Feret sobre el casco convexo — el par que se obtiene con un calibre:
+   fmax = la mayor distancia entre dos puntos del contorno, abriéndolo todo lo que da;
+   fmin = la menor abertura posible cerrándolo sobre la pieza, probando todas las
+   orientaciones. Ninguno depende de cómo esté girado el tiesto en la foto. Ojo que las
+   dos direcciones NO son perpendiculares entre sí: son dos mediciones independientes.
+   Devuelve además los segmentos sobre los que se tomó cada una, para dibujarlos. */
+function feretDims(hull){if(hull.length<2)return{fmax:0,fmin:0,fpts:null,axFmin:null};let fmax=0,fpts=null;for(let i=0;i<hull.length;i++)for(let j=i+1;j<hull.length;j++){const d=Math.hypot(hull[i][0]-hull[j][0],hull[i][1]-hull[j][1]);if(d>fmax){fmax=d;fpts=[hull[i].slice(),hull[j].slice()];}}let fmin=Infinity,best=null;for(let i=0;i<hull.length;i++){const j=(i+1)%hull.length;const ex=hull[j][0]-hull[i][0],ey=hull[j][1]-hull[i][1];const len=Math.hypot(ex,ey);if(len===0)continue;const ux=ex/len,uy=ey/len;let mnU=Infinity,mxU=-Infinity,mnV=Infinity,mxV=-Infinity;for(const p of hull){const u=p[0]*ux+p[1]*uy,v=-p[0]*uy+p[1]*ux;if(u<mnU)mnU=u;if(u>mxU)mxU=u;if(v<mnV)mnV=v;if(v>mxV)mxV=v;}const w=mxV-mnV;if(w<fmin){fmin=w;best={ux,uy,mnU,mxU,mnV,mxV};}}let axFmin=null;if(best){const{ux,uy,mnU,mxU,mnV,mxV}=best;const uc=(mnU+mxU)/2,P=(u,v)=>[u*ux-v*uy,u*uy+v*ux];axFmin=[P(uc,mnV),P(uc,mxV)];}if(!isFinite(fmin))fmin=0;return{fmax,fmin,fpts,axFmin};}
 /* Rectángulo mínimo rotado (rotating calipers sobre el casco convexo):
    L y W son los lados del rectángulo de área mínima que encierra la pieza,
-   en cualquier orientación — equivale a medir largo y ancho con regla. */
-function minAreaRect(hull){const n=hull.length;if(n<2)return{L:0,W:0};if(n===2)return{L:Math.hypot(hull[1][0]-hull[0][0],hull[1][1]-hull[0][1]),W:0};let best={area:Infinity,L:0,W:0};for(let i=0;i<n;i++){const j=(i+1)%n;const ex=hull[j][0]-hull[i][0],ey=hull[j][1]-hull[i][1];const len=Math.hypot(ex,ey);if(len===0)continue;const ux=ex/len,uy=ey/len;let mnU=Infinity,mxU=-Infinity,mnV=Infinity,mxV=-Infinity;for(const p of hull){const u=p[0]*ux+p[1]*uy,v=-p[0]*uy+p[1]*ux;if(u<mnU)mnU=u;if(u>mxU)mxU=u;if(v<mnV)mnV=v;if(v>mxV)mxV=v;}const a=(mxU-mnU)*(mxV-mnV);if(a<best.area)best={area:a,L:Math.max(mxU-mnU,mxV-mnV),W:Math.min(mxU-mnU,mxV-mnV)};}return best;}
+   en cualquier orientación — equivale a medir largo y ancho con regla.
+   Devuelve además axL y axW: los dos segmentos (en px de la imagen) sobre los que
+   se tomó cada medida, para poder dibujarlos y que se vea cuál es cuál. */
+function minAreaRect(hull){const n=hull.length;if(n<2)return{L:0,W:0,axL:null,axW:null};if(n===2)return{L:Math.hypot(hull[1][0]-hull[0][0],hull[1][1]-hull[0][1]),W:0,axL:[hull[0].slice(),hull[1].slice()],axW:null};let best=null;for(let i=0;i<n;i++){const j=(i+1)%n;const ex=hull[j][0]-hull[i][0],ey=hull[j][1]-hull[i][1];const len=Math.hypot(ex,ey);if(len===0)continue;const ux=ex/len,uy=ey/len;let mnU=Infinity,mxU=-Infinity,mnV=Infinity,mxV=-Infinity;for(const p of hull){const u=p[0]*ux+p[1]*uy,v=-p[0]*uy+p[1]*ux;if(u<mnU)mnU=u;if(u>mxU)mxU=u;if(v<mnV)mnV=v;if(v>mxV)mxV=v;}const a=(mxU-mnU)*(mxV-mnV);if(!best||a<best.area)best={area:a,ux,uy,mnU,mxU,mnV,mxV};}if(!best)return{L:0,W:0,axL:null,axW:null};const{ux,uy,mnU,mxU,mnV,mxV}=best;const P=(u,v)=>[u*ux-v*uy,u*uy+v*ux];const du=mxU-mnU,dv=mxV-mnV,uc=(mnU+mxU)/2,vc=(mnV+mxV)/2;const axU=[P(mnU,vc),P(mxU,vc)],axV=[P(uc,mnV),P(uc,mxV)];return du>=dv?{L:du,W:dv,axL:axU,axW:axV}:{L:dv,W:du,axL:axV,axW:axU};}
 function pointInPoly(x,y,pts){let ins=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){const xi=pts[i].ix,yi=pts[i].iy,xj=pts[j].ix,yj=pts[j].iy;if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))ins=!ins;}return ins;}
-function computeMetrics(pixArr,w){if(!pixArr.length)return null;const ppc=S.pxPerCm,h=pc.height,pixSet=new Set(pixArr);const area_cm2=pixArr.length/(ppc*ppc);const rgba=S.rgba;let mnX=Infinity,mxX=-Infinity,mnY=Infinity,mxY=-Infinity,sp=pixArr[0],rs=0,gs=0,bs=0;pixArr.forEach(p=>{if(p<sp)sp=p;const x=p%w,y=(p-x)/w;if(x<mnX)mnX=x;if(x>mxX)mxX=x;if(y<mnY)mnY=y;if(y>mxY)mxY=y;if(rgba){const q=p*4;rs+=rgba[q];gs+=rgba[q+1];bs+=rgba[q+2];}});const perim=tracePerim(pixSet,w,h,sp)/ppc;const circ=perim>0?Math.min(1,(4*Math.PI*area_cm2)/(perim*perim)):0;const bp=[];pixArr.forEach(p=>{const x=p%w,y=(p-x)/w;if(x===0||!pixSet.has(p-1)||x===w-1||!pixSet.has(p+1)||y===0||!pixSet.has(p-w)||!pixSet.has(p+w))bp.push([x,y]);});const hull=convexHull(bp);const hullA=hull.length>=3?polyAreaPx(hull)/(ppc*ppc):0;const solid=hullA>0?r3(Math.min(1,area_cm2/hullA)):1;const{fmax}=feretDims(hull);const mar=minAreaRect(hull);const largo=(mar.L+1)/ppc,ancho=(mar.W+1)/ppc,feret=(fmax+1)/ppc;const elong=r2(largo/Math.max(0.01,ancho));const n=pixArr.length;const colorHex=rgba?rgb2h(Math.round(rs/n),Math.round(gs/n),Math.round(bs/n)):'#000000';return{area_cm2:r2(area_cm2),perimeter_cm:r2(perim),circularity:r3(circ),elongation:elong,solidity:solid,bbox:{minX:mnX,maxX:mxX,minY:mnY,maxY:mxY},largo_cm:r2(largo),ancho_cm:r2(ancho),feret_cm:r2(feret),colorHex,borderPts:bp};}
+function computeMetrics(pixArr,w){if(!pixArr.length)return null;const h=pc.height,pixSet=new Set(pixArr);const areaPx=pixArr.length;const rgba=S.rgba;let mnX=Infinity,mxX=-Infinity,mnY=Infinity,mxY=-Infinity,sp=pixArr[0],rs=0,gs=0,bs=0;pixArr.forEach(p=>{if(p<sp)sp=p;const x=p%w,y=(p-x)/w;if(x<mnX)mnX=x;if(x>mxX)mxX=x;if(y<mnY)mnY=y;if(y>mxY)mxY=y;if(rgba){const q=p*4;rs+=rgba[q];gs+=rgba[q+1];bs+=rgba[q+2];}});const perimPx=tracePerim(pixSet,w,h,sp);const circ=perimPx>0?Math.min(1,(4*Math.PI*areaPx)/(perimPx*perimPx)):0;const bp=[];pixArr.forEach(p=>{const x=p%w,y=(p-x)/w;if(x===0||!pixSet.has(p-1)||x===w-1||!pixSet.has(p+1)||y===0||!pixSet.has(p-w)||!pixSet.has(p+w))bp.push([x,y]);});const hull=convexHull(bp);const hullAPx=hull.length>=3?polyAreaPx(hull):0;const solid=hullAPx>0?r3(Math.min(1,areaPx/hullAPx)):1;const{fmax,fmin,fpts,axFmin}=feretDims(hull);const mar=minAreaRect(hull);const px={area:areaPx,perim:perimPx,L:mar.L+1,W:mar.W+1,feret:fmax+1,fw:fmin+1};const elong=r2(px.feret/Math.max(1e-6,px.fw));const colorHex=rgba?rgb2h(Math.round(rs/areaPx),Math.round(gs/areaPx),Math.round(bs/areaPx)):'#000000';return deriveCm({px,geo:{axL:mar.axL,axW:mar.axW,feret:fpts,axFA:axFmin},circularity:r3(circ),elongation:elong,solidity:solid,bbox:{minX:mnX,maxX:mxX,minY:mnY,maxY:mxY},colorHex,borderPts:bp});}
 async function detectAuto(){if(!S.pxPerCm)return;showProc('Aplicando pre-procesamiento…');await delay(30);const blurR=parseInt(document.getElementById('blurS').value);const closeR=parseInt(document.getElementById('closeS').value);const thr=parseInt(document.getElementById('thrS').value);const bg=document.getElementById('bgMode').value;const minAPx=parseFloat(document.getElementById('minArea').value)*S.pxPerCm*S.pxPerCm;const w=pc.width,h=pc.height;let gray=S.grayCache;if(blurR>0)gray=boxBlur(gray,w,h,blurR);let bin=binarize(gray,thr,bg);if(closeR>0){updProc('Cierre morfológico…');await delay(20);bin=morphClose(bin,w,h,closeR);}updProc('Rellenando agujeros…');await delay(20);bin=fillHoles(bin,w,h);updProc('Detectando componentes…');await delay(20);const labels=new Int32Array(w*h);let nl=1;const comps={};for(let i=0;i<w*h;i++)if(bin[i]&&!labels[i]){const px=floodFill(bin,labels,w,h,i,nl);if(px.length>=minAPx)comps[nl]=px;nl++;}updProc('Calculando métricas…');await delay(20);const code=document.getElementById('code').value||'T';S.sherds=[];let idx=0;for(const[,px] of Object.entries(comps)){const m=computeMetrics(px,w);if(!m)continue;S.sherds.push({id:`${code}-${String(idx+1).padStart(2,'0')}`,_k:++S.seq,type:'auto',color:COLS[idx%COLS.length],...m});idx++;}hideProc();renderResults();render();setDot('D','on',`${S.sherds.length} auto + ${S.manualSherds.length} manual`);ndot('s3','d');enableExport();document.getElementById('btnClearAll').disabled=false;setMsg(`${S.sherds.length} tiesto(s) detectado(s).`);}
 function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 function showProc(t){document.getElementById('procOv').classList.remove('hidden');document.getElementById('procTxt').textContent=t;}
@@ -873,13 +970,13 @@ function updProc(t){document.getElementById('procTxt').textContent=t;}
 function hideProc(){document.getElementById('procOv').classList.add('hidden');}
 function preview(){if(!S.pxPerCm)return;const blurR=parseInt(document.getElementById('blurS').value);const closeR=parseInt(document.getElementById('closeS').value);const thr=parseInt(document.getElementById('thrS').value);const bg=document.getElementById('bgMode').value;const w=pc.width,h=pc.height;let gray=S.grayCache;if(blurR>0)gray=boxBlur(gray,w,h,blurR);let bin=binarize(gray,thr,bg);if(closeR>0)bin=morphClose(bin,w,h,closeR);bin=fillHoles(bin,w,h);render();const pv=octx.createImageData(oc.width,oc.height);for(let sy=0;sy<oc.height;sy++)for(let sx=0;sx<oc.width;sx++){const{ix,iy}=s2i(sx,sy);const fx=Math.round(ix),fy=Math.round(iy);if(fx<0||fy<0||fx>=w||fy>=h)continue;if(bin[fy*w+fx]){const di=(sy*oc.width+sx)*4;pv.data[di]=91;pv.data[di+1]=191;pv.data[di+2]=176;pv.data[di+3]=85;}}const off=document.createElement('canvas');off.width=oc.width;off.height=oc.height;off.getContext('2d').putImageData(pv,0,0);octx.drawImage(off,0,0);setMsg('Vista previa — verde = foreground detectado.');}
 function handleManClick(ix,iy){if(S.polyClosed)manClear();const pts=S.poly;if(pts.length>2){const s0=i2s(pts[0].ix,pts[0].iy),sc2=i2s(ix,iy);if(Math.hypot(sc2.sx-s0.sx,sc2.sy-s0.sy)<14){closePoly();return;}}pts.push({ix,iy});document.getElementById('btnUndo').disabled=false;document.getElementById('btnClr').disabled=false;document.getElementById('btnClearAll').disabled=false;ndot('sM','on');document.getElementById('manInfo').textContent=`${pts.length} vértice(s) — doble-clic o clic en el inicio para cerrar.`;render();}
-function closePoly(){const pts=S.poly;if(pts.length<3){setMsg('Necesitás al menos 3 vértices.');return;}S.polyClosed=true;const m=manMetrics(pts);const rawId=document.getElementById('manId').value.trim();const id=rawId||`M-${String(S.manualSherds.length+1).padStart(2,'0')}`;S.manualSherds.push({id,_k:++S.seq,polygon:[...pts],type:'manual',...m});S.poly=[];S.polyClosed=false;document.getElementById('manInfo').textContent=`✓ "${id}" guardado.`;document.getElementById('manId').value='';ndot('sM','d');renderResults();render();enableExport();setDot('D','on',`${S.sherds.length} auto + ${S.manualSherds.length} manual`);setMsg(`Tiesto manual "${id}" registrado.`);}
+function closePoly(){const pts=S.poly;if(pts.length<3){setMsg('Necesitás al menos 3 vértices.');return;}S.polyClosed=true;const m=manMetrics(pts);const rawId=document.getElementById('manId').value.trim();const taken=new Set([...S.sherds,...S.manualSherds].map(s=>s.id));let id=rawId;if(!id){do{id=`M-${String(++S.manSeq).padStart(2,'0')}`;}while(taken.has(id));}S.manualSherds.push({id,_k:++S.seq,polygon:[...pts],type:'manual',...m});S.poly=[];S.polyClosed=false;document.getElementById('manInfo').textContent=`✓ "${id}" guardado.`;document.getElementById('manId').value='';ndot('sM','d');renderResults();render();enableExport();setDot('D','on',`${S.sherds.length} auto + ${S.manualSherds.length} manual`);setMsg(`Tiesto manual "${id}" registrado.`+(rawId&&taken.has(rawId)?' ⚠ Ese código ya estaba en uso — corregilo antes de exportar.':''));}
 function manUndo(){S.poly.pop();if(!S.poly.length){document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;}document.getElementById('manInfo').textContent=`${S.poly.length} vértice(s).`;render();}
 function manClear(){S.poly=[];S.polyClosed=false;document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;document.getElementById('manInfo').textContent='';render();}
-function manMetrics(pts){const ppc=S.pxPerCm,n=pts.length,w=pc.width,h=pc.height;let a=0;for(let i=0;i<n;i++){const j=(i+1)%n;a+=pts[i].ix*pts[j].iy-pts[j].ix*pts[i].iy;}const area_cm2=Math.abs(a)/(2*ppc*ppc);let pp=0;for(let i=0;i<n;i++){const j=(i+1)%n;pp+=Math.hypot(pts[j].ix-pts[i].ix,pts[j].iy-pts[i].iy);}const perim=pp/ppc;const circ=perim>0?Math.min(1,(4*Math.PI*area_cm2)/(perim*perim)):0;const xs=pts.map(p=>p.ix),ys=pts.map(p=>p.iy);const mnX=Math.min(...xs),mxX=Math.max(...xs),mnY=Math.min(...ys),mxY=Math.max(...ys);const hull=convexHull(pts.map(p=>[p.ix,p.iy]));const hullA=hull.length>=3?polyAreaPx(hull)/(ppc*ppc):0;const solid=hullA>0?r3(Math.min(1,area_cm2/hullA)):1;const{fmax}=feretDims(hull);const mar=minAreaRect(hull);const largo=mar.L/ppc,ancho=mar.W/ppc,feret=fmax/ppc;const elong=largo/Math.max(0.01,ancho);let rs=0,gs=0,bs=0,cnt=0;const rgba=S.rgba;if(rgba){const bw=Math.max(1,mxX-mnX),bh=Math.max(1,mxY-mnY);const step=Math.max(1,Math.floor(Math.sqrt(bw*bh/40000)));for(let y=Math.max(0,Math.ceil(mnY));y<=Math.min(h-1,Math.floor(mxY));y+=step)for(let x=Math.max(0,Math.ceil(mnX));x<=Math.min(w-1,Math.floor(mxX));x+=step){if(pointInPoly(x,y,pts)){const q=(y*w+x)*4;rs+=rgba[q];gs+=rgba[q+1];bs+=rgba[q+2];cnt++;}}}let colorHex='#000000';if(cnt)colorHex=rgb2h(Math.round(rs/cnt),Math.round(gs/cnt),Math.round(bs/cnt));else if(rgba){const cx=Math.min(w-1,Math.max(0,Math.round((mnX+mxX)/2))),cy=Math.min(h-1,Math.max(0,Math.round((mnY+mxY)/2)));const q=(cy*w+cx)*4;colorHex=rgb2h(rgba[q],rgba[q+1],rgba[q+2]);}return{area_cm2:r2(area_cm2),perimeter_cm:r2(perim),circularity:r3(circ),elongation:r2(elong),solidity:solid,bbox:{minX:mnX,maxX:mxX,minY:mnY,maxY:mxY},largo_cm:r2(largo),ancho_cm:r2(ancho),feret_cm:r2(feret),colorHex,borderPts:null};}
-function confirmCrop(){const c=S.crop;if(!c.confirmed)return;const x0=Math.max(0,Math.round(Math.min(c.sx,c.ex)));const y0=Math.max(0,Math.round(Math.min(c.sy,c.ey)));const x1=Math.min(S.img.width,Math.round(Math.max(c.sx,c.ex)));const y1=Math.min(S.img.height,Math.round(Math.max(c.sy,c.ey)));const cw=x1-x0,ch=y1-y0;if(cw<10||ch<10){cancelCrop();return;}const tmp=document.createElement('canvas');tmp.width=cw;tmp.height=ch;const tc=tmp.getContext('2d');tc.drawImage(pc,x0,y0,cw,ch,0,0,cw,ch);const newImg=new Image();newImg.onload=()=>{S.img=newImg;pc.width=cw;pc.height=ch;pctx.clearRect(0,0,cw,ch);pctx.drawImage(tmp,0,0);const id=pctx.getImageData(0,0,cw,ch);S.grayCache=computeGray(id);S.rgba=id.data;S.otsuT=otsuCalc(S.grayCache,cw*ch);document.getElementById('otsuV').textContent=S.otsuT;S.sherds=[];S.manualSherds=[];S.poly=[];S.polyClosed=false;S.calPts=S.calPts.map(p=>({ix:p.ix-x0,iy:p.iy-y0}));if(S.calPts.some(p=>p.ix<0||p.iy<0||p.ix>cw||p.iy>ch))S.calPts=[];S.crop={on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false};document.getElementById('cropBar').classList.remove('v');document.getElementById('btnOrig').classList.remove('hidden');document.getElementById('imgBadge').textContent=`${cw}×${ch}`;renderResults();resizeVP();resetZoom();setDot('D','','Sin detección');ndot('s3','p');ndot('sM','p');setMsg(`Recortada a ${cw}×${ch}px.${S.pxPerCm?' Calibración conservada.':' Recalibrá la escala.'}`);setTool('pan');render();};newImg.src=tmp.toDataURL();}
+function manMetrics(pts){const n=pts.length,w=pc.width,h=pc.height;let a=0;for(let i=0;i<n;i++){const j=(i+1)%n;a+=pts[i].ix*pts[j].iy-pts[j].ix*pts[i].iy;}const areaPx=Math.abs(a)/2;let perimPx=0;for(let i=0;i<n;i++){const j=(i+1)%n;perimPx+=Math.hypot(pts[j].ix-pts[i].ix,pts[j].iy-pts[i].iy);}const circ=perimPx>0?Math.min(1,(4*Math.PI*areaPx)/(perimPx*perimPx)):0;const xs=pts.map(p=>p.ix),ys=pts.map(p=>p.iy);const mnX=Math.min(...xs),mxX=Math.max(...xs),mnY=Math.min(...ys),mxY=Math.max(...ys);const hull=convexHull(pts.map(p=>[p.ix,p.iy]));const hullAPx=hull.length>=3?polyAreaPx(hull):0;const solid=hullAPx>0?r3(Math.min(1,areaPx/hullAPx)):1;const{fmax,fmin,fpts,axFmin}=feretDims(hull);const mar=minAreaRect(hull);const px={area:areaPx,perim:perimPx,L:mar.L,W:mar.W,feret:fmax,fw:fmin};const geo={axL:mar.axL,axW:mar.axW,feret:fpts,axFA:axFmin};const elong=r2(px.feret/Math.max(1e-6,px.fw));let rs=0,gs=0,bs=0,cnt=0;const rgba=S.rgba;if(rgba){const bw=Math.max(1,mxX-mnX),bh=Math.max(1,mxY-mnY);const step=Math.max(1,Math.floor(Math.sqrt(bw*bh/40000)));for(let y=Math.max(0,Math.ceil(mnY));y<=Math.min(h-1,Math.floor(mxY));y+=step)for(let x=Math.max(0,Math.ceil(mnX));x<=Math.min(w-1,Math.floor(mxX));x+=step){if(pointInPoly(x,y,pts)){const q=(y*w+x)*4;rs+=rgba[q];gs+=rgba[q+1];bs+=rgba[q+2];cnt++;}}}let colorHex='#000000';if(cnt)colorHex=rgb2h(Math.round(rs/cnt),Math.round(gs/cnt),Math.round(bs/cnt));else if(rgba){const cx=Math.min(w-1,Math.max(0,Math.round((mnX+mxX)/2))),cy=Math.min(h-1,Math.max(0,Math.round((mnY+mxY)/2)));const q=(cy*w+cx)*4;colorHex=rgb2h(rgba[q],rgba[q+1],rgba[q+2]);}return deriveCm({px,geo,circularity:r3(circ),elongation:elong,solidity:solid,bbox:{minX:mnX,maxX:mxX,minY:mnY,maxY:mxY},colorHex,borderPts:null});}
+function confirmCrop(){const c=S.crop;if(!c.confirmed)return;const x0=Math.max(0,Math.round(Math.min(c.sx,c.ex)));const y0=Math.max(0,Math.round(Math.min(c.sy,c.ey)));const x1=Math.min(S.img.width,Math.round(Math.max(c.sx,c.ex)));const y1=Math.min(S.img.height,Math.round(Math.max(c.sy,c.ey)));const cw=x1-x0,ch=y1-y0;if(cw<10||ch<10){cancelCrop();return;}const tmp=document.createElement('canvas');tmp.width=cw;tmp.height=ch;const tc=tmp.getContext('2d');tc.drawImage(pc,x0,y0,cw,ch,0,0,cw,ch);const newImg=new Image();newImg.onload=()=>{S.img=newImg;pc.width=cw;pc.height=ch;pctx.clearRect(0,0,cw,ch);pctx.drawImage(tmp,0,0);const id=pctx.getImageData(0,0,cw,ch);S.grayCache=computeGray(id);S.rgba=id.data;S.otsuT=otsuCalc(S.grayCache,cw*ch);document.getElementById('otsuV').textContent=S.otsuT;S.sherds=[];S.manualSherds=[];S.manSeq=0;S.poly=[];S.polyClosed=false;S.calPts=S.calPts.map(p=>({ix:p.ix-x0,iy:p.iy-y0}));if(S.calPts.some(p=>p.ix<0||p.iy<0||p.ix>cw||p.iy>ch))S.calPts=[];S.crop={on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false};document.getElementById('cropBar').classList.remove('v');document.getElementById('btnOrig').classList.remove('hidden');document.getElementById('imgBadge').textContent=`${cw}×${ch}`;renderResults();resizeVP();resetZoom();setDot('D','','Sin detección');ndot('s3','p');ndot('sM','p');setMsg(`Recortada a ${cw}×${ch}px.${S.pxPerCm?' Calibración conservada.':' Recalibrá la escala.'}`);setTool('pan');render();};newImg.src=tmp.toDataURL();}
 function cancelCrop(){S.crop={on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false};document.getElementById('cropBar').classList.remove('v');render();}
-function restoreOriginal(){if(!S.origImg||S.img===S.origImg)return;const img=S.origImg;S.img=img;pc.width=img.width;pc.height=img.height;pctx.drawImage(img,0,0);const id=pctx.getImageData(0,0,img.width,img.height);S.grayCache=computeGray(id);S.rgba=id.data;S.otsuT=otsuCalc(S.grayCache,img.width*img.height);document.getElementById('otsuV').textContent=S.otsuT;S.sherds=[];S.manualSherds=[];S.poly=[];S.polyClosed=false;S.calPts=[];document.getElementById('imgBadge').textContent=`${img.width}×${img.height}`;document.getElementById('btnOrig').classList.add('hidden');renderResults();resizeVP();resetZoom();setDot('D','','Sin detección');ndot('s3','p');ndot('sM','p');disableExport();setMsg('Imagen original restaurada.'+(S.pxPerCm?' Calibración conservada.':''));setTool('pan');render();}
+function restoreOriginal(){if(!S.origImg||S.img===S.origImg)return;const img=S.origImg;S.img=img;pc.width=img.width;pc.height=img.height;pctx.drawImage(img,0,0);const id=pctx.getImageData(0,0,img.width,img.height);S.grayCache=computeGray(id);S.rgba=id.data;S.otsuT=otsuCalc(S.grayCache,img.width*img.height);document.getElementById('otsuV').textContent=S.otsuT;S.sherds=[];S.manualSherds=[];S.manSeq=0;S.poly=[];S.polyClosed=false;S.calPts=[];document.getElementById('imgBadge').textContent=`${img.width}×${img.height}`;document.getElementById('btnOrig').classList.add('hidden');renderResults();resizeVP();resetZoom();setDot('D','','Sin detección');ndot('s3','p');ndot('sM','p');disableExport();setMsg('Imagen original restaurada.'+(S.pxPerCm?' Calibración conservada.':''));setTool('pan');render();}
 function deleteSherd(k){
   const sh=[...S.sherds,...S.manualSherds].find(s=>s._k===k);
   S.sherds=S.sherds.filter(s=>s._k!==k);
@@ -915,7 +1012,8 @@ function renderResults(){
         <div class="rr"><span class="rk">Ancho (cm)</span><span class="rv hi">${sh.ancho_cm}</span></div>
         <div class="rr"><span class="rk">Perímetro (cm)</span><span class="rv hi">${sh.perimeter_cm}</span></div>
         <div class="dvd"></div>
-        <div class="rr"><span class="rk">Diám. máx. (Feret)</span><span class="rv">${sh.feret_cm} cm</span></div>
+        <div class="rr"><span class="rk">Largo rect. (Lr)</span><span class="rv">${sh.rectL_cm} cm</span></div>
+        <div class="rr"><span class="rk">Ancho rect. (Ar)</span><span class="rv">${sh.rectA_cm} cm</span></div>
         <div class="rr"><span class="rk">Circularidad</span><span class="rv">${sh.circularity}</span></div>
         <div class="rr"><span class="rk">Elongación</span><span class="rv">${sh.elongation}</span></div>
         <div class="rr"><span class="rk">Solidez</span><span class="rv">${sh.solidity}</span></div>
@@ -937,15 +1035,15 @@ function expXLSX(){
   const all=[...S.sherds,...S.manualSherds];if(!all.length)return;
   if(typeof XLSX==='undefined'){setMsg('⚠ SheetJS no disponible (falta xlsx.full.min.js junto al index.html) — exportá CSV o JSON.');return;}
   const ws_data=[
-    ['Código','Tipo','Área (cm²)','Largo (cm)','Ancho (cm)','Perímetro (cm)','Feret máx (cm)','Circularidad','Elongación','Solidez','Color hex'],
-    ...all.map(s=>[s.id,s.type,s.area_cm2,s.largo_cm,s.ancho_cm,s.perimeter_cm,s.feret_cm,s.circularity,s.elongation,s.solidity,s.colorHex])
+    ['Código','Tipo','Área (cm²)','Largo (cm)','Ancho (cm)','Perímetro (cm)','Largo rect (cm)','Ancho rect (cm)','Circularidad','Elongación','Solidez','Color hex'],
+    ...all.map(s=>[s.id,s.type,s.area_cm2,s.largo_cm,s.ancho_cm,s.perimeter_cm,s.rectL_cm,s.rectA_cm,s.circularity,s.elongation,s.solidity,s.colorHex])
   ];
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.aoa_to_sheet(ws_data);
-  ws['!cols']=[{wch:18},{wch:8},{wch:12},{wch:11},{wch:11},{wch:14},{wch:14},{wch:13},{wch:11},{wch:9},{wch:10}];
+  ws['!cols']=[{wch:18},{wch:8},{wch:12},{wch:11},{wch:11},{wch:14},{wch:14},{wch:18},{wch:13},{wch:11},{wch:9},{wch:10}];
   XLSX.utils.book_append_sheet(wb,ws,'CeraMetric');
   const meta=[
-    ['Aplicación','CeraMetric v1.1'],
+    ['Aplicación','CeraMetric v1.2'],
     ['Fecha',new Date().toISOString()],
     ['Código de registro',document.getElementById('code').value||'—'],
     ['Imagen (px)',S.img?`${S.img.width}×${S.img.height}`:'—'],
@@ -957,11 +1055,17 @@ function expXLSX(){
   ];
   const wsm=XLSX.utils.aoa_to_sheet(meta);wsm['!cols']=[{wch:22},{wch:30}];
   XLSX.utils.book_append_sheet(wb,wsm,'Metadatos');
-  XLSX.writeFile(wb,'cerametric_v11.xlsx');
+  XLSX.writeFile(wb,'cerametric_v12.xlsx');
 }
-function expCSV(){const all=[...S.sherds,...S.manualSherds];if(!all.length)return;const rows=['Código,Tipo,Area_cm2,Largo_cm,Ancho_cm,Perimetro_cm,Feret_max_cm,Circularidad,Elongacion,Solidez,Color_hex'];all.forEach(s=>rows.push([s.id,s.type,s.area_cm2,s.largo_cm,s.ancho_cm,s.perimeter_cm,s.feret_cm,s.circularity,s.elongation,s.solidity,s.colorHex].join(',')));dl('cerametric_v11.csv','\uFEFF'+rows.join('\n'),'text/csv');}
-function expJSON(){const all=[...S.sherds,...S.manualSherds];if(!all.length)return;const out={aplicacion:'CeraMetric v1.1',fecha:new Date().toISOString(),codigo:document.getElementById('code').value||null,imagen_px:S.img?`${S.img.width}×${S.img.height}`:null,px_por_cm:S.pxPerCm?r2(S.pxPerCm):null,tiestos:all.map(s=>({id:s.id,type:s.type,area_cm2:s.area_cm2,largo_cm:s.largo_cm,ancho_cm:s.ancho_cm,perimeter_cm:s.perimeter_cm,feret_max_cm:s.feret_cm,circularity:s.circularity,elongation:s.elongation,solidity:s.solidity,color_hex:s.colorHex}))};dl('cerametric_v11.json',JSON.stringify(out,null,2),'application/json');}
-function expImg(){if(!S.img)return;const sv={tx:S.tx,ty:S.ty,sc:S.sc,w:oc.width,h:oc.height};oc.width=S.img.width;oc.height=S.img.height;S.tx=0;S.ty=0;S.sc=1;octx.clearRect(0,0,oc.width,oc.height);drawSherds();drawManualSherds();drawCal();const exp=document.createElement('canvas');exp.width=S.img.width;exp.height=S.img.height;const ec=exp.getContext('2d');ec.drawImage(S.img,0,0);ec.drawImage(oc,0,0);oc.width=sv.w;oc.height=sv.h;S.tx=sv.tx;S.ty=sv.ty;S.sc=sv.sc;render();exp.toBlob(b=>{const a=document.createElement('a');const u=URL.createObjectURL(b);a.href=u;a.download='cerametric_anotado.png';a.click();setTimeout(()=>URL.revokeObjectURL(u),10000);});}
+/* Entrecomillado RFC 4180: un código de registro con coma, comillas o punto y coma
+   corría las columnas al abrir el CSV (v1.1). Los campos de texto que empiezan con
+   = + - @ se prefijan con apóstrofo para que Excel no los interprete como fórmula;
+   los numéricos pasan intactos. */
+function csvCell(v){let s=v==null?'':String(v);if(typeof v!=='number'&&/^[=+\-@\t\r]/.test(s))s="'"+s;return /[",;\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csvRow(a){return a.map(csvCell).join(',');}
+function expCSV(){const all=[...S.sherds,...S.manualSherds];if(!all.length)return;const rows=[csvRow(['Código','Tipo','Area_cm2','Largo_cm','Ancho_cm','Perimetro_cm','Rect_largo_cm','Rect_ancho_cm','Circularidad','Elongacion','Solidez','Color_hex'])];all.forEach(s=>rows.push(csvRow([s.id,s.type,s.area_cm2,s.largo_cm,s.ancho_cm,s.perimeter_cm,s.rectL_cm,s.rectA_cm,s.circularity,s.elongation,s.solidity,s.colorHex])));dl('cerametric_v12.csv','\uFEFF'+rows.join('\r\n'),'text/csv');}
+function expJSON(){const all=[...S.sherds,...S.manualSherds];if(!all.length)return;const out={aplicacion:'CeraMetric v1.2',fecha:new Date().toISOString(),codigo:document.getElementById('code').value||null,imagen_px:S.img?`${S.img.width}×${S.img.height}`:null,px_por_cm:S.pxPerCm?r2(S.pxPerCm):null,tiestos:all.map(s=>({id:s.id,type:s.type,area_cm2:s.area_cm2,largo_cm:s.largo_cm,ancho_cm:s.ancho_cm,perimeter_cm:s.perimeter_cm,rect_largo_cm:s.rectL_cm,rect_ancho_cm:s.rectA_cm,circularity:s.circularity,elongation:s.elongation,solidity:s.solidity,color_hex:s.colorHex}))};dl('cerametric_v12.json',JSON.stringify(out,null,2),'application/json');}
+function expImg(){if(!S.img)return;const sv={tx:S.tx,ty:S.ty,sc:S.sc,w:oc.width,h:oc.height};oc.width=S.img.width;oc.height=S.img.height;S.tx=0;S.ty=0;S.sc=1;octx.clearRect(0,0,oc.width,oc.height);drawSherds();drawManualSherds();drawAxes();drawCal();const exp=document.createElement('canvas');exp.width=S.img.width;exp.height=S.img.height;const ec=exp.getContext('2d');ec.drawImage(S.img,0,0);ec.drawImage(oc,0,0);oc.width=sv.w;oc.height=sv.h;S.tx=sv.tx;S.ty=sv.ty;S.sc=sv.sc;render();exp.toBlob(b=>{const a=document.createElement('a');const u=URL.createObjectURL(b);a.href=u;a.download='cerametric_anotado.png';a.click();setTimeout(()=>URL.revokeObjectURL(u),10000);});}
 function dl(fn,c,t){const a=document.createElement('a');const u=URL.createObjectURL(new Blob([c],{type:t}));a.href=u;a.download=fn;a.click();setTimeout(()=>URL.revokeObjectURL(u),10000);}
 function enableBaseUI(){['tbZI','tbZO','tbFit','tbPan','tbCal','tbCrop'].forEach(id=>document.getElementById(id).disabled=false);}
 function enableStep3(){['thrS','blurS','closeS','bgMode','minArea','btnPrev','btnDet'].forEach(id=>document.getElementById(id).disabled=false);}
