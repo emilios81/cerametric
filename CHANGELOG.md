@@ -4,67 +4,32 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
 ## [1.2] — 2026-08-05
 
-> ⚠ **El `Largo` y el `Ancho` cambiaron de definición.** Antes eran los lados del
-> rectángulo de área mínima; ahora se miden de extremo a extremo, como a mano. Los lotes de
-> v1.0 y v1.1 **no son comparables columna a columna** con los nuevos. Las definiciones
-> viejas siguen disponibles en `Largo rect.` y `Ancho rect.`, así que un lote nuevo se puede
-> comparar con uno viejo usando esas dos columnas. El área, el perímetro, la circularidad,
-> la solidez y el color no cambiaron.
+**Ninguna métrica cambió de definición: los datos de v1.1 son comparables con los de v1.2**,
+salvo los lotes afectados por el primer error de abajo. Verificado contra
+`ejemplo/imagen_de_prueba.png`: las cinco figuras dan los mismos valores que en v1.1, hasta
+el último decimal.
 
-### Cambiado
-
-- **`Largo` y `Ancho` ahora se miden de extremo a extremo**, no como lados del rectángulo
-  mínimo. `Largo` = mayor distancia entre dos puntos de la pieza, de punta a punta.
-  `Ancho` = extensión de la pieza perpendicular a ese largo, cruzándola de un extremo al
-  otro. Es la medición de gabinete, y ninguna depende de cómo esté girada la pieza.
-
-  El motivo: el rectángulo de área mínima optimiza **superficie, no longitud**. En un
-  tiesto poco alargado gira a una orientación donde su lado mayor queda **por debajo del
-  largo real de la pieza**. Se detectó midiendo un tiesto real donde el largo informado era
-  6.73 cm cuando la pieza medía 7.8 cm de punta a punta.
-
-- **Los lados del rectángulo mínimo siguen disponibles** como `Largo rect.` y `Ancho rect.`
-  Son el par correcto en piezas con **esquinas vivas**: en un rectángulo la mayor distancia
-  entre dos puntos es la diagonal, así que ahí el par directo se va con ella (10.06 × 9.09
-  en una figura de 8.5 × 5.4). **La verificación con una tarjeta de dimensiones conocidas
-  hay que hacerla contra estas dos columnas.**
-
-- **`Elongación`** pasa a ser `Largo / Ancho` con las definiciones nuevas.
-
-  En formas redondeadas sin esquinas — o sea, tiestos — el par directo da exacto en
-  cualquier elongación. Verificado sobre elipses sintéticas:
-
-  | Elipse | Largo | Ancho medido | Ancho real |
-  |---|---|---|---|
-  | 8 × 6.7 | 8.00 | 6.70 | 6.70 |
-  | 8 × 4.0 | 8.00 | 4.00 | 4.00 |
-  | 8 × 1.6 | 8.00 | 1.60 | 1.60 |
-
-  Sobre las figuras con esquinas de `ejemplo/imagen_de_prueba.png`:
-
-  | Figura | Largo | Ancho | Largo rect. | Ancho rect. |
-  |---|---|---|---|---|
-  | Rectángulo 8.5 × 5.4 | 10.06 *(diagonal)* | 9.09 *(inflado)* | 8.53 | 5.43 |
-  | Círculo ⌀ 4 | 4.02 | 4.02 | 4.00 | 4.00 |
-  | Triángulo 6 × 4 | 5.96 | 3.98 | 5.93 | 3.98 |
-  | Barra fina 5 × 0.9 | 5.12 | 1.74 *(inflado)* | 5.08 | 0.93 |
-
-El área, el perímetro, la circularidad, la solidez y el color **no cambiaron**: verificado
-contra la imagen de prueba, dan los mismos valores que en v1.1 hasta el último decimal.
+`Largo` y `Ancho` siguen siendo los lados del **rectángulo de área mínima** — la caja más
+chica que contiene la pieza, probando todos los ángulos —, medidos por el medio y no de
+esquina a esquina.
 
 ### Agregado
 
 - **Ejes de medición sobre la imagen.** Cada tiesto muestra ahora las cotas de las que
   salen sus medidas, dibujadas como en un plano: línea con marcas en los extremos, más la
-  sigla y el valor. El **color** indica la dimensión (ámbar el largo, celeste el ancho) y
-  el **trazo** el criterio (línea llena el calibre, punteada el rectángulo mínimo). En una
-  pieza irregular no había forma de saber cuál de los dos números era cuál; ahora se ve
-  entre qué puntos se tomó cada uno. Un selector permite superponer el rectángulo mínimo
-  para comparar, o mostrarlo solo. Las cotas aparecen también en la **imagen anotada** que
-  se exporta.
+  sigla y el valor. El **color** indica la dimensión (ámbar a lo largo, celeste a lo ancho)
+  y el **trazo** el criterio (línea llena los lados de la caja, punteada las cruzadas). En
+  una pieza irregular no había forma de saber cuál de los dos números era cuál; ahora se ve
+  entre qué puntos se tomó cada uno. Un selector permite mostrar un par, el otro o los dos.
+  Las cotas aparecen también en la **imagen anotada** que se exporta.
+- **Columna `Ancho ⊥ Feret`**, la extensión de la pieza perpendicular al Feret máximo.
+  Junto a `Feret máx` forma el par de **medidas cruzadas**, que muestra hasta dónde llega la
+  pieza más allá de la caja. En un tiesto redondeado poco alargado el Feret máximo puede
+  superar al largo por varios milímetros — en la figura irregular del ejemplo, 0.84 cm —
+  porque el rectángulo de área mínima optimiza superficie y no longitud. Tenerlo a la vista
+  evita confundir una cosa con la otra.
 - **Nota metodológica sobre largo y ancho** en el README, con la tabla comparativa de los
-  dos pares medidos sobre la imagen de prueba y la aclaración de contra qué columnas hay
-  que verificar la calibración con una tarjeta.
+  dos pares medidos sobre la imagen de prueba.
 - **Explicación dentro de la aplicación**, en el panel de resultados: qué se está midiendo,
   por qué las cotas terminan donde terminan y qué pasa en piezas con esquinas vivas. Se
   pliega con un clic para no empujar la lista de tiestos.
@@ -107,11 +72,11 @@ contra la imagen de prueba, dan los mismos valores que en v1.1 hasta el último 
 
 - Los archivos pasan a llamarse `cerametric_v12.xlsx` / `.csv` / `.json`, y la versión que
   figura en la hoja **Metadatos** y en el JSON es `CeraMetric v1.2`.
-- La columna `Feret_max_cm` **desaparece**: su valor pasó a ser `Largo_cm`. En su lugar están
-  `Rect_largo_cm` y `Rect_ancho_cm` (`rect_largo_cm` / `rect_ancho_cm` en el JSON), que son
-  el par del rectángulo mínimo — o sea, el `Largo_cm` y el `Ancho_cm` de v1.1.
-  El orden de columnas queda: `Código, Tipo, Area_cm2, Largo_cm, Ancho_cm, Perimetro_cm,
-  Rect_largo_cm, Rect_ancho_cm, Circularidad, Elongacion, Solidez, Color_hex`.
+- **Columna nueva** `Ancho_perp_Feret_cm` (`ancho_perp_feret_cm` en el JSON), justo después
+  de `Feret_max_cm`. Las demás columnas conservan nombre, orden y significado, así que una
+  planilla de v1.1 se puede apilar con una de v1.2 agregándole esa columna vacía. El orden
+  queda: `Código, Tipo, Area_cm2, Largo_cm, Ancho_cm, Perimetro_cm, Feret_max_cm,
+  Ancho_perp_Feret_cm, Circularidad, Elongacion, Solidez, Color_hex`.
 - El CSV termina las filas con CRLF, como indica la norma.
 
 ## [1.1] — 2026-07-25

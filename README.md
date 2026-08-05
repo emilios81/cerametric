@@ -17,7 +17,7 @@ Dr. Emilio A. Villafañez · Escuela de Arqueología · Universidad Nacional de 
 
 ## ¿Qué es CeraMetric?
 
-CeraMetric mide fragmentos cerámicos a partir de una fotografía con escala gráfica. Calibrás la escala con dos clics, la aplicación detecta los tiestos y devuelve área, largo, ancho, perímetro, color promedio y tres índices de forma, listos para exportar a Excel, CSV o JSON. El largo y el ancho se toman de extremo a extremo, como a mano: la mayor distancia entre dos puntos de la pieza y su extensión perpendicular a esa dirección.
+CeraMetric mide fragmentos cerámicos a partir de una fotografía con escala gráfica. Calibrás la escala con dos clics, la aplicación detecta los tiestos y devuelve área, largo, ancho, perímetro, color promedio y tres índices de forma, listos para exportar a Excel, CSV o JSON. El largo y el ancho son los lados de la caja rectangular más chica que contiene la pieza: lo mismo que se obtiene midiéndola con regla, sin que importe cómo esté girada en la foto.
 
 Está pensada para reemplazar la medición manual con regla y calibre en el análisis de lotes cerámicos: en una sola foto se pueden medir decenas de tiestos con criterios uniformes y reproducibles.
 
@@ -75,10 +75,10 @@ Sobre cada tiesto se dibujan las **cotas** de las que salen sus medidas, con el 
 
 El **color** dice qué dimensión es y el **trazo** con qué criterio se tomó:
 
-| | Línea llena — calibre | Línea punteada — rectángulo mínimo |
+| | Línea llena — lados de la caja | Línea punteada — cruzadas |
 |---|---|---|
-| 🟠 **Ámbar** | `L` largo | `Lr` largo rect. |
-| 🔵 **Celeste** | `A` ancho | `Ar` ancho rect. |
+| 🟠 **Ámbar** | `L` largo | `Máx` Feret máximo |
+| 🔵 **Celeste** | `A` ancho | `Perp` ancho ⊥ Feret |
 
 Sirve para no confundir cuál número es cuál en piezas irregulares, y para ver de un vistazo cuánto se separan los dos criterios en cada tiesto (ver [Notas metodológicas](#notas-metodológicas)). Con el selector de abajo mostrás un par, el otro o los dos. Las cotas se apagan con la casilla **Ejes de medición sobre la imagen** y salen también en la imagen anotada que se exporta.
 
@@ -106,9 +106,9 @@ Exportá en **Excel (.xlsx)**, **CSV**, **JSON** o como **imagen anotada** (la f
 | Métrica | Definición |
 |---|---|
 | **Área** (cm²) | Conteo de píxeles del tiesto / px·cm⁻² |
-| **Largo** (cm) | Mayor distancia entre dos puntos de la pieza, de punta a punta (diámetro de Feret máximo) |
-| **Ancho** (cm) | Extensión de la pieza perpendicular a ese largo, de un extremo al otro |
-| **Largo rect.** y **Ancho rect.** (cm) | Lados del rectángulo de área mínima que encierra la pieza (rotating calipers sobre el casco convexo) |
+| **Largo** y **Ancho** (cm) | Lados del rectángulo de área mínima que encierra la pieza — la caja más chica que la contiene, probando todos los ángulos (rotating calipers sobre el casco convexo) |
+| **Feret máx.** (cm) | Mayor distancia entre dos puntos del contorno, en cualquier dirección; en un rectángulo, la diagonal |
+| **Ancho ⊥ Feret** (cm) | Extensión de la pieza perpendicular a esa dirección |
 | **Perímetro** (cm) | Contorno 8-conectado (vecindad de Moore) con corrección de Vossepoel–Smeulders |
 | **Circularidad** | 4π·A / P² |
 | **Elongación** | Largo / Ancho |
@@ -117,35 +117,25 @@ Exportá en **Excel (.xlsx)**, **CSV**, **JSON** o como **imagen anotada** (la f
 
 ### Notas metodológicas
 
-**Largo y ancho: se miden de extremo a extremo.** El largo es la **mayor distancia entre dos puntos de la pieza**, de punta a punta. El ancho es la **extensión perpendicular a ese largo**, cruzando la pieza de un extremo al otro. Es la medición de gabinete de toda la vida, y ninguna de las dos depende de cómo esté girado el tiesto en la fotografía.
+**Largo y ancho: los lados de la caja.** Imaginate el tiesto metido en la **caja rectangular más chica que lo contenga**. La aplicación prueba todos los ángulos posibles y se queda con la caja de menor superficie; el largo y el ancho son **los lados de esa caja**, medidos por el medio de la pieza y no de esquina a esquina.
 
-La aplicación informa además un segundo par, **Largo rect. · Ancho rect.**, que son los lados del rectángulo de área mínima que encierra la pieza. El algoritmo prueba todas las orientaciones y se queda con aquella cuyo rectángulo tiene **el área más chica** — criterio que optimiza superficie, no longitud.
+En un objeto rectangular la caja calza con la pieza y los lados son los reales. En un tiesto deforme, que no tiene lados claros, es la manera de decidir cuál es el largo. Ninguna de las dos medidas depende de cómo esté girada la pieza en la fotografía: el mismo tiesto rotado 45° da los mismos números.
 
-Cada par falla en un caso distinto, y conviene saber cuál:
+**Las medidas cruzadas.** La aplicación informa además **Feret máx** — la mayor distancia entre dos puntos del contorno, en cualquier dirección — y **Ancho ⊥ Feret**, su extensión perpendicular. En un rectángulo, el Feret máximo es la diagonal de esquina a esquina.
 
-- El **rectángulo mínimo** falla en **tiestos poco alargados**. Como optimiza superficie, gira a una orientación donde su lado mayor queda *por debajo del largo real de la pieza*.
-- El **largo y ancho directos** fallan en figuras con **esquinas vivas**, como una tarjeta de calibración: ahí la mayor distancia entre dos puntos es la diagonal, y el par se va con ella.
+Sirven para ver **cuánto sobresale la pieza de su caja**, y ahí hay un detalle que conviene tener presente: como el rectángulo mínimo optimiza *superficie* y no *longitud*, en un tiesto redondeado poco alargado puede girar a una orientación donde su lado mayor queda por debajo de la dimensión máxima real. Medido sobre las figuras de `ejemplo/imagen_de_prueba.png` y sobre un polígono irregular equidimensional:
 
-Los tiestos son formas redondeadas sin esquinas vivas, así que el par directo es el correcto para el material arqueológico. Verificado sobre elipses sintéticas, el ancho da **exacto** en cualquier elongación:
-
-| Elipse | Largo | Ancho medido | Ancho real |
-|---|---|---|---|
-| 8 × 6.7 | 8.00 | 6.70 | 6.70 |
-| 8 × 4.0 | 8.00 | 4.00 | 4.00 |
-| 8 × 1.6 | 8.00 | 1.60 | 1.60 |
-
-Y sobre las figuras de `ejemplo/imagen_de_prueba.png`, que sí tienen esquinas:
-
-| Figura | Largo | Ancho | Largo rect. | Ancho rect. |
+| Figura | Largo | Ancho | Feret máx | Ancho ⊥ Feret |
 |---|---|---|---|---|
-| Rectángulo 8.5 × 5.4 | 10.06 ⟵ *diagonal* | 9.09 ⟵ *inflado* | **8.53** | **5.43** |
-| Círculo ⌀ 4 | 4.02 | 4.02 | 4.00 | 4.00 |
-| Triángulo 6 × 4 | 5.96 | 3.98 | 5.93 | 3.98 |
-| Barra fina 5 × 0.9 | 5.12 | 1.74 ⟵ *inflado* | 5.08 | **0.93** |
+| Rectángulo 8.5 × 5.4 | **8.53** | **5.43** | 10.06 ⟵ *diagonal* | 9.09 |
+| Círculo ⌀ 4 | 4.00 | 4.00 | 4.02 | 4.02 |
+| Triángulo 6 × 4 | 5.93 | 3.98 | 5.96 | 3.98 |
+| Barra fina 5 × 0.9 | 5.08 | 0.93 | 5.12 | 1.74 |
+| Irregular equidimensional | 8.17 | 7.50 | **9.01** ⟵ *0.84 cm más* | 7.57 |
 
-En resumen: para **tiestos**, `Largo` y `Ancho`. Para **objetos rectangulares de control**, `Largo rect.` y `Ancho rect.`
+En la última fila el Feret máximo supera al largo por 0.84 cm. No es un error de ninguno de los dos: son dos preguntas distintas. El largo responde *cuánto mide la pieza*; el Feret máximo, *cuál es la mayor distancia entre dos de sus puntos*.
 
-Los ejes dibujados sobre la imagen muestran de dónde sale cada número, y con el selector podés superponer el rectángulo mínimo para ver cuánto se separan en cada pieza.
+Los ejes dibujados sobre la imagen muestran de dónde sale cada número, y con el selector podés ver un par, el otro o los dos superpuestos.
 
 **Perímetro.** Se traza el contorno del tiesto con vecindad de Moore (8-conectada) y se aplica la corrección de Vossepoel–Smeulders de tres parámetros: `0.980·(pasos rectos) + 1.406·(pasos diagonales) − 0.091·(esquinas)`. Compensa el efecto escalera de la rasterización, que sobreestima el perímetro de los bordes curvos.
 
@@ -170,7 +160,7 @@ Casi todos los problemas de medición vienen de la foto, no del software:
 - **No corrige la perspectiva.** La precisión depende de que la cámara esté perpendicular.
 - La detección automática **no separa tiestos en contacto**; para esos casos está la selección manual.
 - El color es **relativo a las condiciones de captura**, no un valor colorimétrico absoluto.
-- **El `Largo` cambió de definición en v1.2** (antes era el lado del rectángulo mínimo, ahora el del calibre). Los lotes medidos con v1.0 o v1.1 no son comparables columna a columna con los nuevos — ver [CHANGELOG.md](CHANGELOG.md). El `Largo` viejo sigue disponible como `Largo rect.` Si además usaste v1.1 y corregiste la **medida real** de la escala *después* de medir, ese lote hay que volver a exportarlo: había un error de redondeo que cuantizaba las métricas.
+- Los datos medidos con **v1.0 no son comparables** con los de v1.1 en adelante — ver [CHANGELOG.md](CHANGELOG.md). Si usaste v1.1 y corregiste la **medida real** de la escala *después* de medir, ese lote hay que volver a exportarlo con v1.2: había un error de redondeo que cuantizaba las métricas.
 
 ## Probar y verificar
 
@@ -178,9 +168,9 @@ La carpeta [`ejemplo/`](ejemplo/) trae una **imagen de prueba** con figuras de d
 
 Con tus propias fotos, el control equivalente es incluir en la toma un objeto rectangular de dimensiones conocidas (una tarjeta de 8.5 × 5.4 cm sirve) y medirlo con la app.
 
-> **Ojo con qué columnas mirás en ese control.** Como el objeto es un rectángulo, su mayor distancia entre dos puntos es la **diagonal**, y el par `Largo · Ancho` se va con ella: da ~10.1 × 9.1 cm. Eso es correcto para la definición, pero no son los lados. Para verificar la calibración compará contra **`Largo rect.` y `Ancho rect.`**, que tienen que coincidir con los 8.5 × 5.4 reales dentro de un par de décimas de milímetro.
+El `Largo` y el `Ancho` tienen que coincidir con los reales dentro de un par de décimas de milímetro. Si no dan, revisá la calibración y la perpendicularidad de la cámara.
 
-Si `Largo rect.` y `Ancho rect.` no dan, revisá la calibración y la perpendicularidad de la cámara.
+> Las columnas cruzadas, en cambio, van a dar otra cosa y está bien que así sea: en una tarjeta de 8.5 × 5.4 el `Feret máx` devuelve la **diagonal** (~10.1 cm) porque es la mayor distancia entre dos de sus puntos. No las uses para este control.
 
 ## Tecnologías
 
@@ -205,7 +195,7 @@ SheetJS se distribuye bajo su propia licencia; ver [THIRD-PARTY.md](THIRD-PARTY.
 
 ## English summary
 
-**CeraMetric** is an offline-capable, browser-based tool for the morphometric analysis of ceramic sherds. From a single photograph containing a graphic scale, it measures area, length and width end-to-end as measured by hand (maximum Feret diameter and the extent perpendicular to it, both orientation-independent), the sides of the minimum-area bounding rectangle as a secondary pair for pieces with sharp corners, perimeter (Moore-neighbourhood contour tracing with the three-parameter Vossepoel–Smeulders correction), circularity, elongation, solidity and mean RGB colour. Sherds can be segmented automatically (Gaussian blur, morphological closing, hole filling, Otsu-assisted thresholding) or outlined by hand. Measurement axes are drawn over each sherd as dimension lines — amber for length, blue for width, solid for the calliper pair and dashed for the rectangle — so it is always clear which segment each figure comes from. Results export to XLSX, CSV, JSON and as an annotated image.
+**CeraMetric** is an offline-capable, browser-based tool for the morphometric analysis of ceramic sherds. From a single photograph containing a graphic scale, it measures area, length and width (sides of the minimum-area bounding rectangle, orientation-independent), the maximum Feret diameter and the extent perpendicular to it as a secondary pair showing how far the piece reaches beyond that box, perimeter (Moore-neighbourhood contour tracing with the three-parameter Vossepoel–Smeulders correction), circularity, elongation, solidity and mean RGB colour. Sherds can be segmented automatically (Gaussian blur, morphological closing, hole filling, Otsu-assisted thresholding) or outlined by hand. Measurement axes are drawn over each sherd as dimension lines — amber for length, blue for width, solid for the box sides and dashed for the crossing pair — so it is always clear which segment each figure comes from. Results export to XLSX, CSV, JSON and as an annotated image.
 
 No installation, no server, no data upload — all processing happens in the browser. **[Launch the app](https://emilios81.github.io/cerametric/)** or download the repository and open `index.html` locally (keep `xlsx.full.min.js` in the same folder).
 
