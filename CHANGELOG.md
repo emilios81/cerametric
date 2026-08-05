@@ -22,6 +22,12 @@ esquina a esquina.
   una pieza irregular no había forma de saber cuál de los dos números era cuál; ahora se ve
   entre qué puntos se tomó cada uno. Un selector permite mostrar un par, el otro o los dos.
   Las cotas aparecen también en la **imagen anotada** que se exporta.
+- **La caja de área mínima se dibuja alrededor de cada tiesto**, punteada, en el color de la
+  pieza. Es el rectángulo del que salen el largo y el ancho, y verlo explica por qué esas
+  cotas pueden pasar por fuera del fragmento: un tiesto irregular no llena su caja, la toca
+  apenas en unos pocos puntos del borde. Reemplaza al rectángulo alineado a los ejes de la
+  fotografía que se dibujaba antes, que no correspondía a ninguna medida informada y hacía
+  pensar que el largo se tomaba en horizontal.
 - **Columna `Cruce ⊥ máx`**, la línea más larga que atraviesa la pieza perpendicular al
   Feret máximo, con las dos puntas apoyadas sobre el contorno. Junto a `Feret máx` forma el
   par de **medidas cruzadas**, que muestra hasta dónde llega la pieza más allá de la caja.

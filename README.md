@@ -117,9 +117,11 @@ Exportá en **Excel (.xlsx)**, **CSV**, **JSON** o como **imagen anotada** (la f
 
 ### Notas metodológicas
 
-**Largo y ancho: los lados de la caja.** Imaginate el tiesto metido en la **caja rectangular más chica que lo contenga**. La aplicación prueba todos los ángulos posibles y se queda con la caja de menor superficie; el largo y el ancho son **los lados de esa caja**, medidos por el medio de la pieza y no de esquina a esquina.
+**Largo y ancho: los lados de la caja.** Alrededor de cada tiesto se dibuja una **caja punteada**: es la más chica que lo contiene, y la aplicación la encuentra probando todos los ángulos y quedándose con la de menor superficie. El largo y el ancho son **los lados de esa caja**, dibujados por el medio y no de esquina a esquina.
 
 En un objeto rectangular la caja calza con la pieza y los lados son los reales. En un tiesto deforme, que no tiene lados claros, es la manera de decidir cuál es el largo. Ninguna de las dos medidas depende de cómo esté girada la pieza en la fotografía: el mismo tiesto rotado 45° da los mismos números.
+
+> **Por qué a veces la cota se sale del tiesto.** Un fragmento irregular no llena su caja: la toca apenas en unos pocos puntos del borde, y entre esos puntos queda aire. La cota, que va por el medio y mide el lado completo, puede entonces pasar por fuera de la pieza en algún tramo. No es un error: está midiendo la caja, que es lo mismo que apoyar la regla y leer de punta a punta. Con la caja dibujada se ve de dónde sale cada línea.
 
 **Las medidas cruzadas.** La aplicación informa además dos líneas que atraviesan la pieza de borde a borde: **Feret máx**, la mayor distancia entre dos puntos del contorno en cualquier dirección — en un rectángulo, la diagonal de esquina a esquina —, y **Cruce ⊥ máx**, la línea más larga que la atraviesa perpendicular a la anterior. Las dos tienen las puntas apoyadas sobre el contorno, así que se ve exactamente por dónde pasan.
 
