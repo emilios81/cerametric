@@ -987,7 +987,7 @@ function handleCal(ix,iy){if(S.calDone){S.prevPpc=S.pxPerCm||S.prevPpc;S.calPts=
      · 'contorno' → mayor distancia entre dos puntos del borde (px.feret) y la travesía
                     más larga perpendicular a ella (px.fw), como con un calibre.
    La elongación depende del método, así que también se deriva acá. */
-function deriveCm(s){const ppc=S.pxPerCm;if(!ppc||!s.px)return s;const q=s.px;s.area_cm2=r2(q.area/(ppc*ppc));s.perimeter_cm=r2(q.perim/ppc);s.Lcaja_cm=r2(q.L/ppc);s.Acaja_cm=r2(q.W/ppc);s.Lcont_cm=r2(q.feret/ppc);s.Acont_cm=r2(q.fw/ppc);const c=S.method==='caja';s.largo_cm=c?s.Lcaja_cm:s.Lcont_cm;s.ancho_cm=c?s.Acaja_cm:s.Acont_cm;s.elongation=r2((c?q.L:q.feret)/Math.max(1e-6,c?q.W:q.fw));return s;}
+function deriveCm(s){const ppc=S.pxPerCm;if(!ppc||!s.px)return s;const q=s.px;s.area_cm2=r2(q.area/(ppc*ppc));s.perimeter_cm=r2(q.perim/ppc);s.Lcaja_cm=r2(q.L/ppc);s.Acaja_cm=r2(q.W/ppc);s.Lcont_cm=r2(q.feret/ppc);s.Acont_cm=r2(q.fw/ppc);const c=S.method==='caja';s.largo_cm=c?s.Lcaja_cm:s.Lcont_cm;s.ancho_cm=c?s.Acaja_cm:s.Acont_cm;s.elonCaja=r2(q.L/Math.max(1e-6,q.W));s.elonCont=r2(q.feret/Math.max(1e-6,q.fw));s.elongation=c?s.elonCaja:s.elonCont;return s;}
 function setMethod(v){S.method=v;recomputeCm();render();setMsg(v==='caja'?'Método por caja — largo y ancho son los lados del rectángulo mínimo.':'Método por contorno — largo y ancho se miden entre puntos del borde, como con calibre.');}
 function recomputeCm(){const all=[...S.sherds,...S.manualSherds];if(!all.length)return false;all.forEach(deriveCm);renderResults();return true;}
 function finishCal(){const[p0,p1]=S.calPts;const pxD=Math.hypot(p1.ix-p0.ix,p1.iy-p0.iy);const cm=parseFloat(document.getElementById('cm').value);if(!(cm>0)||!(pxD>0)){S.calPts=[];document.getElementById('calInfo').textContent='⚠ Medida real inválida — ingresá un valor en cm mayor a 0 y volvé a marcar.';render();return;}S.calDone=true;S.calCm=cm;S.pxPerCm=pxD/cm;document.getElementById('pxCm').textContent=S.pxPerCm.toFixed(2);document.getElementById('calDist').textContent=pxD.toFixed(1)+' px';document.getElementById('calRes').classList.remove('hidden');document.getElementById('calInfo').textContent=`✓ ${pxD.toFixed(1)} px = ${cm} cm`;document.getElementById('btnRec').disabled=false;ndot('s2','d');setDot('C','on',`${S.pxPerCm.toFixed(1)} px/cm`);enableStep3();document.getElementById('tbMan').disabled=false;if(S.prevPpc&&S.prevPpc!==S.pxPerCm&&recomputeCm())setMsg('Calibración lista — métricas existentes reescaladas a la nueva escala.');else setMsg('Calibración lista.');S.prevPpc=null;setTool('pan');}
@@ -1109,19 +1109,28 @@ function MET(){return S.method;}
 function expXLSX(){
   const all=[...S.sherds,...S.manualSherds];if(!all.length)return;
   if(typeof XLSX==='undefined'){setMsg('⚠ SheetJS no disponible (falta xlsx.full.min.js junto al index.html) — exportá CSV o JSON.');return;}
-  const ws_data=[
-    ['Código','Tipo','Método','Área (cm²)','Largo (cm)','Ancho (cm)','Perímetro (cm)','Largo caja (cm)','Ancho caja (cm)','Largo contorno (cm)','Ancho contorno (cm)','Circularidad','Elongación','Solidez','Color hex'],
-    ...all.map(s=>[s.id,s.type,MET(),s.area_cm2,s.largo_cm,s.ancho_cm,s.perimeter_cm,s.Lcaja_cm,s.Acaja_cm,s.Lcont_cm,s.Acont_cm,s.circularity,s.elongation,s.solidity,s.colorHex])
-  ];
   const wb=XLSX.utils.book_new();
-  const ws=XLSX.utils.aoa_to_sheet(ws_data);
-  ws['!cols']=[{wch:18},{wch:8},{wch:10},{wch:12},{wch:11},{wch:11},{wch:14},{wch:14},{wch:14},{wch:17},{wch:17},{wch:13},{wch:11},{wch:9},{wch:10}];
-  XLSX.utils.book_append_sheet(wb,ws,'CeraMetric');
+  /* Una hoja por método, cada una completa, en vez de una sola planilla con las cuatro
+     columnas de largo y ancho: quien trabaja con un solo criterio se lleva su tabla sin
+     tener que borrar columnas. La hoja del método elegido va primero, que es la que Excel
+     abre al entrar. Elongación sale del par de esa misma hoja. */
+  const hoja=m=>{
+    const c=m==='caja';
+    const d=[
+      ['Código','Tipo','Método','Área (cm²)','Largo (cm)','Ancho (cm)','Perímetro (cm)','Circularidad','Elongación','Solidez','Color hex'],
+      ...all.map(s=>[s.id,s.type,m,s.area_cm2,c?s.Lcaja_cm:s.Lcont_cm,c?s.Acaja_cm:s.Acont_cm,s.perimeter_cm,s.circularity,c?s.elonCaja:s.elonCont,s.solidity,s.colorHex])
+    ];
+    const w=XLSX.utils.aoa_to_sheet(d);
+    w['!cols']=[{wch:18},{wch:8},{wch:10},{wch:12},{wch:11},{wch:11},{wch:14},{wch:13},{wch:11},{wch:9},{wch:10}];
+    XLSX.utils.book_append_sheet(wb,w,c?'Por caja':'Por contorno');
+  };
+  hoja(MET());hoja(MET()==='caja'?'contorno':'caja');
   const meta=[
     ['Aplicación','CeraMetric v1.2'],
     ['Fecha',new Date().toISOString()],
     ['Código de registro',document.getElementById('code').value||'—'],
     ['Método de medición',MET()==='caja'?'Por caja (lados del rectángulo mínimo)':'Por contorno (entre puntos del borde, como con calibre)'],
+    ['Hojas','«Por caja» y «Por contorno», cada una completa; la del método elegido va primera'],
     ['Imagen (px)',S.img?`${S.img.width}×${S.img.height}`:'—'],
     ['px / cm',S.pxPerCm?r2(S.pxPerCm):'—'],
     ['Umbral de binarización',document.getElementById('thrS').value],

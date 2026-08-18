@@ -88,6 +88,8 @@ Cada tiesto de la lista de resultados tiene un ícono de papelera para borrarlo:
 
 Exportá en **Excel (.xlsx)**, **CSV**, **JSON** o como **imagen anotada** (la foto con los contornos y los IDs dibujados, para la ficha o la publicación).
 
+El `.xlsx` trae **una hoja por método de medición** —*Por caja* y *Por contorno*—, cada una con la tabla completa y con el largo y el ancho de su criterio, más la hoja *Metadatos*. Primero va la del método elegido, que es la que se abre: si trabajás con un solo sistema de medidas, esa hoja ya es tu planilla, sin columnas de más que borrar. El CSV, que es un único archivo plano, sigue llevando los dos métodos en la misma tabla.
+
 ### Atajos de teclado
 
 | Tecla | Función |
@@ -117,7 +119,7 @@ Exportá en **Excel (.xlsx)**, **CSV**, **JSON** o como **imagen anotada** (la f
 
 ### Notas metodológicas
 
-**Dos métodos para el largo y el ancho.** El selector *Cómo se toman el largo y el ancho*, arriba de la lista de resultados, decide cuál de los dos manda. Los dos se calculan siempre y los dos se exportan; el elegido es el que va en las columnas `Largo` y `Ancho`, y la exportación deja constancia de cuál usaste.
+**Dos métodos para el largo y el ancho.** El selector *Cómo se toman el largo y el ancho*, arriba de la lista de resultados, decide cuál de los dos manda. Los dos se calculan siempre y los dos se exportan —en el `.xlsx`, cada uno en su propia hoja—, y la exportación deja constancia de cuál usaste.
 
 **Por caja.** Se encierra el tiesto en la **caja rectangular más chica que lo contenga**, probando todos los ángulos, y se miden los lados de esa caja. La caja se dibuja punteada alrededor de la pieza. En un objeto rectangular calza con la pieza y los lados son los reales; en un tiesto deforme, que no tiene lados claros, es la manera de decidir cuál es el largo.
 

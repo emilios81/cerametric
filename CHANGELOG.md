@@ -34,11 +34,13 @@ esquina a esquina.
   - **Por contorno** — la mayor distancia entre dos puntos del borde y la travesía más
     larga perpendicular a ella, que es lo que se obtiene con un calibre.
 
-  Los dos se calculan siempre y **los dos se exportan**, en las columnas `Largo_caja_cm`,
-  `Ancho_caja_cm`, `Largo_contorno_cm` y `Ancho_contorno_cm`. El elegido va además en
-  `Largo_cm` y `Ancho_cm`, y una columna **`Metodo`** deja constancia en cada fila de cuál
-  se usó, para que una planilla no quede ambigua. La `Elongación` se calcula con el par del
-  método elegido. En la hoja *Metadatos* del `.xlsx` y en el JSON también queda registrado.
+  Los dos se calculan siempre y **los dos se exportan**: el `.xlsx` los separa en dos hojas
+  —*Por caja* y *Por contorno*—, y el CSV y el JSON los llevan juntos en las columnas
+  `Largo_caja_cm`, `Ancho_caja_cm`, `Largo_contorno_cm` y `Ancho_contorno_cm`, con el
+  elegido además en `Largo_cm` y `Ancho_cm`. Una columna **`Metodo`** deja constancia en
+  cada fila de cuál se usó, para que una planilla no quede ambigua. La `Elongación` se
+  calcula con el par que corresponde. En la hoja *Metadatos* del `.xlsx` y en el JSON
+  también queda registrado.
 
   En un tiesto redondeado el largo por contorno suele dar algo más que el de la caja
   — 0.84 cm en la figura irregular del ejemplo — porque la caja optimiza superficie y no
@@ -89,12 +91,19 @@ esquina a esquina.
 
 - Los archivos pasan a llamarse `cerametric_v12.xlsx` / `.csv` / `.json`, y la versión que
   figura en la hoja **Metadatos** y en el JSON es `CeraMetric v1.2`.
-- **Columnas nuevas**: `Metodo`, `Largo_caja_cm`, `Ancho_caja_cm`, `Largo_contorno_cm` y
-  `Ancho_contorno_cm`. La columna `Feret_max_cm` de v1.1 pasa a llamarse
-  `Largo_contorno_cm` — mismo valor, nombre coherente con el método al que pertenece. El
-  orden queda: `Código, Tipo, Metodo, Area_cm2, Largo_cm, Ancho_cm, Perimetro_cm,
-  Largo_caja_cm, Ancho_caja_cm, Largo_contorno_cm, Ancho_contorno_cm, Circularidad,
-  Elongacion, Solidez, Color_hex`.
+- **El `.xlsx` trae una hoja por método**: *Por caja* y *Por contorno*, cada una con la
+  tabla completa —`Código, Tipo, Método, Área, Largo, Ancho, Perímetro, Circularidad,
+  Elongación, Solidez, Color hex`— y con el largo y el ancho de **su** criterio. La
+  `Elongación` de cada hoja sale del par de esa hoja. Primero va la del método elegido,
+  que es la que Excel abre; la otra queda al lado por si se quiere comparar. Así, quien
+  trabaja con un solo sistema de medidas se lleva su planilla sin columnas de más.
+- **Columnas nuevas en el CSV**: `Metodo`, `Largo_caja_cm`, `Ancho_caja_cm`,
+  `Largo_contorno_cm` y `Ancho_contorno_cm`. La columna `Feret_max_cm` de v1.1 pasa a
+  llamarse `Largo_contorno_cm` — mismo valor, nombre coherente con el método al que
+  pertenece. El CSV es un único archivo plano, así que ahí siguen conviviendo los dos
+  métodos, en este orden: `Código, Tipo, Metodo, Area_cm2, Largo_cm, Ancho_cm,
+  Perimetro_cm, Largo_caja_cm, Ancho_caja_cm, Largo_contorno_cm, Ancho_contorno_cm,
+  Circularidad, Elongacion, Solidez, Color_hex`. El JSON también guarda los dos.
 - Con el método **por caja** —el que viene por defecto— `Largo_cm`, `Ancho_cm` y
   `Elongacion` valen exactamente lo mismo que en v1.1, así que los lotes viejos siguen
   siendo comparables sin tocar nada.
