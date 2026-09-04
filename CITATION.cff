@@ -10,12 +10,16 @@ repository-code: "https://github.com/emilios81/cerametric"
 url: "https://emilios81.github.io/cerametric/"
 abstract: >-
   Aplicación web para el análisis morfométrico de fragmentos cerámicos a partir de
-  fotografías con escala gráfica. Calcula área, largo y ancho (lados del rectángulo de
-  área mínima), diámetro máximo de Feret, perímetro (contorno 8-conectado con corrección
-  de Vossepoel-Smeulders), circularidad, elongación, solidez y color promedio. Detección
-  automática por umbral o selección manual por polígonos. Exporta a XLSX, CSV, JSON e
-  imagen anotada. Funciona íntegramente en el navegador, sin instalación ni envío de
-  datos a servidores.
+  fotografías con escala gráfica. Calcula área, perímetro (contorno 8-conectado con
+  corrección de Vossepoel-Smeulders), largo y ancho. El largo y el ancho son cuerdas de
+  la propia pieza: el eje es el lado largo del rectángulo de área mínima, de modo que no
+  dependen de cómo esté orientada en la fotografía; el largo es la cuerda más larga en
+  esa dirección y el ancho, la cuerda perpendicular por su punto medio, con las cuatro
+  puntas apoyadas en el contorno. Detección automática por umbral o selección manual por
+  polígonos, con cotas editables a mano y zonas excluidas de la detección. Se elige qué
+  medidas van a la exportación, para el lote entero o tiesto por tiesto. Exporta a XLSX,
+  CSV, JSON e imagen anotada. Interfaz bilingüe español / inglés. Funciona íntegramente
+  en el navegador, sin instalación ni envío de datos a servidores.
 keywords:
   - arqueología
   - cerámica
@@ -26,5 +30,5 @@ keywords:
   - pottery
   - morphometrics
 license: MIT
-version: "1.2"
-date-released: "2026-08-05"
+version: "1.3"
+date-released: "2026-09-04"

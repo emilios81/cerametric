@@ -196,7 +196,7 @@ JavaScript puro sobre HTML5 Canvas, sin frameworks ni build. Un solo archivo (`i
 
 ## Citación
 
-> Villafañez, E.A. (2026). *CeraMetric v1.2: herramienta de análisis morfométrico de tiestos cerámicos*. LATDAA, Escuela de Arqueología, Universidad Nacional de Catamarca. https://github.com/emilios81/cerametric
+> Villafañez, E.A. (2026). *CeraMetric v1.3: herramienta de análisis morfométrico de tiestos cerámicos*. LATDAA, Escuela de Arqueología, Universidad Nacional de Catamarca. https://github.com/emilios81/cerametric
 
 El repositorio incluye un [CITATION.cff](CITATION.cff): GitHub genera la cita en BibTeX o APA desde el botón **Cite this repository**.
 

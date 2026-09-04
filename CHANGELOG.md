@@ -2,7 +2,7 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 
-## [Sin publicar]
+## [1.3] — 2026-09-04
 
 **Cambian la definición del largo y del ancho, y se van tres métricas.** El `Área` y el
 `Perímetro` **no se tocaron**: verificado contra `ejemplo/imagen_de_prueba.png` con los
