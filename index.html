@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CeraMetric v1.2 — LATDAA</title>
+<title>CeraMetric v1.3 — LATDAA</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' fill='none' stroke='%235BBFB0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polygon points='24 4.5 39.5 13 39.5 35 24 43.5 8.5 35 8.5 13' opacity='.75'/><line x1='24' y1='7' x2='24' y2='41' opacity='.4'/><path d='M24 14.6H17.6C17.6 18.4 21.6 19.6 21.1 22.6C20.4 26.6 16.6 27.1 17.1 30.6C17.4 32.9 20.1 32.9 20.1 34.6H24' stroke-width='2'/><path d='M24 14.6H30.4C30.4 18.4 26.4 19.6 26.9 22.6C27.6 26.6 31.4 27.1 30.9 30.6C30.6 32.9 27.9 32.9 27.9 34.6H24' stroke-width='2' stroke-dasharray='3 2.4'/></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -88,6 +89,15 @@ header::after {
   inset: 0;
   background: radial-gradient(circle at 30% 30%, rgba(91,191,176,.2), transparent 60%);
 }
+
+/* El trazo va sobre el brillo del recuadro, no debajo. */
+.logo-mark .mark { position: relative; z-index: 1; }
+
+/* Selector de idioma: dos mitades, la activa encendida. */
+.langbtn { display: flex; border: 1px solid var(--line-2); border-radius: 5px; overflow: hidden; background: rgba(13,27,42,.6); cursor: pointer; padding: 0; }
+.langbtn span { padding: 3px 9px; font-family: var(--fc); font-size: 9.5px; letter-spacing: .12em; color: var(--t3); transition: background .15s, color .15s; }
+.langbtn span.on { background: var(--teal-mid); color: var(--t1); }
+.langbtn:hover { border-color: var(--teal-dim); }
 
 .logo-text h1 {
   font-family: var(--fd);
@@ -375,8 +385,12 @@ select option { background: var(--ink-2); }
 }
 .si-card:hover { border-color: var(--line-2); }
 
-.sh { display: flex; justify-content: space-between; align-items: center; }
-.sid { font-family: var(--fc); font-size: 11.5px; color: var(--teal); font-weight: 500; }
+/* La cabecera puede juntar varias etiquetas (tipo, «a mano», «medidas propias») y dos
+   botones. Sin nowrap en el código, el ancho del panel lo partía en dos líneas: que se
+   acomoden las etiquetas, no el identificador del tiesto. */
+.sh { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.sh > div { flex-wrap: wrap; justify-content: flex-end; }
+.sid { font-family: var(--fc); font-size: 11.5px; color: var(--teal); font-weight: 500; white-space: nowrap; }
 .sid.m { color: var(--manual); }
 .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .tag { display: inline-flex; background: rgba(36,60,82,.8); border: 1px solid var(--line); border-radius: 20px; padding: 1px 7px; font-size: 9px; color: var(--t2); font-family: var(--fc); }
@@ -405,6 +419,14 @@ select option { background: var(--ink-2); }
 }
 
 .axtog input { accent-color: var(--teal); width: 12px; height: 12px; cursor: pointer; flex-shrink: 0; }
+
+/* Selector de medidas exportadas. La casilla de cada medida se repite en la tarjeta de
+   cada tiesto, al lado de su valor: el valor se sigue viendo siempre, tildado o no, porque
+   hace falta mirarlo para decidir si entra. */
+.colsel { display: flex; flex-wrap: wrap; gap: 3px 14px; margin: 3px 0 5px; }
+.colsel .axtog { gap: 5px; }
+.rk .ck { accent-color: var(--teal); width: 11px; height: 11px; cursor: pointer; margin-right: 6px; vertical-align: -1px; }
+.rv.off { opacity: .35; }
 
 .axleg {
   display: flex;
@@ -617,19 +639,30 @@ kbd {
 <header>
   <div class="logo">
     <div class="logo-mark">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(91,191,176,.9)" stroke-width="1.4">
-        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/>
-        <line x1="12" y1="2" x2="12" y2="22"/>
-        <line x1="2" y1="8.5" x2="22" y2="8.5"/>
+      <svg class="mark" width="27" height="27" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <g stroke="#5BBFB0" stroke-width="1.05" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="24 4.5 39.5 13 39.5 35 24 43.5 8.5 35 8.5 13" opacity=".75"/>
+          <line x1="24" y1="7" x2="24" y2="41" opacity=".4"/>
+          <line x1="10" y1="24" x2="38" y2="24" opacity=".4"/>
+          <path d="M24 14.6H17.6C17.6 18.4 21.6 19.6 21.1 22.6C20.4 26.6 16.6 27.1 17.1 30.6C17.4 32.9 20.1 32.9 20.1 34.6H24" stroke="#7FE3D4" stroke-width="1.5"/>
+          <path d="M24 14.6H30.4C30.4 18.4 26.4 19.6 26.9 22.6C27.6 26.6 31.4 27.1 30.9 30.6C30.6 32.9 27.9 32.9 27.9 34.6H24" stroke="#7FE3D4" stroke-width="1.3" stroke-dasharray="2.2 1.9" opacity=".85"/>
+        </g>
+        <g fill="#7FE3D4">
+          <circle cx="24" cy="4.5" r="2"/><circle cx="39.5" cy="13" r="2"/><circle cx="39.5" cy="35" r="2"/>
+          <circle cx="24" cy="43.5" r="2"/><circle cx="8.5" cy="35" r="2"/><circle cx="8.5" cy="13" r="2"/>
+        </g>
       </svg>
     </div>
     <div class="logo-text">
       <h1>CeraMetric</h1>
-      <span class="ver">morphometric analysis · v1.2</span>
+      <span class="ver">morphometric analysis · v1.3</span>
     </div>
   </div>
   <div class="hdr-right">
     <span id="imgBadge" class="chip hidden"></span>
+    <button class="langbtn" id="langBtn" onclick="setLang(LANG==='es'?'en':'es')" title="Español / English">
+      <span id="lgEs" class="on">ES</span><span id="lgEn">EN</span>
+    </button>
   </div>
 </header>
 
@@ -655,13 +688,12 @@ kbd {
   <div class="card">
     <div class="slbl"><div class="snum" id="s1">1</div>Cargar imagen</div>
     <p class="info">JPG / PNG con escala gráfica. Fondo neutro para mejor detección automática.</p>
+    <p class="info"><b style="color:var(--amber)">Orientación:</b> apoyá cada tiesto con su <b>parte más larga hacia arriba</b>. Con el lote entero orientado igual las cotas salen parejas y la lámina se lee de un vistazo. Si alguno queda torcido se mide igual: el eje lo busca el programa a partir de la pieza, no de la foto.</p>
     <button class="btn bp bf" onclick="document.getElementById('fi').click()">
       <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M4 17l4-4 4 4 4-6 4 6"/></svg>
       Abrir imagen
     </button>
     <input type="file" id="fi" accept="image/*">
-    <label>Código de registro</label>
-    <input type="text" id="code" placeholder="ej: AMB-24-U3-T12">
     <button class="btn bs bf hidden" id="btnOrig" onclick="restoreOriginal()">
       <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
       Restaurar imagen original
@@ -834,26 +866,13 @@ kbd {
 <div class="panel panel-r">
   <div class="st">Resultados</div>
   <div class="axbox">
-    <label style="margin-bottom:3px">Cómo se toman el largo y el ancho</label>
-    <select id="method" onchange="setMethod(this.value)">
-      <option value="caja">Por caja — lados del rectángulo mínimo</option>
-      <option value="contorno">Por contorno — como con calibre</option>
-    </select>
-    <label class="axtog" style="margin-top:10px"><input type="checkbox" id="axChk" checked onchange="toggleAxes(this.checked)">Ejes de medición sobre la imagen</label>
-    <select id="axMode" onchange="setAxMode(this.value)" style="margin-top:7px">
-      <option value="solo">Solo el método elegido</option>
-      <option value="ambos">Los dos métodos, para comparar</option>
-    </select>
+    <label class="axtog"><input type="checkbox" id="axChk" checked onchange="toggleAxes(this.checked)">Ejes de medición sobre la imagen</label>
     <div class="axleg">
       <span><i style="--c:#D4A259"></i>ámbar = a lo largo</span>
       <span><i style="--c:#7EB8D8"></i>celeste = a lo ancho</span>
     </div>
     <div class="axleg">
-      <span><i style="--c:#8FAEC0"></i>llena = método elegido</span>
-      <span><i class="dash" style="--c:#8FAEC0"></i>punteada = el otro</span>
-    </div>
-    <div class="axleg">
-      <span><i class="dash" style="--c:#8FAEC0;opacity:.55"></i>fina + punto = apoyo en el contorno</span>
+      <span><i class="dash" style="--c:#8FAEC0"></i>caja punteada = de dónde sale la dirección</span>
     </div>
     <div class="axleg">
       <span><i class="dot" style="--c:#D4A259"></i>puntas redondas = cota movida a mano</span>
@@ -864,11 +883,23 @@ kbd {
       <p><b>El largo y el ancho se editan por separado:</b> mover uno no toca al otro. La cota movida pasa a <b>mandar</b> — es el Largo o el Ancho de la ficha y de la exportación, marcada <i>a mano</i> —, y la calculada queda a la vista para comparar: en la tarjeta, y en columnas propias del CSV, el JSON y el Excel, que además dicen fila por fila qué se movió. El botón <b>↺</b> de la tarjeta devuelve el tiesto a su medida calculada.</p>
     </details>
     <details class="axhelp" open>
-      <summary>Los dos métodos</summary>
-      <p><b>Por caja.</b> Se encierra el tiesto en la <b>caja rectangular más chica</b> que lo contenga, probando todos los ángulos, y se miden <b class="la">los lados</b> <b class="an">de esa caja</b>. Cada lado de la caja se apoya en la pieza, así que el largo es la <b>distancia entre los dos puntos del borde</b> que tocan los lados opuestos: la medida sale del tiesto, no del aire. La caja se dibuja punteada alrededor de la pieza y la cota se corre hasta la altura donde el fragmento la toca; si los dos puntos de contacto no están alineados, dos líneas finas terminadas en punto enlazan la cota con el borde exacto del que sale cada extremo.</p>
-      <p><b>Por contorno.</b> Se mide directamente entre puntos del borde, como con un calibre. El <b class="la">largo</b> es la mayor distancia entre dos puntos de la pieza; el <b class="an">ancho</b>, la travesía más larga perpendicular a esa. Las dos cotas apoyan sus puntas en el contorno.</p>
-      <p class="warn"><b>Cuál elegir.</b> Ninguno es más correcto: responden a preguntas distintas. En un tiesto redondeado el largo por contorno suele dar <b>algo más</b> que el de la caja, porque la caja optimiza superficie y no longitud. En una pieza rectangular pasa al revés: el largo por contorno se va a la <b>diagonal</b>. Elegí uno y usalo para todo el lote — la exportación deja constancia de cuál usaste, y trae igual las medidas del otro.</p>
+      <summary>Cómo se toman el largo y el ancho</summary>
+      <p class="warn"><b>Al fotografiar.</b> Poné cada tiesto con su <b>parte más larga hacia arriba</b>. No es obligatorio —el programa busca solo la dirección más larga de la pieza y mide igual si quedó torcida—, pero con el lote entero orientado del mismo modo las cotas salen parejas.</p>
+      <p>El <b>eje</b> del tiesto es la dirección de su lado más largo: la que da la caja rectangular más chica que lo contenga, probando todos los ángulos. Esa caja se sigue dibujando punteada, pero <b>ya no se mide</b> — es nada más la referencia de por dónde va el eje.</p>
+      <p>El <b class="la">largo</b> es la <b>cuerda</b> más larga que la pieza da en esa dirección. El <b class="an">ancho</b> es la cuerda perpendicular que pasa por el <b>punto medio</b> del largo, no la más ancha. Las cuatro puntas apoyan en el <b>contorno</b> de la cerámica: son medidas del tiesto, no del rectángulo que lo encierra.</p>
     </details>
+  </div>
+  <div class="axbox">
+    <label style="margin-bottom:3px">Medidas que van a la exportación</label>
+    <div class="colsel">
+      <label class="axtog"><input type="checkbox" id="cArea" checked onchange="setCol('area',this.checked)">Área</label>
+      <label class="axtog"><input type="checkbox" id="cPerim" checked onchange="setCol('perim',this.checked)">Perímetro</label>
+      <label class="axtog"><input type="checkbox" id="cLargo" checked onchange="setCol('largo',this.checked)">Largo</label>
+      <label class="axtog"><input type="checkbox" id="cAncho" checked onchange="setCol('ancho',this.checked)">Ancho</label>
+    </div>
+    <p class="tip">Vale para todo el lote. No cambia lo que ves en pantalla: en la ficha de cada tiesto seguís viendo las cuatro medidas, con su casilla al lado diciendo cuál se exporta.</p>
+    <p class="tip"><b>Para un tiesto en particular</b>, tildá o destildá la casilla en su tarjeta: ese tiesto pasa a llevar su <b>propia selección</b> —queda marcado <i>medidas propias</i>— y el resto del lote no se entera. El <b>↺</b> celeste lo devuelve a esta selección general. En la planilla la columna aparece si <b>al menos un tiesto</b> la pidió, y en los que no la piden la celda queda vacía.</p>
+    <p class="tip" id="colsWarn" style="color:var(--amber)"></p>
   </div>
   <div id="noRes" class="info" style="padding:4px 0;opacity:.7">Los resultados aparecerán aquí al detectar o trazar tiestos.</div>
   <div id="sherdList" style="display:flex;flex-direction:column;gap:6px"></div>
@@ -907,13 +938,8 @@ kbd {
     <div class="rr"><span class="rk">Área</span><span class="rv">Conteo px / ppc²</span></div>
     <div class="rr" style="margin-top:3px"><span class="rk">Perímetro</span><span class="rv">Contorno 8-con.</span></div>
     <p class="tip">Trazado del contorno con corrección de Vossepoel–Smeulders (0.980·rectos + 1.406·diagonales − 0.091·esquinas). Preciso para bordes curvos.</p>
-    <div class="rr" style="margin-top:4px"><span class="rk">Largo · Ancho caja</span><span class="rv">Rect. mínimo</span></div>
-    <p class="tip">Lados de la caja rectangular más chica que contiene la pieza, probando todos los ángulos. Equivale a medirla con regla y no dependen de cómo esté girada en la foto. Cada lado apoya en el borde: el largo es la separación entre los dos puntos extremos del tiesto, medida sobre el eje de la caja.</p>
-    <div class="rr" style="margin-top:4px"><span class="rk">Largo · Ancho contorno</span><span class="rv">Calibre</span></div>
-    <p class="tip">Largo = mayor distancia entre dos puntos del borde, en cualquier dirección; en un rectángulo, la diagonal. Ancho = la travesía más larga perpendicular a esa. Las dos apoyan sus puntas en el contorno.</p>
-    <div class="rr" style="margin-top:4px"><span class="rk">Circularidad</span><span class="rv">4π·A / P²</span></div>
-    <div class="rr" style="margin-top:3px"><span class="rk">Elongación</span><span class="rv">Largo / Ancho</span></div>
-    <div class="rr" style="margin-top:3px"><span class="rk">Solidez</span><span class="rv">A / A_hull</span></div>
+    <div class="rr" style="margin-top:4px"><span class="rk">Largo · Ancho</span><span class="rv">Cuerdas</span></div>
+    <p class="tip">Eje = dirección del lado largo del rectángulo mínimo; no depende de cómo esté girada la pieza en la foto. Largo = la cuerda más larga del tiesto en esa dirección. Ancho = la cuerda perpendicular por el punto medio del largo. Las cuatro puntas apoyan en el contorno.</p>
   </div>
 </div>
 
@@ -924,13 +950,179 @@ kbd {
   <div class="sdi"><div class="sd" id="dC"></div><span id="sC">Sin calibrar</span></div>
   <div class="sdi"><div class="sd" id="dD"></div><span id="sD">Sin detección</span></div>
   <div style="flex:1"></div>
-  <span id="sMsg" style="color:var(--t3)">CeraMetric v1.2</span>
+  <span id="sMsg" style="color:var(--t3)">CeraMetric v1.3</span>
 </div>
 
 <canvas id="pc" style="display:none"></canvas>
 <script src="xlsx.full.min.js"></script>
 <script>
-const S={img:null,origImg:null,tx:0,ty:0,sc:1,isc:1,vpW:0,vpH:0,tool:'pan',pan:{on:false,sx:0,sy:0,tx:0,ty:0},ctrl:false,mpos:{ix:0,iy:0},calPts:[],calDone:false,pxPerCm:null,calCm:null,prevPpc:null,rgba:null,seq:0,manSeq:0,showAxes:true,method:'caja',axMode:'solo',axDrag:null,expImg:false,excl:[],exclDrag:null,noClick:false,sherds:[],manualSherds:[],poly:[],polyClosed:false,otsuT:null,grayCache:null,crop:{on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false}};
+/* ─── BILINGÜE ───────────────────────────────
+   La interfaz se escribió en español y el inglés se aplica por REEMPLAZO DE FRASES sobre el
+   DOM ya armado: un TreeWalker recorre los nodos de texto y cambia los que estén en el
+   diccionario; después se hace lo mismo con los `title` y los `placeholder`. Así no hay que
+   sembrar el HTML de claves, y los <b>/<code>/<kbd> intercalados quedan donde estaban,
+   porque cada trozo de texto es su propio nodo.
+   Lo que el JS escribe en vivo —mensajes de la barra, tarjetas de tiesto, encabezados de la
+   exportación— no lo alcanza el TreeWalker: eso pasa por t().
+   El índice se arma UNA vez, al arrancar, sobre el HTML estático. La lista de tiestos se
+   rehace todo el tiempo y por eso se traduce sola con t() en vez de indexarse. */
+const EN={
+ /* paso 1 */
+ 'Flujo de trabajo':'Workflow','Cargar imagen':'Load image',
+ 'JPG / PNG con escala gráfica. Fondo neutro para mejor detección automática.':'JPG / PNG with a scale bar. A plain background helps automatic detection.',
+ 'Orientación:':'Orientation:','apoyá cada tiesto con su':'rest each sherd with its',
+ 'parte más larga hacia arriba':'longest side facing up',
+ '. Con el lote entero orientado igual las cotas salen parejas y la lámina se lee de un vistazo. Si alguno queda torcido se mide igual: el eje lo busca el programa a partir de la pieza, no de la foto.':'. With the whole batch aligned the same way the dimension lines come out even and the plate reads at a glance. A sherd left askew is measured just the same: the axis comes from the piece, not from the photograph.',
+ 'Abrir imagen':'Open image','Restaurar imagen original':'Restore original image',
+ /* paso 2 */
+ 'Calibración de escala':'Scale calibration','Marcar la escala':'Mark the scale bar','Encuadrá la escala':'Frame the scale bar','antes':'before',
+ 'de calibrar: la detección va a ignorar lo que quede adentro, así sus colores, números y recuadros no entran como tiestos. Sigue sirviendo para calibrar igual que siempre. Al marcarla se pasa sola a':'calibrating: detection will skip whatever falls inside, so its colours, numbers and boxes are not picked up as sherds. It still works for calibration exactly as before. Marking it switches straight to',
+ 'Calibrar':'Calibrate',
+ ', que es el paso siguiente. Podés marcar más de una zona —una etiqueta, una moneda, la mano—: cada una trae una':', which is the next step. You can mark more than one area — a label, a coin, a hand — and each one carries an',
+ 'para quitarla.':'to remove it.','Herramienta':'Tool',
+ 'en la barra. Clic en los dos extremos de la escala.':'in the toolbar. Click the two ends of the scale bar.',
+ '= línea recta. Si cambiás la medida después, la escala y las métricas se recalculan solas; para volver a marcar los puntos, hacé clic de nuevo sobre la imagen.':'= straight line. If you change the real length afterwards, the scale and the metrics are recomputed on their own; to mark the points again, click on the image once more.',
+ 'Medida real (cm)':'Real length (cm)','Recalibrar':'Recalibrate','px / cm':'px / cm','distancia px':'distance px',
+ /* paso 3 */
+ 'Detección automática':'Automatic detection','Desenfoque gaussiano':'Blur','Cierre morfológico (px)':'Morphological closing (px)',
+ 'Umbral de binarización':'Binarisation threshold','Otsu sugiere:':'Otsu suggests:','Aplicar':'Apply','Tipo de fondo':'Background',
+ 'Claro (blanco / beige)':'Light (white / beige)','Oscuro':'Dark','Área mínima (cm²)':'Minimum area (cm²)','Prevista':'Preview','Detectar':'Detect',
+ /* paso 4 */
+ 'Selección manual':'Manual outline','Lápiz':'Pencil',
+ 'en la barra. Clic = vértice. Doble-clic o clic cerca del inicio para cerrar el polígono.':'in the toolbar. Click = vertex. Double-click, or click near the start, to close the polygon.',
+ 'ID del tiesto':'Sherd ID','Deshacer':'Undo','Limpiar':'Clear','Limpiar todas las selecciones':'Clear every outline',
+ /* lienzo */
+ '⊕ Ctrl · línea recta':'⊕ Ctrl · straight line','Arrastrá para seleccionar el área':'Drag to select the area','Cancelar':'Cancel',
+ 'Cargá una imagen':'Load an image','JPG · PNG — incluir escala gráfica':'JPG · PNG — include a scale bar',
+ 'área exacta':'exact area','perímetro real':'true perimeter','morfometría':'morphometrics','color':'colour','Procesando…':'Working…',
+ /* panel derecho */
+ 'Resultados':'Results','Ejes de medición sobre la imagen':'Measurement axes on the image',
+ 'ámbar = a lo largo':'amber = length','celeste = a lo ancho':'blue = width',
+ 'caja punteada = de dónde sale la dirección':'dashed box = where the direction comes from',
+ 'puntas redondas = cota movida a mano':'round ends = dimension line moved by hand',
+ 'Mover una cota a mano':'Moving a dimension line by hand','Con la herramienta de':'With the','cotas':'dimension-line tool','(tecla':'(key',
+ ') aparecen nodos en las cuatro puntas del largo y el ancho de cada tiesto. Arrastrá el que quieras: la cota se mueve libre, para medir algo puntual que ningún criterio automático da — el espesor de un labio, el arranque de un asa, la cuerda de un borde. Con':') handles appear at the four ends of every sherd\'s length and width. Drag any of them and the dimension line follows freely, to measure something specific that no automatic rule gives you — the thickness of a rim, the root of a handle, the chord of an edge. Holding',
+ 'la punta se pega al punto más cercano del contorno, así no hay que acertar el píxel a pulso.':'snaps the end to the nearest point of the outline, so you do not have to hit the pixel by hand.',
+ 'El largo y el ancho se editan por separado:':'Length and width are edited separately:',
+ 'mover uno no toca al otro. La cota movida pasa a':'moving one leaves the other untouched. The line you moved then',
+ 'mandar':'takes over','— es el Largo o el Ancho de la ficha y de la exportación, marcada':'— it becomes the Length or Width of the record and of the export, flagged',
+ 'a mano':'by hand',
+ '—, y la calculada queda a la vista para comparar: en la tarjeta, y en columnas propias del CSV, el JSON y el Excel, que además dicen fila por fila qué se movió. El botón':'— while the computed one stays in view for comparison: on the card, and in its own columns in the CSV, the JSON and the Excel file, which also state row by row what was moved. The',
+ 'de la tarjeta devuelve el tiesto a su medida calculada.':'button on the card returns the sherd to its computed measurement.',
+ 'Cómo se toman el largo y el ancho':'How length and width are taken','Al fotografiar.':'When photographing.','Poné cada tiesto con su':'Set each sherd with its',
+ '. No es obligatorio —el programa busca solo la dirección más larga de la pieza y mide igual si quedó torcida—, pero con el lote entero orientado del mismo modo las cotas salen parejas.':'. It is not compulsory — the program finds the longest direction of the piece on its own and measures just the same if it ended up askew — but with the whole batch aligned the same way the dimension lines come out even.',
+ 'El':'The','eje':'axis',
+ 'del tiesto es la dirección de su lado más largo: la que da la caja rectangular más chica que lo contenga, probando todos los ángulos. Esa caja se sigue dibujando punteada, pero':'of the sherd is the direction of its longest side: the one given by the smallest rectangular box that contains it, trying every angle. That box is still drawn dashed, but',
+ 'ya no se mide':'it is no longer measured','— es nada más la referencia de por dónde va el eje.':'— it is only the reference for where the axis runs.',
+ 'largo':'length','es la':'is the','cuerda':'chord',
+ 'más larga que la pieza da en esa dirección. El':'longest the piece gives in that direction. The',
+ 'ancho':'width','es la cuerda perpendicular que pasa por el':'is the perpendicular chord through the',
+ 'punto medio':'midpoint','del largo, no la más ancha. Las cuatro puntas apoyan en el':'of the length, not the widest one. All four ends rest on the',
+ 'contorno':'outline','de la cerámica: son medidas del tiesto, no del rectángulo que lo encierra.':'of the ceramic: they are measurements of the sherd, not of the box around it.',
+ /* selector de medidas */
+ 'Medidas que van a la exportación':'Measurements included in the export','Área':'Area','Perímetro':'Perimeter','Largo':'Length','Ancho':'Width',
+ 'Vale para todo el lote. No cambia lo que ves en pantalla: en la ficha de cada tiesto seguís viendo las cuatro medidas, con su casilla al lado diciendo cuál se exporta.':'Applies to the whole batch. It does not change what you see on screen: every sherd card still shows all four measurements, each with a tick box saying whether it is exported.',
+ 'Para un tiesto en particular':'For one sherd in particular',
+ ', tildá o destildá la casilla en su tarjeta: ese tiesto pasa a llevar su':', tick or untick the box on its card: that sherd then carries its',
+ 'propia selección':'own selection','—queda marcado':'— it is flagged','medidas propias':'own measurements',
+ '— y el resto del lote no se entera. El':'— and the rest of the batch is untouched. The blue',
+ 'celeste lo devuelve a esta selección general. En la planilla la columna aparece si':'returns it to this general selection. In the spreadsheet a column appears if',
+ 'al menos un tiesto':'at least one sherd','la pidió, y en los que no la piden la celda queda vacía.':'asked for it, and in those that did not the cell is left blank.',
+ 'Los resultados aparecerán aquí al detectar o trazar tiestos.':'Results will appear here once you detect or outline sherds.',
+ /* resumen y exportacion */
+ 'Resumen de lote':'Batch summary','Tiestos detectados':'Sherds detected','Área total (cm²)':'Total area (cm²)','Área promedio (cm²)':'Mean area (cm²)',
+ 'Largo promedio (cm)':'Mean length (cm)','Perim. promedio (cm)':'Mean perimeter (cm)','Exportar':'Export','Imagen anotada':'Annotated image',
+ 'Referencia de métricas':'Metric reference','Conteo px / ppc²':'Pixel count / ppc²','Contorno 8-con.':'8-connected outline',
+ 'Trazado del contorno con corrección de Vossepoel–Smeulders (0.980·rectos + 1.406·diagonales − 0.091·esquinas). Preciso para bordes curvos.':'Contour tracing with the Vossepoel–Smeulders correction (0.980·straight + 1.406·diagonal − 0.091·corners). Accurate on curved edges.',
+ 'Largo · Ancho':'Length · Width','Cuerdas':'Chords',
+ 'Eje = dirección del lado largo del rectángulo mínimo; no depende de cómo esté girada la pieza en la foto. Largo = la cuerda más larga del tiesto en esa dirección. Ancho = la cuerda perpendicular por el punto medio del largo. Las cuatro puntas apoyan en el contorno.':'Axis = direction of the long side of the minimum-area rectangle; independent of how the piece is turned in the photograph. Length = the longest chord of the sherd in that direction. Width = the perpendicular chord through the midpoint of the length. All four ends rest on the outline.',
+ 'Sin imagen':'No image','Sin calibrar':'Not calibrated','Sin detección':'No detection',
+ /* title / placeholder */
+ 'Mover (H)':'Pan (H)','Calibrar (C)':'Calibrate (C)','Selección manual (M)':'Manual outline (M)','Recortar (R)':'Crop (R)',
+ 'Mover las cotas a mano (E)':'Move dimension lines by hand (E)','Marcar la escala — zona excluida de la detección (X)':'Mark the scale bar — area excluded from detection (X)',
+ 'Acercar (+)':'Zoom in (+)','Alejar (-)':'Zoom out (-)','Ajustar':'Fit','ej: M-01':'e.g. M-01',
+ 'Volver a la medida calculada':'Back to the computed measurement','Eliminar tiesto':'Delete sherd',
+ 'Volver a la selección general de medidas':'Back to the general measurement selection',
+ 'Incluir esta medida en la exportación de este tiesto':'Include this measurement in this sherd\'s export',
+ /* mensajes del JS */
+ 'Selecciones limpiadas.':'Outlines cleared.',
+ 'Zona marcada. Ahora calibrá: clic en los dos extremos de la escala — se puede adentro de la zona.':'Area marked. Now calibrate: click the two ends of the scale bar — inside the area is fine.',
+ 'Zona marcada — la detección la va a ignorar.':'Area marked — detection will skip it.','Zonas quitadas.':'Areas removed.',
+ 'Medida real cambiada — escala y métricas recalculadas.':'Real length changed — scale and metrics recomputed.',
+ 'Medida real cambiada — escala recalculada.':'Real length changed — scale recomputed.',
+ '⚠ No se pudo cargar la imagen — formato no soportado por el navegador (usá JPG o PNG).':'⚠ The image could not be loaded — format not supported by the browser (use JPG or PNG).',
+ 'Imagen cargada — iniciá la calibración.':'Image loaded — start the calibration.',
+ 'Zona quitada — la detección vuelve a mirar ahí.':'Area removed — detection looks there again.',
+ 'Calibrá la escala antes de usar la selección manual.':'Calibrate the scale before using the manual outline.',
+ 'Primero detectá o trazá algún tiesto: las cotas se mueven sobre medidas ya tomadas.':'Detect or outline a sherd first: dimension lines move over measurements already taken.',
+ 'Calibración lista — métricas existentes reescaladas a la nueva escala.':'Calibration done — existing metrics rescaled to the new scale.',
+ 'Calibración lista.':'Calibration done.','Vista previa — verde = foreground detectado.':'Preview — green = detected foreground.',
+ 'Necesitás al menos 3 vértices.':'At least 3 vertices are needed.','Imagen original restaurada.':'Original image restored.',
+ '⚠ SheetJS no disponible (falta xlsx.full.min.js junto al index.html) — exportá CSV o JSON.':'⚠ SheetJS unavailable (xlsx.full.min.js is missing next to index.html) — export CSV or JSON instead.',
+ '⚠ Ninguna medida tildada — el .xlsx sale solo con el código y el tipo.':'⚠ No measurement ticked — the .xlsx will carry only the code and the type.',
+ '⚠ Ninguna medida tildada — el CSV sale solo con el código y el tipo.':'⚠ No measurement ticked — the CSV will carry only the code and the type.',
+ '⚠ Medida real inválida (cm > 0).':'⚠ Invalid real length (cm > 0).','Recalibrando — marcá los dos puntos de nuevo.':'Recalibrating — mark the two points again.',
+ '⚠ Medida real inválida — ingresá un valor en cm mayor a 0 y volvé a marcar.':'⚠ Invalid real length — enter a value in cm greater than 0 and mark again.',
+ 'Recalibrando…':'Recalibrating…','Calibración  ·  clic pt.1  ·  clic pt.2  ·  Ctrl = línea recta':'Calibration  ·  click pt.1  ·  click pt.2  ·  Ctrl = straight line',
+ 'Selección manual  ·  clic = vértice  ·  doble-clic = cerrar polígono':'Manual outline  ·  click = vertex  ·  double-click = close polygon',
+ 'Recortar  ·  arrastrá para seleccionar  ·  Enter = aplicar':'Crop  ·  drag to select  ·  Enter = apply',
+ 'Marcar la escala  ·  arrastrá para encuadrarla  ·  la × de cada zona la quita':'Mark the scale bar  ·  drag to frame it  ·  the × on each area removes it',
+ 'Mover cotas  ·  arrastrá los nodos de las puntas  ·  Ctrl = pegar al contorno':'Move dimension lines  ·  drag the end handles  ·  Ctrl = snap to the outline',
+ '⊕ Ctrl · pegar al contorno':'⊕ Ctrl · snap to the outline',
+ /* fragmentos que el JS arma con numeros */
+ 'tiesto(s) detectado(s).':'sherd(s) detected.','descartado(s) por zona excluida.':'discarded by an excluded area.',
+ 'vértice(s) — doble-clic o clic en el inicio para cerrar.':'vertex(es) — double-click, or click the start, to close.','vértice(s).':'vertex(es).',
+ 'registrado.':'recorded.','guardado.':'saved.','eliminado.':'deleted.','Tiesto manual':'Manual sherd','⚠ Ese código ya estaba en uso — corregilo antes de exportar.':'⚠ That code was already in use — fix it before exporting.','ninguna':'none','Tiesto':'Sherd',
+ 'Recortada a':'Cropped to','Calibración conservada.':'Calibration kept.','Recalibrá la escala.':'Recalibrate the scale.',
+ 'auto + ':'auto + ',' manual':' manual','— vuelto a la medida calculada.':'— back to the computed measurement.',
+ '— vuelve a seguir la selección general de medidas.':'— follows the general measurement selection again.',
+ '— medido a mano:':'— measured by hand:','cm. El botón ↺ de la tarjeta lo devuelve a la medida calculada.':'cm. The ↺ button on the card returns it to the computed measurement.',
+ '⚠ No hay ninguna medida tildada: la exportación saldría solo con el código y el tipo.':'⚠ No measurement is ticked: the export would carry only the code and the type.',
+ 'tiesto(s) llevan su propia selección de medidas.':'sherd(s) carry their own measurement selection.','de':'of',
+ /* fichas y exportacion */
+ 'Área (cm²)':'Area (cm²)','Largo (cm)':'Length (cm)','Ancho (cm)':'Width (cm)','Perímetro (cm)':'Perimeter (cm)',
+ 'Largo calculado':'Computed length','Ancho calculado':'Computed width','· a mano':'· by hand',
+ '⚠ El ancho supera al largo — fijate si moviste la cota que querías.':'⚠ Width exceeds length — check that you moved the dimension line you meant to.',
+ 'largo y ancho':'length and width','no':'no',
+ 'Código':'Code','Tipo':'Type','Editado a mano':'Edited by hand','Largo calculado (cm)':'Computed length (cm)','Ancho calculado (cm)':'Computed width (cm)',
+ 'Tiestos':'Sherds','Metadatos':'Metadata',
+ 'Aplicación':'Application','Fecha':'Date','Largo y ancho':'Length and width','Medidas exportadas':'Measurements exported',
+ 'Tiestos con medidas propias':'Sherds with their own measurements','Tiestos medidos a mano':'Sherds measured by hand',
+ 'Zonas excluidas de la detección':'Areas excluded from detection','Imagen (px)':'Image (px)','ninguno':'none',
+ 'Cuerdas del tiesto: el eje es el lado largo del rectángulo mínimo; el largo, la cuerda más larga en esa dirección; el ancho, la cuerda perpendicular por el punto medio del largo. Las cuatro puntas apoyan en el contorno.':'Chords of the sherd: the axis is the long side of the minimum-area rectangle; the length is the longest chord in that direction; the width, the perpendicular chord through the midpoint of the length. All four ends rest on the outline.',
+ 'Una columna aparece si al menos un tiesto la pidió; en los que no la piden la celda queda vacía.':'A column appears if at least one sherd asked for it; in those that did not, the cell is left blank.',
+ 'la columna «Editado a mano» dice qué se movió en cada uno; esa dimensión manda en Largo/Ancho y la automática queda en «Largo/Ancho calculado»':'the “Edited by hand” column states what was moved in each; that dimension governs Length/Width and the automatic one stays in “Computed length/width”','manual':'manual','auto':'auto','área':'area','perímetro':'perimeter'
+};
+let LANG='es',I18N_IDX=null;
+/* Se llama tr() y no t() porque `t` ya es nombre de parámetro en dimLine, drawAxes,
+   densifica y setTool: ahí dentro sombrearía a la función y rompería la traducción. */
+function tr(x){return LANG==='en'&&EN[x]!==undefined?EN[x]:x;}
+/* Índice de lo que hay que tocar en el HTML estático: nodos de texto traducibles, más los
+   title y placeholder. Se arma una sola vez y guarda el original en español. */
+function i18nIndexar(){
+  /* Una sola vez y nunca más: si se reconstruyera con la página ya en inglés, guardaría el
+     inglés como «original» y el español no volvería nunca más. */
+  if(I18N_IDX)return;
+  I18N_IDX=[];
+  const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+  let n;while(n=w.nextNode()){const v=n.nodeValue;if(v&&v.trim()&&EN[v.trim()]!==undefined)I18N_IDX.push({n,o:v,a:null});}
+  document.querySelectorAll('[title],[placeholder]').forEach(el=>{
+    ['title','placeholder'].forEach(a=>{const v=el.getAttribute(a);if(v&&EN[v.trim()]!==undefined)I18N_IDX.push({n:el,o:v,a});});});
+}
+/* Al traducir se conservan los espacios de alrededor: se cambia solo la parte con letras,
+   porque el salto de línea y la sangría del HTML forman parte del mismo nodo. */
+function setLang(l){
+  LANG=l;if(!I18N_IDX)i18nIndexar();
+  I18N_IDX.forEach(({n,o,a})=>{const k=o.trim(),v=l==='en'?o.replace(k,EN[k]):o;
+    if(a)n.setAttribute(a,v);else n.nodeValue=v;});
+  document.getElementById('lgEs').classList.toggle('on',l==='es');
+  document.getElementById('lgEn').classList.toggle('on',l==='en');
+  document.documentElement.lang=l;
+  try{localStorage.setItem('cerametric-lang',l);}catch(e){}
+  renderResults();
+  const mb=document.getElementById('mb');if(mb&&mb.dataset.k)mb.textContent=tr(mb.dataset.k);
+}
+const S={img:null,origImg:null,tx:0,ty:0,sc:1,isc:1,vpW:0,vpH:0,tool:'pan',pan:{on:false,sx:0,sy:0,tx:0,ty:0},ctrl:false,mpos:{ix:0,iy:0},calPts:[],calDone:false,pxPerCm:null,calCm:null,prevPpc:null,rgba:null,seq:0,manSeq:0,showAxes:true,cols:{area:true,perim:true,largo:true,ancho:true},axDrag:null,expImg:false,excl:[],exclDrag:null,noClick:false,sherds:[],manualSherds:[],poly:[],polyClosed:false,otsuT:null,grayCache:null,crop:{on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false}};
 const COLS=['#5BBFB0','#7EC8FF','#A0D080','#D0A0F0','#F0C840','#80D0C8','#9EC8FF','#B0E09A','#F08080','#C8B880'];
 const MCOL='#E8956A';
 const mc=document.getElementById('mc'),oc=document.getElementById('oc'),pc=document.getElementById('pc');
@@ -938,19 +1130,19 @@ const ctx=mc.getContext('2d'),octx=oc.getContext('2d'),pctx=pc.getContext('2d');
 const vp=document.getElementById('vp');
 function resizeVP(){const r=vp.getBoundingClientRect();S.vpW=r.width;S.vpH=r.height;mc.width=oc.width=r.width;mc.height=oc.height=r.height;render();}
 window.addEventListener('resize',resizeVP);resizeVP();
-function resetAll(){S.excl=[];S.exclDrag=null;exclUI();S.calPts=[];S.calDone=false;S.pxPerCm=null;S.calCm=null;S.prevPpc=null;S.rgba=null;document.getElementById('btnOrig').classList.add('hidden');S.sherds=[];S.manualSherds=[];S.manSeq=0;S.poly=[];S.polyClosed=false;S.otsuT=null;S.grayCache=null;S.crop={on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false};document.getElementById('calInfo').textContent='';document.getElementById('calRes').classList.add('hidden');document.getElementById('oChip').classList.add('hidden');document.getElementById('manInfo').textContent='';document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;document.getElementById('btnRec').disabled=true;document.getElementById('cropBar').classList.remove('v');ndot('s2','p');ndot('s3','p');ndot('sM','p');setDot('C','','Sin calibrar');setDot('D','','Sin detección');renderResults();disableStep3();disableExport();}
-function clearAll(){S.sherds=[];S.manualSherds=[];S.manSeq=0;S.poly=[];S.polyClosed=false;document.getElementById('manInfo').textContent='';document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;ndot('s3','p');ndot('sM','p');setDot('D','','Sin detección');renderResults();disableExport();render();setMsg('Selecciones limpiadas.');}
+function resetAll(){S.excl=[];S.exclDrag=null;exclUI();S.calPts=[];S.calDone=false;S.pxPerCm=null;S.calCm=null;S.prevPpc=null;S.rgba=null;document.getElementById('btnOrig').classList.add('hidden');S.sherds=[];S.manualSherds=[];S.manSeq=0;S.poly=[];S.polyClosed=false;S.otsuT=null;S.grayCache=null;S.crop={on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false};document.getElementById('calInfo').textContent='';document.getElementById('calRes').classList.add('hidden');document.getElementById('oChip').classList.add('hidden');document.getElementById('manInfo').textContent='';document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;document.getElementById('btnRec').disabled=true;document.getElementById('cropBar').classList.remove('v');ndot('s2','p');ndot('s3','p');ndot('sM','p');setDot('C','',tr('Sin calibrar'));setDot('D','',tr('Sin detección'));renderResults();disableStep3();disableExport();}
+function clearAll(){S.sherds=[];S.manualSherds=[];S.manSeq=0;S.poly=[];S.polyClosed=false;document.getElementById('manInfo').textContent='';document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;ndot('s3','p');ndot('sM','p');setDot('D','',tr('Sin detección'));renderResults();disableExport();render();setMsg(tr('Selecciones limpiadas.'));}
 function i2s(ix,iy){return{sx:ix*S.sc+S.tx,sy:iy*S.sc+S.ty}}
 function s2i(sx,sy){return{ix:(sx-S.tx)/S.sc,iy:(sy-S.ty)/S.sc}}
 function snapAx(p0,p1){return Math.abs(p1.ix-p0.ix)>Math.abs(p1.iy-p0.iy)?{ix:p1.ix,iy:p0.iy}:{ix:p0.ix,iy:p1.iy}}
 function render(){ctx.clearRect(0,0,mc.width,mc.height);octx.clearRect(0,0,oc.width,oc.height);if(!S.img)return;ctx.save();ctx.translate(S.tx,S.ty);ctx.scale(S.sc,S.sc);ctx.drawImage(S.img,0,0);ctx.restore();drawExcl();drawSherds();drawManualSherds();drawAxes();drawCal();drawPoly();drawCropRect();}
-/* La caja de área mínima, o sea el rectángulo del que salen el largo y el ancho. Verla
-   muestra en qué dirección se tomó cada medida: la pieza toca la caja en unos pocos puntos
-   del borde, y son esos puntos —no las esquinas de la caja— los que fijan el largo y el
-   ancho. Las cotas se anclan ahí (ver minAreaRect). Reemplaza al rectángulo
-   alineado a los ejes de la foto que se dibujaba antes, que no correspondía a ninguna
-   medida y hacía pensar que el largo se tomaba en horizontal. */
-function drawBox(pts,col,id){if(!pts)return false;const s=pts.map(p=>i2s(p[0],p[1]));if(S.showAxes&&(S.method==='caja'||S.axMode==='ambos')){octx.save();octx.strokeStyle=col;octx.globalAlpha=.5;octx.lineWidth=1.1;octx.setLineDash([4,3]);octx.beginPath();octx.moveTo(s[0].sx,s[0].sy);for(let i=1;i<s.length;i++)octx.lineTo(s[i].sx,s[i].sy);octx.closePath();octx.stroke();octx.restore();}if(id){let t=s[0];for(const p of s)if(p.sy<t.sy)t=p;octx.save();octx.fillStyle=col;octx.font='500 10px DM Mono,monospace';octx.fillText(id,t.sx+4,t.sy-5);octx.restore();}return true;}
+/* La caja de área mínima. Desde v1.3 ya NO se mide: está para que se vea en qué DIRECCIÓN
+   se tomaron el largo y el ancho, que son cuerdas de la propia pieza (ver cuerdas()). Sin
+   ella, en un fragmento deforme, no hay manera de saber de dónde salió el eje — y también
+   explica de un vistazo por qué la cota del largo puede quedar más corta que el lado de la
+   caja. Reemplaza al rectángulo alineado a los ejes de la foto que se dibujaba antes, que
+   no correspondía a ninguna medida y hacía pensar que el largo se tomaba en horizontal. */
+function drawBox(pts,col,id){if(!pts)return false;const s=pts.map(p=>i2s(p[0],p[1]));if(S.showAxes){octx.save();octx.strokeStyle=col;octx.globalAlpha=.5;octx.lineWidth=1.1;octx.setLineDash([4,3]);octx.beginPath();octx.moveTo(s[0].sx,s[0].sy);for(let i=1;i<s.length;i++)octx.lineTo(s[i].sx,s[i].sy);octx.closePath();octx.stroke();octx.restore();}if(id){let t=s[0];for(const p of s)if(p.sy<t.sy)t=p;octx.save();octx.fillStyle=col;octx.font='500 10px DM Mono,monospace';octx.fillText(id,t.sx+4,t.sy-5);octx.restore();}return true;}
 function drawSherds(){S.sherds.forEach(sh=>{if(sh.borderPts&&sh.borderPts.length){const ps=Math.max(1.5,S.sc);sh.borderPts.forEach(([bx,by])=>{const{sx,sy}=i2s(bx,by);octx.fillStyle=sh.color+'CC';octx.fillRect(sx,sy,ps,ps);});}if(drawBox(sh.geo&&sh.geo.box,sh.color,sh.id))return;const{minX,maxX,minY,maxY}=sh.bbox;const a=i2s(minX,minY),b=i2s(maxX,maxY);octx.save();octx.strokeStyle=sh.color;octx.lineWidth=1.2;octx.setLineDash([4,3]);octx.strokeRect(a.sx,a.sy,b.sx-a.sx,b.sy-a.sy);octx.setLineDash([]);octx.fillStyle=sh.color;octx.font='500 10px DM Mono,monospace';octx.fillText(sh.id,a.sx+3,a.sy-4);octx.restore();});}
 function drawManualSherds(){S.manualSherds.forEach(sh=>{const pts=sh.polygon;if(!pts.length)return;octx.save();octx.strokeStyle=MCOL;octx.fillStyle='rgba(232,149,106,.14)';octx.lineWidth=1.6;octx.beginPath();const s0=i2s(pts[0].ix,pts[0].iy);octx.moveTo(s0.sx,s0.sy);for(let i=1;i<pts.length;i++){const sp=i2s(pts[i].ix,pts[i].iy);octx.lineTo(sp.sx,sp.sy);}octx.closePath();octx.fill();octx.stroke();octx.restore();if(!drawBox(sh.geo&&sh.geo.box,MCOL,sh.id)){octx.save();octx.fillStyle=MCOL;octx.font='500 10px DM Mono,monospace';octx.fillText(sh.id,s0.sx+3,s0.sy-4);octx.restore();}});}
 function drawCal(){const pts=S.calPts;if(!pts.length)return;const s0=i2s(pts[0].ix,pts[0].iy);drawPt(octx,s0.sx,s0.sy,'#5BBFB0','1');if(S.calDone&&pts.length===2){const s1=i2s(pts[1].ix,pts[1].iy);drawPt(octx,s1.sx,s1.sy,'#5BBFB0','2');drawLn(octx,s0.sx,s0.sy,s1.sx,s1.sy,'#5BBFB0',[5,3]);const mx=(s0.sx+s1.sx)/2,my=(s0.sy+s1.sy)/2;octx.fillStyle='#5BBFB0';octx.font='500 10px DM Mono,monospace';octx.fillText(`${S.calCm} cm`,mx+5,my-5);return;}if(S.tool==='calibrate'&&pts.length===1){let{ix,iy}=S.mpos;if(S.ctrl){const sn=snapAx(pts[0],{ix,iy});ix=sn.ix;iy=sn.iy;}const sm=i2s(ix,iy);drawLn(octx,s0.sx,s0.sy,sm.sx,sm.sy,'#5BBFB0',[4,3]);octx.beginPath();octx.arc(sm.sx,sm.sy,4,0,Math.PI*2);octx.fillStyle='rgba(91,191,176,.4)';octx.fill();if(S.pxPerCm){const d=Math.hypot(ix-pts[0].ix,iy-pts[0].iy);octx.fillStyle='rgba(91,191,176,.8)';octx.font='10px DM Mono,monospace';octx.fillText(`${(d/S.pxPerCm).toFixed(2)} cm`,sm.sx+7,sm.sy-7);}}}
@@ -992,8 +1184,8 @@ function exclAdd(z){const w=Math.abs(z.x1-z.x0),h=Math.abs(z.y1-z.y0);if(w<6||h<
   /* Marcar la escala es el paso previo a calibrarla, así que en cuanto queda marcada se pasa
      sola a la herramienta de calibrar. Sin esto uno se queda en modo excluir sin darse
      cuenta y los clics sobre la escala no calibran nada. */
-  if(!S.calDone){setTool('calibrate');setMsg('Zona marcada. Ahora calibrá: clic en los dos extremos de la escala — se puede adentro de la zona.');}
-  else setMsg('Zona marcada — la detección la va a ignorar.');}
+  if(!S.calDone){setTool('calibrate');setMsg(tr('Zona marcada. Ahora calibrá: clic en los dos extremos de la escala — se puede adentro de la zona.'));}
+  else setMsg(tr('Zona marcada — la detección la va a ignorar.'));}
 function exclClear(){S.excl=[];exclUI();render();setMsg('Zonas quitadas.');}
 function exclUI(){const el=document.getElementById('exclInfo');if(!el)return;const n=S.excl.length;
   el.innerHTML=n?`✓ ${n} zona${n>1?'s':''} marcada${n>1?'s':''} — la detección ${n>1?'las':'la'} ignora. <a href="#" onclick="exclClear();return false" style="color:var(--t3)">quitar ${n>1?'todas':''}</a>`:'';}
@@ -1011,49 +1203,37 @@ function drawCropRect(){const c=S.crop;if(!c.on&&!c.confirmed)return;const a=i2s
 function drawPt(c,x,y,col,label){c.beginPath();c.arc(x,y,5,0,Math.PI*2);c.fillStyle=col;c.fill();c.strokeStyle='rgba(255,255,255,.7)';c.lineWidth=1.5;c.stroke();if(label){c.fillStyle='#fff';c.font='500 10px DM Mono,monospace';c.fillText(label,x+7,y-4);}}
 function drawLn(c,x1,y1,x2,y2,col,dash){c.save();c.strokeStyle=col;c.lineWidth=1.5;if(dash)c.setLineDash(dash);c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();c.restore();}
 /* ─── EJES DE MEDICIÓN ────────────────────────────
-   Dibuja sobre cada tiesto los segmentos de los que salen el largo, el ancho y el
-   los lados del rectángulo mínimo, como cotas de dibujo técnico (línea + marcas en los
-   extremos). Sin esto no hay forma de saber cuál de los dos números es cuál en una
-   pieza irregular. Las coordenadas viven en px de la imagen, así que no dependen
-   de la calibración: recalibrar no las mueve. */
+   Dibuja sobre cada tiesto las dos cuerdas de las que salen el largo y el ancho, como
+   cotas de dibujo técnico (línea + marcas en los extremos), más la caja punteada que da la
+   dirección del eje. Sin esto no hay forma de saber cuál de los dos números es cuál en una
+   pieza irregular. Las coordenadas viven en px de la imagen, así que no dependen de la
+   calibración: recalibrar no las mueve. */
 /* Código visual: el COLOR dice qué dimensión es (ámbar = largo, celeste = ancho) y el
-   TRAZO dice con qué criterio se tomó. Línea LLENA = lados de la caja (largo y ancho, lo
-   que se anota en ficha). Línea PUNTEADA = medidas cruzadas, de extremo a extremo.
-   Línea FINA a media tinta, con un punto en la punta = referencia: enlaza la cota con el
-   punto del contorno del que sale la medida, cuando la cota no llega a apoyarse sola.
+   TRAZO dice de dónde salió el número. Línea LLENA = la medida que va a la ficha. Línea
+   PUNTEADA = la calculada, y solo aparece cuando la cota se movió a mano, para ver cuánto
+   se corrió. Puntas redondas = cota puesta a pulso; marcas perpendiculares = calculada.
    Ver la nota metodológica del README. */
 const AXL='#D4A259',AXW='#7EB8D8',DASH=[5,4];
-/* El largo y el ancho se cruzan en el centro del rectángulo mínimo, así que si las
+/* El ancho pasa justo por la mitad del largo, así que si las
    etiquetas fueran al punto medio de cada cota caerían una encima de la otra. Por eso
    `t` las corre a lo largo de su propia línea: el largo a un cuarto, el ancho a tres
    cuartos. */
-function dimLine(a,b,col,dash,lbl,t,ext,mano){const A=i2s(a[0],a[1]),B=i2s(b[0],b[1]);const dx=B.sx-A.sx,dy=B.sy-A.sy,len=Math.hypot(dx,dy);if(len<2)return;const nx=-dy/len,ny=dx/len,k=5;
-  /* Líneas de referencia: van del punto del contorno que fija la medida hasta la punta de
-     la cota, sobre el lado de la caja. Finas y a media tinta para no competir con la cota;
-     el punto lleno marca dónde apoya sobre la cerámica. Si la cota ya toca el borde con
-     sus dos puntas no se dibuja ninguna. */
-  if(ext&&ext.length){octx.save();octx.strokeStyle=col;octx.lineWidth=1.2;octx.globalAlpha=.7;octx.setLineDash([3,2]);ext.forEach(([p,q])=>{const Pp=i2s(p[0],p[1]),Q=i2s(q[0],q[1]);octx.beginPath();octx.moveTo(Pp.sx,Pp.sy);octx.lineTo(Q.sx,Q.sy);octx.stroke();});octx.setLineDash([]);octx.globalAlpha=1;octx.fillStyle=col;ext.forEach(([p])=>{const Pp=i2s(p[0],p[1]);octx.beginPath();octx.arc(Pp.sx,Pp.sy,2.6,0,Math.PI*2);octx.fill();octx.strokeStyle='rgba(13,27,42,.55)';octx.lineWidth=.8;octx.setLineDash([]);octx.stroke();});octx.restore();}
+function dimLine(a,b,col,dash,lbl,t,mano){const A=i2s(a[0],a[1]),B=i2s(b[0],b[1]);const dx=B.sx-A.sx,dy=B.sy-A.sy,len=Math.hypot(dx,dy);if(len<2)return;const nx=-dy/len,ny=dx/len,k=5;
   octx.save();octx.strokeStyle=col;octx.lineWidth=1.6;if(dash)octx.setLineDash(dash);octx.beginPath();octx.moveTo(A.sx,A.sy);octx.lineTo(B.sx,B.sy);octx.stroke();octx.setLineDash([]);/* Una cota puesta a mano termina en círculo en vez de en la marca perpendicular del dibujo
      técnico: la marca dice "acá cae la medida", el círculo dice "acá la puse yo". */
   if(mano){[A,B].forEach(p=>{octx.beginPath();octx.arc(p.sx,p.sy,3.4,0,Math.PI*2);octx.fillStyle=col;octx.fill();octx.lineWidth=1.2;octx.strokeStyle='rgba(13,27,42,.6)';octx.stroke();});octx.strokeStyle=col;octx.lineWidth=1.6;}
   else{octx.beginPath();octx.moveTo(A.sx-nx*k,A.sy-ny*k);octx.lineTo(A.sx+nx*k,A.sy+ny*k);octx.moveTo(B.sx-nx*k,B.sy-ny*k);octx.lineTo(B.sx+nx*k,B.sy+ny*k);octx.stroke();}if(lbl&&len>55){const f=t==null?0.5:t,mx=A.sx+dx*f,my=A.sy+dy*f;octx.font='500 10px DM Mono,monospace';const tw=octx.measureText(lbl).width;octx.fillStyle='rgba(13,27,42,.82)';octx.fillRect(mx-tw/2-3,my-7,tw+6,14);octx.fillStyle=col;octx.textAlign='center';octx.textBaseline='middle';octx.fillText(lbl,mx,my);octx.textAlign='start';octx.textBaseline='alphabetic';}octx.restore();}
-function drawAxes(){if(!S.showAxes)return;const caja=S.method==='caja',ambos=S.axMode==='ambos';
-[...S.sherds,...S.manualSherds].forEach(sh=>{const g=sh.geo;if(!g)return;
-  const M={caja:{L:g.axL,A:g.axW,eL:g.extL,eA:g.extW,Lv:sh.Lcaja_cm,Av:sh.Acaja_cm,n:'caja'},
-           cont:{L:g.feret,A:g.axFA,eL:null,eA:null,Lv:sh.Lcont_cm,Av:sh.Acont_cm,n:'cont'}};
-  const cal=caja?M.caja:M.cont,otro=caja?M.cont:M.caja,mn=sh.manAx||{};
+function drawAxes(){if(!S.showAxes)return;
+[...S.sherds,...S.manualSherds].forEach(sh=>{const g=sh.geo;if(!g)return;const mn=sh.manAx||{};
   /* Cada dimensión se resuelve por su cuenta. La que se movió a mano se dibuja como
-     principal —es la que va a la ficha— y su punteada de comparación pasa a ser la
-     calculada del método elegido, para ver de un vistazo cuánto se corrió; la que sigue
-     calculada compara contra el otro método, como siempre. */
-  const dim=(k,ev,col,lbl,t)=>{
-    const mano=mn[k],seg=mano||cal[k];if(!seg)return;
-    const val=mano?(k==='L'?sh.Lman_cm:sh.Aman_cm):cal[ev.v];
-    if(ambos){const sg=mano?cal[k]:otro[k],sv=mano?cal[ev.v]:otro[ev.v],sn=mano?cal.n:otro.n;
-      if(sg)dimLine(sg[0],sg[1],col,DASH,`${lbl} ${sn} ${sv}`,t.sec);}
-    dimLine(seg[0],seg[1],col,null,`${lbl} ${val}`,t.pri,mano?null:cal[ev.e],!!mano);};
-  dim('A',{v:'Av',e:'eA'},AXW,'A',{pri:0.75,sec:0.25});
-  dim('L',{v:'Lv',e:'eL'},AXL,'L',{pri:0.25,sec:0.75});
+     principal —es la que va a la ficha— y la calculada queda punteada al lado, para ver de
+     un vistazo cuánto se corrió. */
+  const dim=(k,calc,val,vc,col,lbl,t)=>{
+    const mano=mn[k],seg=mano||calc;if(!seg)return;
+    if(mano&&calc)dimLine(calc[0],calc[1],col,DASH,`${lbl} calc ${vc}`,t.sec);
+    dimLine(seg[0],seg[1],col,null,`${lbl} ${val}`,t.pri,!!mano);};
+  dim('A',g.axW,sh.ancho_cm,sh.Acalc_cm,AXW,'A',{pri:0.75,sec:0.25});
+  dim('L',g.axL,sh.largo_cm,sh.Lcalc_cm,AXL,'L',{pri:0.25,sec:0.75});
   if(S.tool==='cotas'&&!S.expImg)drawAxHandles(sh);});}
 /* ─── COTAS MOVIDAS A MANO ────────────────────────────
    Un tiesto puede llevar su propio par de cotas, puestas a pulso con la herramienta de
@@ -1070,7 +1250,7 @@ function drawAxes(){if(!S.showAxes)return;const caja=S.method==='caja',ambos=S.a
    cambiar el otro. Si el par se copiara entero al primer arrastre, la dimensión intacta
    perdería la corrección de +1 px de la detección automática y el número se movería solo
    —0.25 mm a 40 px/cm—, que en un instrumento de medida es inadmisible. */
-function axEdit(sh){const g=sh.geo;if(!g)return null;const c=S.method==='caja',m=sh.manAx||{};const L=m.L||(c?g.axL:g.feret),A=m.A||(c?g.axW:g.axFA);return(L||A)?{L,A}:null;}
+function axEdit(sh){const g=sh.geo;if(!g)return null;const m=sh.manAx||{};const L=m.L||g.axL,A=m.A||g.axW;return(L||A)?{L,A}:null;}
 /* Qué se movió a mano en un tiesto. La exportación lo dice fila por fila. */
 function manLbl(s){const m=s.manAx||{};return m.L&&m.A?'largo y ancho':(m.L?'largo':(m.A?'ancho':'no'));}
 /* Nodo bajo el puntero, si hay alguno a menos de 11 px de pantalla. */
@@ -1085,23 +1265,22 @@ function snapBorde(sh,ix,iy){let d=Infinity,px=ix,py=iy;
    interfaz, no dato. */
 function drawAxHandles(sh){const e=axEdit(sh);if(!e)return;[['L',AXL],['A',AXW]].forEach(([k,col])=>{const seg=e[k];if(!seg)return;for(let i=0;i<2;i++){const p=i2s(seg[i][0],seg[i][1]);const act=S.axDrag&&S.axDrag.sh===sh&&S.axDrag.k===k&&S.axDrag.i===i;octx.save();octx.beginPath();octx.arc(p.sx,p.sy,act?6.5:4.8,0,Math.PI*2);octx.fillStyle=col;octx.fill();octx.lineWidth=act?2:1.5;octx.strokeStyle='rgba(255,255,255,.9)';octx.stroke();octx.restore();}});}
 /* Devuelve el tiesto a su medida calculada. */
-function axReset(k){const sh=[...S.sherds,...S.manualSherds].find(x=>x._k===k);if(!sh||!sh.manAx)return;delete sh.manAx;deriveCm(sh);renderResults();render();setMsg(sh.id+' — vuelto a la medida calculada.');}
+function axReset(k){const sh=[...S.sherds,...S.manualSherds].find(x=>x._k===k);if(!sh||!sh.manAx)return;delete sh.manAx;deriveCm(sh);renderResults();render();setMsg(sh.id+' '+tr('— vuelto a la medida calculada.'));}
 function toggleAxes(v){S.showAxes=v;render();}
-function setAxMode(v){S.axMode=v;render();}
 document.getElementById('fi').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>loadImg(ev.target.result);r.readAsDataURL(f);e.target.value='';});
-document.getElementById('cm').addEventListener('input',()=>{if(!S.calDone||S.calPts.length!==2)return;const cm=parseFloat(document.getElementById('cm').value);if(!(cm>0)){document.getElementById('calInfo').textContent='⚠ Medida real inválida (cm > 0).';return;}const[p0,p1]=S.calPts;const pxD=Math.hypot(p1.ix-p0.ix,p1.iy-p0.iy);const old=S.pxPerCm;S.calCm=cm;S.pxPerCm=pxD/cm;document.getElementById('pxCm').textContent=S.pxPerCm.toFixed(2);document.getElementById('calInfo').textContent=`✓ ${pxD.toFixed(1)} px = ${cm} cm`;setDot('C','on',`${S.pxPerCm.toFixed(1)} px/cm`);if(old!==S.pxPerCm&&recomputeCm())setMsg('Medida real cambiada — escala y métricas recalculadas.');else setMsg('Medida real cambiada — escala recalculada.');render();});
-function loadImg(src){const img=new Image();img.onerror=()=>{setMsg('⚠ No se pudo cargar la imagen — formato no soportado por el navegador (usá JPG o PNG).');};img.onload=()=>{S.img=img;S.origImg=img;resetAll();pc.width=img.width;pc.height=img.height;pctx.drawImage(img,0,0);const id=pctx.getImageData(0,0,img.width,img.height);S.grayCache=computeGray(id);S.rgba=id.data;S.otsuT=otsuCalc(S.grayCache,img.width*img.height);document.getElementById('otsuV').textContent=S.otsuT;document.getElementById('oChip').classList.remove('hidden');resizeVP();resetZoom();document.getElementById('ph').classList.add('hidden');document.getElementById('imgBadge').textContent=`${img.width}×${img.height}`;document.getElementById('imgBadge').classList.remove('hidden');setDot('I','on',`${img.width}×${img.height}`);enableBaseUI();ndot('s1','d');setTool('calibrate');setMsg('Imagen cargada — iniciá la calibración.');};img.src=src;}
+document.getElementById('cm').addEventListener('input',()=>{if(!S.calDone||S.calPts.length!==2)return;const cm=parseFloat(document.getElementById('cm').value);if(!(cm>0)){document.getElementById('calInfo').textContent=tr('⚠ Medida real inválida (cm > 0).');return;}const[p0,p1]=S.calPts;const pxD=Math.hypot(p1.ix-p0.ix,p1.iy-p0.iy);const old=S.pxPerCm;S.calCm=cm;S.pxPerCm=pxD/cm;document.getElementById('pxCm').textContent=S.pxPerCm.toFixed(2);document.getElementById('calInfo').textContent=`✓ ${pxD.toFixed(1)} px = ${cm} cm`;setDot('C','on',`${S.pxPerCm.toFixed(1)} px/cm`);if(old!==S.pxPerCm&&recomputeCm())setMsg(tr('Medida real cambiada — escala y métricas recalculadas.'));else setMsg(tr('Medida real cambiada — escala recalculada.'));render();});
+function loadImg(src){const img=new Image();img.onerror=()=>{setMsg(tr('⚠ No se pudo cargar la imagen — formato no soportado por el navegador (usá JPG o PNG).'));};img.onload=()=>{S.img=img;S.origImg=img;resetAll();pc.width=img.width;pc.height=img.height;pctx.drawImage(img,0,0);const id=pctx.getImageData(0,0,img.width,img.height);S.grayCache=computeGray(id);S.rgba=id.data;S.otsuT=otsuCalc(S.grayCache,img.width*img.height);document.getElementById('otsuV').textContent=S.otsuT;document.getElementById('oChip').classList.remove('hidden');resizeVP();resetZoom();document.getElementById('ph').classList.add('hidden');document.getElementById('imgBadge').textContent=`${img.width}×${img.height}`;document.getElementById('imgBadge').classList.remove('hidden');setDot('I','on',`${img.width}×${img.height}`);enableBaseUI();ndot('s1','d');setTool('calibrate');setMsg(tr('Imagen cargada — iniciá la calibración.'));};img.src=src;}
 function resetZoom(){if(!S.img)return;const r=vp.getBoundingClientRect();const sc=Math.min(r.width/S.img.width,r.height/S.img.height,1)*0.92;S.sc=S.isc=sc;S.tx=(r.width-S.img.width*sc)/2;S.ty=(r.height-S.img.height*sc)/2;zlbl();render();}
 function zoomBy(f,cx,cy){if(!S.img)return;cx=cx??S.vpW/2;cy=cy??S.vpH/2;const ns=Math.max(0.05,Math.min(S.sc*f,30));const rat=ns/S.sc;S.tx=cx-rat*(cx-S.tx);S.ty=cy-rat*(cy-S.ty);S.sc=ns;zlbl();render();}
 function zlbl(){document.getElementById('zl').textContent=`${Math.round(S.sc/S.isc*100)}%`;}
 vp.addEventListener('wheel',e=>{e.preventDefault();if(!S.img)return;const r=vp.getBoundingClientRect();zoomBy(e.deltaY<0?1.15:1/1.15,e.clientX-r.left,e.clientY-r.top);},{passive:false});
-oc.addEventListener('mousedown',e=>{if(!S.img)return;const r=oc.getBoundingClientRect();const sx=e.clientX-r.left,sy=e.clientY-r.top;if(S.tool==='pan'){S.pan={on:true,sx:e.clientX,sy:e.clientY,tx:S.tx,ty:S.ty};}else if(S.tool==='cotas'){const h=axHit(sx,sy);if(h){/* Al primer arrastre se copia SOLO esa cota: de ahí en más es del tiesto y cambiar de método ya no la pisa. La otra dimensión sigue siendo la calculada. */if(!h.sh.manAx)h.sh.manAx={};if(!h.sh.manAx[h.k]){const ae=axEdit(h.sh);h.sh.manAx[h.k]=[ae[h.k][0].slice(),ae[h.k][1].slice()];deriveCm(h.sh);}S.axDrag={sh:h.sh,k:h.k,i:h.i};render();}}else if(S.tool==='excluir'){const q=exclHitX(sx,sy);
-    if(q>=0){S.excl.splice(q,1);exclUI();render();setMsg('Zona quitada — la detección vuelve a mirar ahí.');}
+oc.addEventListener('mousedown',e=>{if(!S.img)return;const r=oc.getBoundingClientRect();const sx=e.clientX-r.left,sy=e.clientY-r.top;if(S.tool==='pan'){S.pan={on:true,sx:e.clientX,sy:e.clientY,tx:S.tx,ty:S.ty};}else if(S.tool==='cotas'){const h=axHit(sx,sy);if(h){/* Al primer arrastre se copia SOLO esa cota: de ahí en más es del tiesto. La otra dimensión sigue siendo la calculada. */if(!h.sh.manAx)h.sh.manAx={};if(!h.sh.manAx[h.k]){const ae=axEdit(h.sh);h.sh.manAx[h.k]=[ae[h.k][0].slice(),ae[h.k][1].slice()];deriveCm(h.sh);}S.axDrag={sh:h.sh,k:h.k,i:h.i};render();}}else if(S.tool==='excluir'){const q=exclHitX(sx,sy);
+    if(q>=0){S.excl.splice(q,1);exclUI();render();setMsg(tr('Zona quitada — la detección vuelve a mirar ahí.'));}
     else{const{ix,iy}=s2i(sx,sy);S.exclDrag={x0:ix,y0:iy,x1:ix,y1:iy};render();}}else if(S.tool==='crop'){const{ix,iy}=s2i(sx,sy);S.crop={on:true,sx:ix,sy:iy,ex:ix,ey:iy,dragging:true,confirmed:false};document.getElementById('cropBar').classList.remove('v');}});
 oc.addEventListener('mousemove',e=>{if(!S.img)return;const r=oc.getBoundingClientRect();const sx=e.clientX-r.left,sy=e.clientY-r.top;S.mpos=s2i(sx,sy);if(S.tool==='pan'&&S.pan.on){S.tx=S.pan.tx+(e.clientX-S.pan.sx);S.ty=S.pan.ty+(e.clientY-S.pan.sy);}else if(S.tool==='cotas'&&S.axDrag){let{ix,iy}=S.mpos;/* El estado global de Ctrl lo pone el keydown del documento; leer además el del propio evento evita que el pegado al contorno se pierda si el foco estaba fuera del canvas cuando se apretó la tecla. */if(S.ctrl||e.ctrlKey){const q=snapBorde(S.axDrag.sh,ix,iy);ix=q.ix;iy=q.iy;}S.axDrag.sh.manAx[S.axDrag.k][S.axDrag.i]=[ix,iy];deriveCm(S.axDrag.sh);}else if(S.tool==='excluir'&&S.exclDrag){S.exclDrag.x1=S.mpos.ix;S.exclDrag.y1=S.mpos.iy;}else if(S.tool==='crop'&&S.crop.dragging){const{ix,iy}=S.mpos;S.crop.ex=ix;S.crop.ey=iy;const t=S.pxPerCm?r2(Math.abs(S.crop.ex-S.crop.sx)/S.pxPerCm)+'×'+r2(Math.abs(S.crop.ey-S.crop.sy)/S.pxPerCm)+' cm':'arrastrá para seleccionar';document.getElementById('cropInfo').textContent=t;}const needsR=S.pan.on||(S.tool==='calibrate'&&S.calPts.length===1&&!S.calDone)||(S.tool==='manual'&&S.poly.length>0&&!S.polyClosed)||(S.tool==='crop'&&S.crop.dragging)||(S.tool==='cotas'&&S.axDrag)||(S.tool==='excluir'&&S.exclDrag);if(needsR)render();oc.style.cursor=S.tool==='pan'?(S.pan.on?'grabbing':'grab'):(S.tool==='cotas'?(S.axDrag?'grabbing':(axHit(sx,sy)?'grab':'default')):'crosshair');});
 /* Soltar cierra el arrastre y recalcula la ficha. Durante el arrastre solo se redibuja el
    canvas: rehacer la lista de resultados en cada mousemove haría dar tirones al puntero. */
-function axDrop(){if(!S.axDrag)return;const sh=S.axDrag.sh;S.axDrag=null;deriveCm(sh);renderResults();render();setMsg(sh.id+' — medido a mano: '+sh.largo_cm+' × '+sh.ancho_cm+' cm. El botón ↺ de la tarjeta lo devuelve a la medida calculada.');}
+function axDrop(){if(!S.axDrag)return;const sh=S.axDrag.sh;S.axDrag=null;deriveCm(sh);renderResults();render();setMsg(sh.id+' '+tr('— medido a mano:')+' '+sh.largo_cm+' × '+sh.ancho_cm+' '+tr('cm. El botón ↺ de la tarjeta lo devuelve a la medida calculada.'));}
 oc.addEventListener('mouseup',e=>{S.pan.on=false;axDrop();/* El arrastre termina en un evento click que el navegador dispara igual. Si acá se pasó a
      la herramienta de calibrar, ese clic entraría como primer punto de calibración en el
      lugar donde uno soltó el recuadro: hay que tragárselo. */
@@ -1111,43 +1290,32 @@ oc.addEventListener('click',e=>{if(S.noClick){S.noClick=false;return;}if(!S.img|
 oc.addEventListener('dblclick',()=>{if(S.tool!=='manual')return;const n=S.poly.length;if(n>=2){const a=S.poly[n-1],b=S.poly[n-2];if(Math.hypot(a.ix-b.ix,a.iy-b.iy)*S.sc<6)S.poly.pop();}closePoly();});
 document.addEventListener('keydown',e=>{if(e.key==='Control'){S.ctrl=true;document.getElementById('snapInd').classList.add('v');render();}if(['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName))return;if(!S.img)return;if(e.key==='h'||e.key==='H')setTool('pan');if(e.key==='c'||e.key==='C')setTool('calibrate');if(e.key==='m'||e.key==='M')setTool('manual');if(e.key==='r'||e.key==='R')setTool('crop');if(e.key==='e'||e.key==='E')setTool('cotas');if(e.key==='x'||e.key==='X')setTool('excluir');if(e.key==='Escape'){manClear();cancelCrop();setTool('pan');}if(e.key==='+'||e.key==='=')zoomBy(1.25);if(e.key==='-')zoomBy(0.8);if(e.key==='Enter'&&S.crop.confirmed)confirmCrop();});
 document.addEventListener('keyup',e=>{if(e.key==='Control'){S.ctrl=false;document.getElementById('snapInd').classList.remove('v');render();}});
-function setTool(t){if(t==='manual'&&!S.pxPerCm){setMsg('Calibrá la escala antes de usar la selección manual.');return;}if(t==='cotas'&&![...S.sherds,...S.manualSherds].length){setMsg('Primero detectá o trazá algún tiesto: las cotas se mueven sobre medidas ya tomadas.');return;}S.axDrag=null;S.exclDrag=null;S.tool=t;const map={pan:'tbPan',calibrate:'tbCal',manual:'tbMan',crop:'tbCrop',cotas:'tbAx',excluir:'tbExcl'};Object.values(map).forEach(id=>{const b=document.getElementById(id);if(b){b.classList.remove('on','crop-on');}});if(map[t]){const b=document.getElementById(map[t]);if(b)b.classList.add(t==='crop'?'crop-on':'on');}const msgs={pan:'',calibrate:'Calibración  ·  clic pt.1  ·  clic pt.2  ·  Ctrl = línea recta',manual:'Selección manual  ·  clic = vértice  ·  doble-clic = cerrar polígono',crop:'Recortar  ·  arrastrá para seleccionar  ·  Enter = aplicar',excluir:'Marcar la escala  ·  arrastrá para encuadrarla  ·  la × de cada zona la quita',cotas:'Mover cotas  ·  arrastrá los nodos de las puntas  ·  Ctrl = pegar al contorno'};document.getElementById('snapInd').textContent=t==='cotas'?'⊕ Ctrl · pegar al contorno':'⊕ Ctrl · línea recta';const mb=document.getElementById('mb');mb.textContent=msgs[t]||'';mb.className='mbadge'+(t!=='pan'?' v':'')+(t==='crop'?' crop-mode':'');oc.style.cursor=t==='pan'?'grab':(t==='cotas'?'default':'crosshair');if(t!=='crop')cancelCrop();render();}
-function handleCal(ix,iy){if(S.calDone){S.prevPpc=S.pxPerCm||S.prevPpc;S.calPts=[];S.calDone=false;S.pxPerCm=null;document.getElementById('calRes').classList.add('hidden');ndot('s2','p');setDot('C','','Recalibrando…');document.getElementById('calInfo').textContent='Recalibrando — marcá los dos puntos de nuevo.';}if(S.ctrl&&S.calPts.length===1){const sn=snapAx(S.calPts[0],{ix,iy});ix=sn.ix;iy=sn.iy;}S.calPts.push({ix,iy});if(S.calPts.length===2)finishCal();render();}
+function setTool(t){if(t==='manual'&&!S.pxPerCm){setMsg(tr('Calibrá la escala antes de usar la selección manual.'));return;}if(t==='cotas'&&![...S.sherds,...S.manualSherds].length){setMsg(tr('Primero detectá o trazá algún tiesto: las cotas se mueven sobre medidas ya tomadas.'));return;}S.axDrag=null;S.exclDrag=null;S.tool=t;const map={pan:'tbPan',calibrate:'tbCal',manual:'tbMan',crop:'tbCrop',cotas:'tbAx',excluir:'tbExcl'};Object.values(map).forEach(id=>{const b=document.getElementById(id);if(b){b.classList.remove('on','crop-on');}});if(map[t]){const b=document.getElementById(map[t]);if(b)b.classList.add(t==='crop'?'crop-on':'on');}const msgs={pan:'',calibrate:'Calibración  ·  clic pt.1  ·  clic pt.2  ·  Ctrl = línea recta',manual:'Selección manual  ·  clic = vértice  ·  doble-clic = cerrar polígono',crop:'Recortar  ·  arrastrá para seleccionar  ·  Enter = aplicar',excluir:'Marcar la escala  ·  arrastrá para encuadrarla  ·  la × de cada zona la quita',cotas:'Mover cotas  ·  arrastrá los nodos de las puntas  ·  Ctrl = pegar al contorno'};document.getElementById('snapInd').textContent=t==='cotas'?tr('⊕ Ctrl · pegar al contorno'):tr('⊕ Ctrl · línea recta');const mb=document.getElementById('mb');mb.dataset.k=msgs[t]||'';mb.textContent=msgs[t]?tr(msgs[t]):'';mb.className='mbadge'+(t!=='pan'?' v':'')+(t==='crop'?' crop-mode':'');oc.style.cursor=t==='pan'?'grab':(t==='cotas'?'default':'crosshair');if(t!=='crop')cancelCrop();render();}
+function handleCal(ix,iy){if(S.calDone){S.prevPpc=S.pxPerCm||S.prevPpc;S.calPts=[];S.calDone=false;S.pxPerCm=null;document.getElementById('calRes').classList.add('hidden');ndot('s2','p');setDot('C','',tr('Recalibrando…'));document.getElementById('calInfo').textContent='Recalibrando — marcá los dos puntos de nuevo.';}if(S.ctrl&&S.calPts.length===1){const sn=snapAx(S.calPts[0],{ix,iy});ix=sn.ix;iy=sn.iy;}S.calPts.push({ix,iy});if(S.calPts.length===2)finishCal();render();}
 /* Cada tiesto guarda sus métricas crudas en píxeles (s.px) y los centímetros se
    derivan de S.pxPerCm. Recalibrar re-deriva desde el original en vez de reescalar
    valores ya redondeados: si no, cada pulsación de tecla en "Medida real" perdía
-   cifras significativas (v1.1). Circularidad, elongación y solidez son
-   adimensionales — no dependen de la escala y no se recalculan.
-   Hay dos MÉTODOS de medición y el usuario elige cuál manda (S.method). Los dos se
-   calculan siempre y se exportan los dos; el elegido es el que va en Largo_cm/Ancho_cm.
-     · 'caja'     → lados del rectángulo de área mínima (px.L, px.W).
-     · 'contorno' → mayor distancia entre dos puntos del borde (px.feret) y la travesía
-                    más larga perpendicular a ella (px.fw), como con un calibre.
-   La elongación depende del método, así que también se deriva acá. */
-function deriveCm(s){const ppc=S.pxPerCm;if(!ppc||!s.px)return s;const q=s.px;s.area_cm2=r2(q.area/(ppc*ppc));s.perimeter_cm=r2(q.perim/ppc);s.Lcaja_cm=r2(q.L/ppc);s.Acaja_cm=r2(q.W/ppc);s.Lcont_cm=r2(q.feret/ppc);s.Acont_cm=r2(q.fw/ppc);s.elonCaja=r2(q.L/Math.max(1e-6,q.W));s.elonCont=r2(q.feret/Math.max(1e-6,q.fw));
+   cifras significativas (v1.1).
+   Desde v1.3 hay UN solo criterio de largo y ancho —las cuerdas de la pieza, ver
+   cuerdas()— así que ya no hay un par por método que reconciliar. La cota movida a mano,
+   cuando existe, manda sobre la calculada, que igual queda en su propia columna. */
+function deriveCm(s){const ppc=S.pxPerCm;if(!ppc||!s.px)return s;const q=s.px;
+  s.area_cm2=r2(q.area/(ppc*ppc));s.perimeter_cm=r2(q.perim/ppc);
+  s.Lcalc_cm=r2(q.L/ppc);s.Acalc_cm=r2(q.W/ppc);
   /* Las cotas movidas a mano viven en px de la imagen, igual que las calculadas, así que
      recalibrar las re-deriva desde el original en vez de reescalar un valor ya redondeado.
      Cada dimensión es independiente: puede haber un largo a mano con el ancho calculado. */
-  const c=S.method==='caja',m=s.manAx||{},dd=g=>Math.hypot(g[1][0]-g[0][0],g[1][1]-g[0][1]);
+  const m=s.manAx||{},dd=g=>Math.hypot(g[1][0]-g[0][0],g[1][1]-g[0][1]);
   const Lm=m.L?dd(m.L):null,Am=m.A?dd(m.A):null;
   s.Lman_cm=Lm!=null?r2(Lm/ppc):null;
   s.Aman_cm=Am!=null?r2(Am/ppc):null;
   /* La cota puesta a mano manda sobre la calculada: es la medida que va a la ficha. */
-  s.largo_cm=s.Lman_cm!=null?s.Lman_cm:(c?s.Lcaja_cm:s.Lcont_cm);
-  s.ancho_cm=s.Aman_cm!=null?s.Aman_cm:(c?s.Acaja_cm:s.Acont_cm);
-  /* Elongación EFECTIVA de cada método: toma la cota a mano donde la haya y la calculada
-     donde no. Hay una por método porque la exportación saca una hoja por método y cada una
-     tiene que ser coherente con su propio par de largo y ancho — si no, la hoja «Por
-     contorno» dividiría un largo a mano por el ancho de la caja. Sale de los px para no
-     dividir valores ya redondeados. */
-  s.elonEfCaja=r2((Lm!=null?Lm:q.L)/Math.max(1e-6,Am!=null?Am:q.W));
-  s.elonEfCont=r2((Lm!=null?Lm:q.feret)/Math.max(1e-6,Am!=null?Am:q.fw));
-  s.elongation=c?s.elonEfCaja:s.elonEfCont;
+  s.largo_cm=s.Lman_cm!=null?s.Lman_cm:s.Lcalc_cm;
+  s.ancho_cm=s.Aman_cm!=null?s.Aman_cm:s.Acalc_cm;
   return s;}
-function setMethod(v){S.method=v;recomputeCm();render();setMsg(v==='caja'?'Método por caja — largo y ancho son los lados del rectángulo mínimo.':'Método por contorno — largo y ancho se miden entre puntos del borde, como con calibre.');}
 function recomputeCm(){const all=[...S.sherds,...S.manualSherds];if(!all.length)return false;all.forEach(deriveCm);renderResults();return true;}
-function finishCal(){const[p0,p1]=S.calPts;const pxD=Math.hypot(p1.ix-p0.ix,p1.iy-p0.iy);const cm=parseFloat(document.getElementById('cm').value);if(!(cm>0)||!(pxD>0)){S.calPts=[];document.getElementById('calInfo').textContent='⚠ Medida real inválida — ingresá un valor en cm mayor a 0 y volvé a marcar.';render();return;}S.calDone=true;S.calCm=cm;S.pxPerCm=pxD/cm;document.getElementById('pxCm').textContent=S.pxPerCm.toFixed(2);document.getElementById('calDist').textContent=pxD.toFixed(1)+' px';document.getElementById('calRes').classList.remove('hidden');document.getElementById('calInfo').textContent=`✓ ${pxD.toFixed(1)} px = ${cm} cm`;document.getElementById('btnRec').disabled=false;ndot('s2','d');setDot('C','on',`${S.pxPerCm.toFixed(1)} px/cm`);enableStep3();document.getElementById('tbMan').disabled=false;if(S.prevPpc&&S.prevPpc!==S.pxPerCm&&recomputeCm())setMsg('Calibración lista — métricas existentes reescaladas a la nueva escala.');else setMsg('Calibración lista.');S.prevPpc=null;setTool('pan');}
-function resetCal(){S.prevPpc=S.pxPerCm||S.prevPpc;S.calPts=[];S.calDone=false;S.pxPerCm=null;document.getElementById('calInfo').textContent='';document.getElementById('calRes').classList.add('hidden');ndot('s2','p');setDot('C','','Sin calibrar');setTool('calibrate');render();}
+function finishCal(){const[p0,p1]=S.calPts;const pxD=Math.hypot(p1.ix-p0.ix,p1.iy-p0.iy);const cm=parseFloat(document.getElementById('cm').value);if(!(cm>0)||!(pxD>0)){S.calPts=[];document.getElementById('calInfo').textContent=tr('⚠ Medida real inválida — ingresá un valor en cm mayor a 0 y volvé a marcar.');render();return;}S.calDone=true;S.calCm=cm;S.pxPerCm=pxD/cm;document.getElementById('pxCm').textContent=S.pxPerCm.toFixed(2);document.getElementById('calDist').textContent=pxD.toFixed(1)+' px';document.getElementById('calRes').classList.remove('hidden');document.getElementById('calInfo').textContent=`✓ ${pxD.toFixed(1)} px = ${cm} cm`;document.getElementById('btnRec').disabled=false;ndot('s2','d');setDot('C','on',`${S.pxPerCm.toFixed(1)} px/cm`);enableStep3();document.getElementById('tbMan').disabled=false;if(S.prevPpc&&S.prevPpc!==S.pxPerCm&&recomputeCm())setMsg(tr('Calibración lista — métricas existentes reescaladas a la nueva escala.'));else setMsg(tr('Calibración lista.'));S.prevPpc=null;setTool('pan');}
+function resetCal(){S.prevPpc=S.pxPerCm||S.prevPpc;S.calPts=[];S.calDone=false;S.pxPerCm=null;document.getElementById('calInfo').textContent='';document.getElementById('calRes').classList.add('hidden');ndot('s2','p');setDot('C','',tr('Sin calibrar'));setTool('calibrate');render();}
 function computeGray(id){const d=id.data,n=id.width*id.height,g=new Float32Array(n);for(let i=0;i<n;i++)g[i]=0.299*d[i*4]+0.587*d[i*4+1]+0.114*d[i*4+2];return g;}
 function boxBlur(g,w,h,r){if(r<=0)return g;const out=new Float32Array(g.length),tmp=new Float32Array(g.length),d=2*r+1;for(let y=0;y<h;y++){const o=y*w;let s=g[o]*(r+1);for(let x=1;x<=r;x++)s+=g[o+Math.min(x,w-1)];tmp[o]=s/d;for(let x=1;x<w;x++){s+=g[o+Math.min(x+r,w-1)]-g[o+Math.max(x-r-1,0)];tmp[o+x]=s/d;}}for(let x=0;x<w;x++){let s=tmp[x]*(r+1);for(let y=1;y<=r;y++)s+=tmp[Math.min(y,h-1)*w+x];out[x]=s/d;for(let y=1;y<h;y++){s+=tmp[Math.min(y+r,h-1)*w+x]-tmp[Math.max(y-r-1,0)*w+x];out[y*w+x]=s/d;}}return out;}
 function binarize(g,thr,bg){const n=g.length,b=new Uint8Array(n);for(let i=0;i<n;i++)b[i]=bg==='light'?(g[i]<thr?1:0):(g[i]>thr?1:0);return b;}
@@ -1159,153 +1327,216 @@ function otsuCalc(g,n){const h=new Float32Array(256);for(let i=0;i<n;i++)h[Math.
 function applyOtsu(){if(S.otsuT===null)return;document.getElementById('thrS').value=S.otsuT;document.getElementById('thrV').textContent=S.otsuT;}
 function onThr(v){document.getElementById('thrV').textContent=v;}
 function floodFill(bin,labels,w,h,start,lbl){const q=[start];labels[start]=lbl;let hd=0;const px=[];while(hd<q.length){const p=q[hd++];px.push(p);const x=p%w,y=Math.floor(p/w);if(x>0&&bin[p-1]&&!labels[p-1]){labels[p-1]=lbl;q.push(p-1);}if(x<w-1&&bin[p+1]&&!labels[p+1]){labels[p+1]=lbl;q.push(p+1);}if(y>0&&bin[p-w]&&!labels[p-w]){labels[p-w]=lbl;q.push(p-w);}if(y<h-1&&bin[p+w]&&!labels[p+w]){labels[p+w]=lbl;q.push(p+w);}}return px;}
+/* El idioma elegido sobrevive al cierre. Si el navegador no deja guardar (ventana privada,
+   datos bloqueados) se arranca en español, que es como está escrito el HTML. */
+/* El índice se arma SIEMPRE primero, con el HTML recién parseado y todavía en español;
+   recién después se aplica el idioma guardado. */
+i18nIndexar();
+try{if(localStorage.getItem('cerametric-lang')==='en')setLang('en');}catch(e){}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 /* Perímetro por trazado de contorno (Moore) con corrección de Vossepoel–Smeulders
    de 3 parámetros: 0.980·pasos rectos + 1.406·diagonales − 0.091·esquinas.
    Compensa el efecto escalera de la rasterización en bordes curvos. */
 function tracePerim(pixSet,w,h,startP){const nb=[[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]];const fg=(x,y)=>x>=0&&x<w&&y>=0&&y<h&&pixSet.has(y*w+x);const sx=startP%w,sy=(startP-sx)/w;let any=false;for(const[dx,dy]of nb)if(fg(sx+dx,sy+dy)){any=true;break;}if(!any)return Math.PI;let cx=sx,cy=sy,bx=sx-1,by=sy,ns=0,nd=0,nc=0,pm=-1,firstMove=-1,it=0;const maxIt=8*pixSet.size+16;while(it++<maxIt){let kb=4;for(let k=0;k<8;k++)if(cx+nb[k][0]===bx&&cy+nb[k][1]===by){kb=k;break;}let found=-1;for(let i=1;i<=8;i++){const k=(kb+i)%8,nx=cx+nb[k][0],ny=cy+nb[k][1];if(fg(nx,ny)){found=k;break;}bx=nx;by=ny;}if(found<0)break;if(firstMove<0)firstMove=found;else if(cx===sx&&cy===sy&&found===firstMove)break;if(found%2===0)ns++;else nd++;if(pm>=0&&found!==pm)nc++;pm=found;cx+=nb[found][0];cy+=nb[found][1];}return Math.max(0,0.980*ns+1.406*nd-0.091*nc);}
 function convexHull(pts){if(pts.length<3)return pts.slice();const p=pts.slice().sort((a,b)=>a[0]-b[0]||a[1]-b[1]);const cross=(o,a,b)=>(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);const lo=[];for(const q of p){while(lo.length>=2&&cross(lo[lo.length-2],lo[lo.length-1],q)<=0)lo.pop();lo.push(q);}const up=[];for(let i=p.length-1;i>=0;i--){const q=p[i];while(up.length>=2&&cross(up[up.length-2],up[up.length-1],q)<=0)up.pop();up.push(q);}lo.pop();up.pop();return lo.concat(up);}
-function polyAreaPx(pts){let a=0;for(let i=0;i<pts.length;i++){const j=(i+1)%pts.length;a+=pts[i][0]*pts[j][1]-pts[j][0]*pts[i][1];}return Math.abs(a)/2;}
-/* LARGO: el diámetro de Feret máximo, la mayor distancia entre dos puntos del contorno
-   — de punta a punta. No depende de cómo esté girada la pieza en la foto. */
-function feretDims(hull){if(hull.length<2)return{fmax:0,fpts:null};let fmax=0,fpts=null;for(let i=0;i<hull.length;i++)for(let j=i+1;j<hull.length;j++){const d=Math.hypot(hull[i][0]-hull[j][0],hull[i][1]-hull[j][1]);if(d>fmax){fmax=d;fpts=[hull[i].slice(),hull[j].slice()];}}return{fmax,fpts};}
-/* CRUCE PERPENDICULAR: la mayor línea que atraviesa la pieza perpendicular al Feret
-   máximo, con las dos puntas apoyadas en el contorno. Es una cuerda de verdad, no el
-   ancho de una franja: por eso queda siempre dentro de la pieza.
-   La longitud de las cuerdas perpendiculares es una función cóncava y lineal a tramos de
-   la posición, con quiebres en las proyecciones de los vértices del casco, así que basta
-   evaluarla en esos puntos. Si el máximo se sostiene a lo largo de un tramo, la cota se
-   centra en él. */
-function crossChord(hull,fpts){if(!fpts||hull.length<3)return{cw:0,axCC:null};const ex=fpts[1][0]-fpts[0][0],ey=fpts[1][1]-fpts[0][1];const len=Math.hypot(ex,ey);if(len===0)return{cw:0,axCC:null};const ux=ex/len,uy=ey/len;const P=hull.map(p=>({u:p[0]*ux+p[1]*uy,v:-p[0]*uy+p[1]*ux}));
-  const cuerda=u0=>{let mn=Infinity,mx=-Infinity;for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length];const lo=Math.min(a.u,b.u),hi=Math.max(a.u,b.u);if(u0<lo-1e-9||u0>hi+1e-9)continue;const d=b.u-a.u;if(Math.abs(d)<1e-9){mn=Math.min(mn,a.v,b.v);mx=Math.max(mx,a.v,b.v);}else{const v=a.v+(b.v-a.v)*(u0-a.u)/d;if(v<mn)mn=v;if(v>mx)mx=v;}}return isFinite(mn)?{mn,mx,w:mx-mn}:null;};
-  let best=0;for(const p of P){const c=cuerda(p.u);if(c&&c.w>best)best=c.w;}
-  if(best<=0)return{cw:0,axCC:null};
-  const alcanzan=P.filter(p=>{const c=cuerda(p.u);return c&&c.w>=best-1e-6;}).map(p=>p.u);
-  const uc=(Math.min(...alcanzan)+Math.max(...alcanzan))/2;const c=cuerda(uc)||cuerda(alcanzan[0]);
-  const XY=(u,v)=>[u*ux-v*uy,u*uy+v*ux];
-  return{cw:c.w,axCC:[XY(uc,c.mn),XY(uc,c.mx)]};}
-/* Distancia de un punto al contorno real de la pieza. Sirve para decidir si la punta de una
-   cota apoya sobre la cerámica. En la detección automática el borde son píxeles sueltos y
-   alcanza con el más cercano; en el trazado manual son pocos vértices, así que hay que medir
-   contra los lados del polígono y no contra sus esquinas. */
-function distPix(pts){return p=>{let d=Infinity;for(const q of pts){const dx=q[0]-p[0],dy=q[1]-p[1],e=dx*dx+dy*dy;if(e<d)d=e;}return Math.sqrt(d);};}
-function distPoly(pts){return p=>{let d=Infinity;for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];const vx=b[0]-a[0],vy=b[1]-a[1],L2=vx*vx+vy*vy;let t=L2?((p[0]-a[0])*vx+(p[1]-a[1])*vy)/L2:0;t=t<0?0:t>1?1:t;const e=Math.hypot(p[0]-a[0]-t*vx,p[1]-a[1]-t*vy);if(e<d)d=e;}return d;};}
-/* Rectángulo mínimo rotado (rotating calipers sobre el casco convexo):
-   L y W son los lados del rectángulo de área mínima que encierra la pieza,
-   en cualquier orientación — equivale a medir largo y ancho con regla.
-   Devuelve además axL y axW: los dos segmentos (en px de la imagen) sobre los que
-   se tomó cada medida, para poder dibujarlos y que se vea cuál es cuál.
-
-   ANCLAJE AL CONTORNO. Cada lado de la caja se apoya en la pieza, así que el largo ya era
-   la distancia entre los dos puntos del borde que tocan los lados opuestos — el número
-   nunca salió del aire. Lo que sí salía del aire era el DIBUJO: la cota se trazaba por el
-   centro geométrico de la caja, y en un fragmento deforme los puntos de contacto están a
-   otra altura, así que las puntas quedaban flotando y parecía que se estaba midiendo la
-   caja y no la cerámica. Ahora la cota se corre a la altura donde la pieza toca — si las
-   dos zonas de contacto se superponen queda entera apoyada en el contorno — y donde no
-   alcanza salen las referencias extL/extW hasta los puntos exactos del borde, como las
-   líneas auxiliares de una cota de plano. Ningún valor exportado cambia. */
-function minAreaRect(hull,dist){const n=hull.length;if(n<2)return{L:0,W:0,axL:null,axW:null};if(n===2)return{L:Math.hypot(hull[1][0]-hull[0][0],hull[1][1]-hull[0][1]),W:0,axL:[hull[0].slice(),hull[1].slice()],axW:null};let best=null;for(let i=0;i<n;i++){const j=(i+1)%n;const ex=hull[j][0]-hull[i][0],ey=hull[j][1]-hull[i][1];const len=Math.hypot(ex,ey);if(len===0)continue;const ux=ex/len,uy=ey/len;let mnU=Infinity,mxU=-Infinity,mnV=Infinity,mxV=-Infinity;for(const p of hull){const u=p[0]*ux+p[1]*uy,v=-p[0]*uy+p[1]*ux;if(u<mnU)mnU=u;if(u>mxU)mxU=u;if(v<mnV)mnV=v;if(v>mxV)mxV=v;}const a=(mxU-mnU)*(mxV-mnV);if(!best||a<best.area)best={area:a,ux,uy,mnU,mxU,mnV,mxV};}if(!best)return{L:0,W:0,axL:null,axW:null};const{ux,uy,mnU,mxU,mnV,mxV}=best;const P=(u,v)=>[u*ux-v*uy,u*uy+v*ux];const du=mxU-mnU,dv=mxV-mnV,uc=(mnU+mxU)/2,vc=(mnV+mxV)/2;
-  const U=p=>p[0]*ux+p[1]*uy,V=p=>-p[0]*uy+p[1]*ux;
-  /* Margen de contacto: un punto del borde "llega" al lado de la caja si queda a menos de
-     1 px — el límite de la propia digitalización — o del 0.5 % del tamaño de la caja. Sin
-     esa banda un borde recto rasterizado deja un solo vértice en el casco y la cota se
-     iría a una esquina en vez de quedarse centrada, que es justo lo que no queremos en una
-     pieza de lados rectos como una tarjeta de control. */
-  const tol=Math.max(1,0.005*Math.max(du,dv));
-  /* Para saber si una punta apoya sobre la cerámica hay que preguntárselo al CONTORNO, no
-     al casco: entre dos vértices del casco que tocan el mismo lado el borde real puede
-     hundirse, y una punta apoyada ahí descansa sobre el puente del casco y no sobre la
-     pieza. El llamador pasa esa distancia (distPix / distPoly); si no la pasa se cae al
-     casco, que es la aproximación vieja. */
-  const D=dist||(p=>{let d=Infinity;for(let i=0;i<n;i++){const a=hull[i],b=hull[(i+1)%n];const vx=b[0]-a[0],vy=b[1]-a[1],L2=vx*vx+vy*vy;let t=L2?((p[0]-a[0])*vx+(p[1]-a[1])*vy)/L2:0;t=t<0?0:t>1?1:t;const e=Math.hypot(p[0]-a[0]-t*vx,p[1]-a[1]-t*vy);if(e<d)d=e;}return d;});
-  /* Puntos del borde que llegan a un lado de la caja: son los que fijan la medida. */
-  const toca=(sel,co,tr)=>{const r=[];for(const p of hull)if(Math.abs(co(p)-sel)<=tol)r.push({t:tr(p),p});return r;};
-  /* Coloca la cota: se prueba el centro de la caja y la posición de cada punto de apoyo, y
-     gana la que deja menos puntas en el aire — a igualdad, la más cercana al centro, para no
-     mover el dibujo más de lo necesario. Cuando existe una posición con las dos puntas
-     apoyadas, la cota entera pasa a ser una cuerda real de la pieza. La punta que aun así
-     quede suelta se enlaza con el punto de apoyo más próximo. */
-  const cota=(ta,tb,s1,s2,ctr,pt)=>{if(!ta.length||!tb.length)return{s:ctr,pa:null,pb:null};let mej=null;
-    for(const v of [ctr,...ta.map(x=>x.t),...tb.map(x=>x.t)]){const a=D(pt(s1,v))<=tol,b=D(pt(s2,v))<=tol,sc=(a?0:1)+(b?0:1),d=Math.abs(v-ctr);if(!mej||sc<mej.sc||(sc===mej.sc&&d<mej.d))mej={v,a,b,sc,d};}
-    const cer=(ts,v)=>ts.reduce((x,y)=>Math.abs(y.t-v)<Math.abs(x.t-v)?y:x).p;
-    return{s:mej.v,pa:mej.a?null:cer(ta,mej.v),pb:mej.b?null:cer(tb,mej.v)};};
-  const cu=cota(toca(mnU,U,V),toca(mxU,U,V),mnU,mxU,vc,(s,w)=>P(s,w));
-  const cv=cota(toca(mnV,V,U),toca(mxV,V,U),mnV,mxV,uc,(s,w)=>P(w,s));
-  const axU=[P(mnU,cu.s),P(mxU,cu.s)],axV=[P(cv.s,mnV),P(cv.s,mxV)];
-  /* Por debajo de la tolerancia de contacto la cota ya se considera apoyada: dibujar ahí
-     una referencia de medio píxel sería un punto suelto sin nada que explicar. */
-  const seg=(p,q)=>p&&Math.hypot(p[0]-q[0],p[1]-q[1])>tol?[p.slice(),q]:null;
-  const extU=[seg(cu.pa,axU[0]),seg(cu.pb,axU[1])].filter(Boolean);
-  const extV=[seg(cv.pa,axV[0]),seg(cv.pb,axV[1])].filter(Boolean);
-  const box=[P(mnU,mnV),P(mxU,mnV),P(mxU,mxV),P(mnU,mxV)];return du>=dv?{L:du,W:dv,axL:axU,axW:axV,extL:extU,extW:extV,box}:{L:dv,W:du,axL:axV,axW:axU,extL:extV,extW:extU,box};}
+/* ─── LARGO Y ANCHO: CUERDAS DEL TIESTO ──────────────
+   El eje sale del lado largo del rectángulo de área mínima: es la dirección propia de la
+   pieza y no depende de cómo haya quedado girada en la foto — por eso pedir que la parte
+   más larga mire hacia arriba es una recomendación para que el lote salga parejo, no un
+   requisito del cálculo. Pero la medida NO es el lado de la caja: es una cuerda de verdad,
+   con las dos puntas apoyadas en el contorno de la cerámica.
+     · LARGO: la más larga de las cuerdas paralelas al eje.
+     · ANCHO: la cuerda perpendicular que pasa por el PUNTO MEDIO del largo. No la más
+       ancha: en un tiesto triangular da bastante menos que la travesía máxima, y es a
+       propósito — es la medida «de la parte media».
+   Un entrante no parte la cuerda: se mide del primer al último punto de cerámica que la
+   recta encuentra, como cuando el calibre pasa por encima de una muesca.
+   El lado de la caja medía la SOMBRA de la pieza sobre el eje, que junta puntos a distinta
+   altura; una cuerda tiene que vivir entera sobre una sola recta, así que puede dar un poco
+   menos. La comparación figura por figura contra v1.2 está en el CHANGELOG. */
+/* Rectángulo de área mínima (rotating calipers sobre el casco convexo). Ya no aporta el
+   largo ni el ancho —eso lo hace cuerdas()— pero sigue dando las dos cosas que hacen
+   falta: la DIRECCIÓN del eje propio del tiesto, que es la del lado largo, y los cuatro
+   vértices de la caja, que se dibuja punteada para que se vea de dónde salió esa
+   dirección. */
+function ejeCaja(hull){const n=hull.length;if(n<2)return null;
+  if(n===2){const dx=hull[1][0]-hull[0][0],dy=hull[1][1]-hull[0][1],L=Math.hypot(dx,dy);if(!L)return null;return{ux:dx/L,uy:dy/L,box:[hull[0].slice(),hull[1].slice(),hull[1].slice(),hull[0].slice()]};}
+  let best=null;for(let i=0;i<n;i++){const j=(i+1)%n;const ex=hull[j][0]-hull[i][0],ey=hull[j][1]-hull[i][1];const len=Math.hypot(ex,ey);if(len===0)continue;const ux=ex/len,uy=ey/len;let mnU=Infinity,mxU=-Infinity,mnV=Infinity,mxV=-Infinity;for(const q of hull){const u=q[0]*ux+q[1]*uy,v=-q[0]*uy+q[1]*ux;if(u<mnU)mnU=u;if(u>mxU)mxU=u;if(v<mnV)mnV=v;if(v>mxV)mxV=v;}const a=(mxU-mnU)*(mxV-mnV),lg=Math.max(mxU-mnU,mxV-mnV);
+    /* EMPATES. Un triangulo —y cualquier poligono regular— tiene VARIAS orientaciones
+       con exactamente la misma area minima. Quedarse con la primera hacia que el eje
+       dependiera del orden en que se recorrio el borde: el mismo tiesto trazado al reves
+       daba otro largo. Ante un empate (1e-6 relativo, o sea empate de verdad y no una
+       diferencia real) gana el rectangulo mas alargado — el largo tiene que ser lo mas
+       largo que la pieza de. */
+    if(!best||a<best.area*(1-1e-6)||(a<=best.area*(1+1e-6)&&lg>best.lg))best={area:a,lg,ux,uy,mnU,mxU,mnV,mxV};}
+  if(!best)return null;const{ux,uy,mnU,mxU,mnV,mxV}=best;const P=(u,v)=>[u*ux-v*uy,u*uy+v*ux];
+  const box=[P(mnU,mnV),P(mxU,mnV),P(mxU,mxV),P(mnU,mxV)];
+  /* El eje es el lado LARGO: si el que se recorrió resultó ser el corto, se gira 90°. */
+  return (mxU-mnU)>=(mxV-mnV)?{ux,uy,box}:{ux:-uy,uy:ux,box};}
+/* Puntos del borde de un polígono, uno cada `paso` px. El trazado manual tiene pocos
+   vértices y las cuerdas se calculan barriendo el contorno punto por punto, así que hay
+   que densificarlo; en la detección automática el borde ya son píxeles sueltos. */
+function densifica(poly,paso){const out=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length];const L=Math.hypot(b[0]-a[0],b[1]-a[1]);const k=Math.max(1,Math.ceil(L/paso));for(let t=0;t<k;t++)out.push([a[0]+(b[0]-a[0])*t/k,a[1]+(b[1]-a[1])*t/k]);}return out;}
+/* Las dos cuerdas, en px de la imagen. `bp` son los puntos del contorno de la pieza. */
+function cuerdas(bp,ux,uy){if(!bp||bp.length<2)return null;
+  const U=q=>q[0]*ux+q[1]*uy,V=q=>-q[0]*uy+q[1]*ux;
+  /* Bandas de 1 px perpendiculares al eje. En cada banda, el primer y el último punto del
+     borde son las puntas de la cuerda de esa línea; gana la más larga. */
+  const banda=new Map();
+  for(const q of bp){const u=U(q),k=Math.round(V(q)),b=banda.get(k);if(!b)banda.set(k,[u,u]);else{if(u<b[0])b[0]=u;if(u>b[1])b[1]=u;}}
+  let L=-1,vL=0,u0=0,u1=0;
+  banda.forEach((b,k)=>{const w=b[1]-b[0];if(w>L){L=w;vL=k;u0=b[0];u1=b[1];}});
+  if(L<0)return null;
+  /* El ancho se toma justo en la mitad del largo. La franja se ensancha si en 1 px no cayó
+     ningún punto del borde — pasa cuando el eje corta el contorno casi de frente. */
+  const uc=(u0+u1)/2;let mn=Infinity,mx=-Infinity;
+  for(let tol=0.5;tol<=4&&mx<=mn;tol+=0.5){mn=Infinity;mx=-Infinity;
+    for(const q of bp)if(Math.abs(U(q)-uc)<=tol){const v=V(q);if(v<mn)mn=v;if(v>mx)mx=v;}}
+  const XY=(u,v)=>[u*ux-v*uy,u*uy+v*ux],W=mx>mn?mx-mn:0;
+  return{L,W,axL:[XY(u0,vL),XY(u1,vL)],axW:W>0?[XY(uc,mn),XY(uc,mx)]:null};}
 function pointInPoly(x,y,pts){let ins=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){const xi=pts[i].ix,yi=pts[i].iy,xj=pts[j].ix,yj=pts[j].iy;if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))ins=!ins;}return ins;}
-function computeMetrics(pixArr,w){if(!pixArr.length)return null;const h=pc.height,pixSet=new Set(pixArr);const areaPx=pixArr.length;const rgba=S.rgba;let mnX=Infinity,mxX=-Infinity,mnY=Infinity,mxY=-Infinity,sp=pixArr[0],rs=0,gs=0,bs=0;pixArr.forEach(p=>{if(p<sp)sp=p;const x=p%w,y=(p-x)/w;if(x<mnX)mnX=x;if(x>mxX)mxX=x;if(y<mnY)mnY=y;if(y>mxY)mxY=y;if(rgba){const q=p*4;rs+=rgba[q];gs+=rgba[q+1];bs+=rgba[q+2];}});const perimPx=tracePerim(pixSet,w,h,sp);const circ=perimPx>0?Math.min(1,(4*Math.PI*areaPx)/(perimPx*perimPx)):0;const bp=[];pixArr.forEach(p=>{const x=p%w,y=(p-x)/w;if(x===0||!pixSet.has(p-1)||x===w-1||!pixSet.has(p+1)||y===0||!pixSet.has(p-w)||!pixSet.has(p+w))bp.push([x,y]);});const hull=convexHull(bp);const hullAPx=hull.length>=3?polyAreaPx(hull):0;const solid=hullAPx>0?r3(Math.min(1,areaPx/hullAPx)):1;const{fmax,fpts}=feretDims(hull);const cc=crossChord(hull,fpts);const mar=minAreaRect(hull,distPix(bp));const px={area:areaPx,perim:perimPx,L:mar.L+1,W:mar.W+1,feret:fmax+1,fw:cc.cw+1};const colorHex=rgba?rgb2h(Math.round(rs/areaPx),Math.round(gs/areaPx),Math.round(bs/areaPx)):'#000000';return deriveCm({px,geo:{axL:mar.axL,axW:mar.axW,extL:mar.extL,extW:mar.extW,box:mar.box,feret:fpts,axFA:cc.axCC},circularity:r3(circ),solidity:solid,bbox:{minX:mnX,maxX:mxX,minY:mnY,maxY:mxY},colorHex,borderPts:bp});}
-async function detectAuto(){if(!S.pxPerCm)return;showProc('Aplicando pre-procesamiento…');await delay(30);const blurR=parseInt(document.getElementById('blurS').value);const closeR=parseInt(document.getElementById('closeS').value);const thr=parseInt(document.getElementById('thrS').value);const bg=document.getElementById('bgMode').value;const minAPx=parseFloat(document.getElementById('minArea').value)*S.pxPerCm*S.pxPerCm;const w=pc.width,h=pc.height;let gray=S.grayCache;if(blurR>0)gray=boxBlur(gray,w,h,blurR);let bin=binarize(gray,thr,bg);if(closeR>0){updProc('Cierre morfológico…');await delay(20);bin=morphClose(bin,w,h,closeR);}updProc('Rellenando agujeros…');await delay(20);bin=fillHoles(bin,w,h);updProc('Detectando componentes…');await delay(20);const labels=new Int32Array(w*h);let nl=1;const comps={};let tapados=0;for(let i=0;i<w*h;i++)if(bin[i]&&!labels[i]){const px=floodFill(bin,labels,w,h,i,nl);if(px.length>=minAPx){if(exclTapa(px,w))tapados++;else comps[nl]=px;}nl++;}updProc('Calculando métricas…');await delay(20);const code=document.getElementById('code').value||'T';S.sherds=[];let idx=0;for(const[,px] of Object.entries(comps)){const m=computeMetrics(px,w);if(!m)continue;S.sherds.push({id:`${code}-${String(idx+1).padStart(2,'0')}`,_k:++S.seq,type:'auto',color:COLS[idx%COLS.length],...m});idx++;}hideProc();renderResults();render();setDot('D','on',`${S.sherds.length} auto + ${S.manualSherds.length} manual`);ndot('s3','d');enableExport();document.getElementById('btnClearAll').disabled=false;setMsg(`${S.sherds.length} tiesto(s) detectado(s).`+(tapados?` ${tapados} descartado(s) por zona excluida.`:''));}
+function computeMetrics(pixArr,w){if(!pixArr.length)return null;const h=pc.height,pixSet=new Set(pixArr);const areaPx=pixArr.length;let mnX=Infinity,mxX=-Infinity,mnY=Infinity,mxY=-Infinity,sp=pixArr[0];pixArr.forEach(p=>{if(p<sp)sp=p;const x=p%w,y=(p-x)/w;if(x<mnX)mnX=x;if(x>mxX)mxX=x;if(y<mnY)mnY=y;if(y>mxY)mxY=y;});const perimPx=tracePerim(pixSet,w,h,sp);const bp=[];pixArr.forEach(p=>{const x=p%w,y=(p-x)/w;if(x===0||!pixSet.has(p-1)||x===w-1||!pixSet.has(p+1)||y===0||!pixSet.has(p-w)||!pixSet.has(p+w))bp.push([x,y]);});const hull=convexHull(bp);const ej=ejeCaja(hull);const cu=ej?cuerdas(bp,ej.ux,ej.uy):null;const px={area:areaPx,perim:perimPx,L:(cu?cu.L:0)+1,W:(cu?cu.W:0)+1};return deriveCm({px,geo:{axL:cu?cu.axL:null,axW:cu?cu.axW:null,box:ej?ej.box:null},bbox:{minX:mnX,maxX:mxX,minY:mnY,maxY:mxY},borderPts:bp});}
+/* ─── ORDEN DE LECTURA ──────────────────────
+   Los tiestos se numeran como se leen sobre la mesa: por filas de arriba hacia abajo y,
+   dentro de cada fila, de izquierda a derecha. Así la secuencia del `.xlsx` sigue a la
+   fotografía y se puede ir tiesto por tiesto sin buscarlos.
+   No alcanza con ordenar por Y —que es lo que hacía la detección, porque recorría los
+   píxeles fila por fila y numeraba según dónde apareciera el PRIMER píxel de cada pieza—:
+   dos tiestos de la misma hilera casi nunca tienen el borde superior a la misma altura, y
+   por unos pocos píxeles el de la derecha se numeraba antes que el de la izquierda.
+   Las filas se arman por SOLAPAMIENTO VERTICAL: un tiesto entra en la fila que se está
+   armando si comparte con ella más de la mitad de su propia altura. Ese criterio aguanta
+   piezas de tamaños muy distintos —un fragmento chico junto a uno grande siguen en la misma
+   hilera— y no encadena hileras separadas, porque para eso el solapamiento tendría que ser
+   grande de verdad. */
+function ordenLectura(arr){
+  const alto=b=>b.maxY-b.minY;
+  arr.sort((a,b)=>a.bbox.minY-b.bbox.minY||a.bbox.minX-b.bbox.minX);
+  const filas=[];
+  arr.forEach(sh=>{const b=sh.bbox,f=filas[filas.length-1];
+    const solape=f?Math.min(f.maxY,b.maxY)-Math.max(f.minY,b.minY):0;
+    if(f&&solape>0.5*Math.min(alto(b),f.maxY-f.minY)){f.items.push(sh);f.minY=Math.min(f.minY,b.minY);f.maxY=Math.max(f.maxY,b.maxY);}
+    else filas.push({items:[sh],minY:b.minY,maxY:b.maxY});});
+  filas.forEach(f=>f.items.sort((a,b)=>a.bbox.minX-b.bbox.minX));
+  const out=[];filas.forEach(f=>f.items.forEach(sh=>out.push(sh)));
+  return out;}
+async function detectAuto(){if(!S.pxPerCm)return;showProc('Aplicando pre-procesamiento…');await delay(30);const blurR=parseInt(document.getElementById('blurS').value);const closeR=parseInt(document.getElementById('closeS').value);const thr=parseInt(document.getElementById('thrS').value);const bg=document.getElementById('bgMode').value;const minAPx=parseFloat(document.getElementById('minArea').value)*S.pxPerCm*S.pxPerCm;const w=pc.width,h=pc.height;let gray=S.grayCache;if(blurR>0)gray=boxBlur(gray,w,h,blurR);let bin=binarize(gray,thr,bg);if(closeR>0){updProc('Cierre morfológico…');await delay(20);bin=morphClose(bin,w,h,closeR);}updProc('Rellenando agujeros…');await delay(20);bin=fillHoles(bin,w,h);updProc('Detectando componentes…');await delay(20);const labels=new Int32Array(w*h);let nl=1;const comps={};let tapados=0;for(let i=0;i<w*h;i++)if(bin[i]&&!labels[i]){const px=floodFill(bin,labels,w,h,i,nl);if(px.length>=minAPx){if(exclTapa(px,w))tapados++;else comps[nl]=px;}nl++;}updProc('Calculando métricas…');await delay(20);/* Prefijo fijo: los tiestos son T-01, T-02… El código de registro se sacó en v1.3 —
+   solo se aplicaba en el instante de detectar, así que escribirlo después no renombraba
+   nada y no hacía más que confundir. El lote se identifica por el nombre del archivo. */
+  const code='T';const medidos=[];for(const[,px] of Object.entries(comps)){const m=computeMetrics(px,w);if(m)medidos.push(m);}
+  /* Se mide todo primero y se numera después: el número tiene que salir de dónde quedó
+     la pieza en la foto, no del orden en que el barrido de píxeles la encontró. */
+  S.sherds=ordenLectura(medidos).map((m,i)=>({id:`${code}-${String(i+1).padStart(2,'0')}`,_k:++S.seq,type:'auto',color:COLS[i%COLS.length],...m}));hideProc();renderResults();render();setDot('D','on',`${S.sherds.length} auto + ${S.manualSherds.length} manual`);ndot('s3','d');enableExport();document.getElementById('btnClearAll').disabled=false;setMsg(`${S.sherds.length} ${tr('tiesto(s) detectado(s).')}`+(tapados?` ${tapados} ${tr('descartado(s) por zona excluida.')}`:''));}
 function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 function showProc(t){document.getElementById('procOv').classList.remove('hidden');document.getElementById('procTxt').textContent=t;}
 function updProc(t){document.getElementById('procTxt').textContent=t;}
 function hideProc(){document.getElementById('procOv').classList.add('hidden');}
 function preview(){if(!S.pxPerCm)return;const blurR=parseInt(document.getElementById('blurS').value);const closeR=parseInt(document.getElementById('closeS').value);const thr=parseInt(document.getElementById('thrS').value);const bg=document.getElementById('bgMode').value;const w=pc.width,h=pc.height;let gray=S.grayCache;if(blurR>0)gray=boxBlur(gray,w,h,blurR);let bin=binarize(gray,thr,bg);if(closeR>0)bin=morphClose(bin,w,h,closeR);bin=fillHoles(bin,w,h);render();const pv=octx.createImageData(oc.width,oc.height);for(let sy=0;sy<oc.height;sy++)for(let sx=0;sx<oc.width;sx++){const{ix,iy}=s2i(sx,sy);const fx=Math.round(ix),fy=Math.round(iy);if(fx<0||fy<0||fx>=w||fy>=h)continue;if(bin[fy*w+fx]&&!S.excl.some(z=>fx>=z.x0&&fx<=z.x1&&fy>=z.y0&&fy<=z.y1)){const di=(sy*oc.width+sx)*4;pv.data[di]=91;pv.data[di+1]=191;pv.data[di+2]=176;pv.data[di+3]=85;}}const off=document.createElement('canvas');off.width=oc.width;off.height=oc.height;off.getContext('2d').putImageData(pv,0,0);octx.drawImage(off,0,0);setMsg('Vista previa — verde = foreground detectado.');}
-function handleManClick(ix,iy){if(S.polyClosed)manClear();const pts=S.poly;if(pts.length>2){const s0=i2s(pts[0].ix,pts[0].iy),sc2=i2s(ix,iy);if(Math.hypot(sc2.sx-s0.sx,sc2.sy-s0.sy)<14){closePoly();return;}}pts.push({ix,iy});document.getElementById('btnUndo').disabled=false;document.getElementById('btnClr').disabled=false;document.getElementById('btnClearAll').disabled=false;ndot('sM','on');document.getElementById('manInfo').textContent=`${pts.length} vértice(s) — doble-clic o clic en el inicio para cerrar.`;render();}
-function closePoly(){const pts=S.poly;if(pts.length<3){setMsg('Necesitás al menos 3 vértices.');return;}S.polyClosed=true;const m=manMetrics(pts);const rawId=document.getElementById('manId').value.trim();const taken=new Set([...S.sherds,...S.manualSherds].map(s=>s.id));let id=rawId;if(!id){do{id=`M-${String(++S.manSeq).padStart(2,'0')}`;}while(taken.has(id));}S.manualSherds.push({id,_k:++S.seq,polygon:[...pts],type:'manual',...m});S.poly=[];S.polyClosed=false;document.getElementById('manInfo').textContent=`✓ "${id}" guardado.`;document.getElementById('manId').value='';ndot('sM','d');renderResults();render();enableExport();setDot('D','on',`${S.sherds.length} auto + ${S.manualSherds.length} manual`);setMsg(`Tiesto manual "${id}" registrado.`+(rawId&&taken.has(rawId)?' ⚠ Ese código ya estaba en uso — corregilo antes de exportar.':''));}
-function manUndo(){S.poly.pop();if(!S.poly.length){document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;}document.getElementById('manInfo').textContent=`${S.poly.length} vértice(s).`;render();}
+function handleManClick(ix,iy){if(S.polyClosed)manClear();const pts=S.poly;if(pts.length>2){const s0=i2s(pts[0].ix,pts[0].iy),sc2=i2s(ix,iy);if(Math.hypot(sc2.sx-s0.sx,sc2.sy-s0.sy)<14){closePoly();return;}}pts.push({ix,iy});document.getElementById('btnUndo').disabled=false;document.getElementById('btnClr').disabled=false;document.getElementById('btnClearAll').disabled=false;ndot('sM','on');document.getElementById('manInfo').textContent=`${pts.length} ${tr('vértice(s) — doble-clic o clic en el inicio para cerrar.')}`;render();}
+function closePoly(){const pts=S.poly;if(pts.length<3){setMsg(tr('Necesitás al menos 3 vértices.'));return;}S.polyClosed=true;const m=manMetrics(pts);const rawId=document.getElementById('manId').value.trim();const taken=new Set([...S.sherds,...S.manualSherds].map(s=>s.id));let id=rawId;if(!id){do{id=`M-${String(++S.manSeq).padStart(2,'0')}`;}while(taken.has(id));}S.manualSherds.push({id,_k:++S.seq,polygon:[...pts],type:'manual',...m});S.poly=[];S.polyClosed=false;document.getElementById('manInfo').textContent=`✓ "${id}" ${tr('guardado.')}`;document.getElementById('manId').value='';ndot('sM','d');renderResults();render();enableExport();setDot('D','on',`${S.sherds.length} auto + ${S.manualSherds.length} manual`);setMsg(`${tr('Tiesto manual')} "${id}" ${tr('registrado.')}`+(rawId&&taken.has(rawId)?' '+tr('⚠ Ese código ya estaba en uso — corregilo antes de exportar.'):''));}
+function manUndo(){S.poly.pop();if(!S.poly.length){document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;}document.getElementById('manInfo').textContent=`${S.poly.length} ${tr('vértice(s).')}`;render();}
 function manClear(){S.poly=[];S.polyClosed=false;document.getElementById('btnUndo').disabled=true;document.getElementById('btnClr').disabled=true;document.getElementById('manInfo').textContent='';render();}
-function manMetrics(pts){const n=pts.length,w=pc.width,h=pc.height;let a=0;for(let i=0;i<n;i++){const j=(i+1)%n;a+=pts[i].ix*pts[j].iy-pts[j].ix*pts[i].iy;}const areaPx=Math.abs(a)/2;let perimPx=0;for(let i=0;i<n;i++){const j=(i+1)%n;perimPx+=Math.hypot(pts[j].ix-pts[i].ix,pts[j].iy-pts[i].iy);}const circ=perimPx>0?Math.min(1,(4*Math.PI*areaPx)/(perimPx*perimPx)):0;const xs=pts.map(p=>p.ix),ys=pts.map(p=>p.iy);const mnX=Math.min(...xs),mxX=Math.max(...xs),mnY=Math.min(...ys),mxY=Math.max(...ys);const XY=pts.map(p=>[p.ix,p.iy]);const hull=convexHull(XY);const hullAPx=hull.length>=3?polyAreaPx(hull):0;const solid=hullAPx>0?r3(Math.min(1,areaPx/hullAPx)):1;const{fmax,fpts}=feretDims(hull);const cc=crossChord(hull,fpts);const mar=minAreaRect(hull,distPoly(XY));const px={area:areaPx,perim:perimPx,L:mar.L,W:mar.W,feret:fmax,fw:cc.cw};const geo={axL:mar.axL,axW:mar.axW,extL:mar.extL,extW:mar.extW,box:mar.box,feret:fpts,axFA:cc.axCC};let rs=0,gs=0,bs=0,cnt=0;const rgba=S.rgba;if(rgba){const bw=Math.max(1,mxX-mnX),bh=Math.max(1,mxY-mnY);const step=Math.max(1,Math.floor(Math.sqrt(bw*bh/40000)));for(let y=Math.max(0,Math.ceil(mnY));y<=Math.min(h-1,Math.floor(mxY));y+=step)for(let x=Math.max(0,Math.ceil(mnX));x<=Math.min(w-1,Math.floor(mxX));x+=step){if(pointInPoly(x,y,pts)){const q=(y*w+x)*4;rs+=rgba[q];gs+=rgba[q+1];bs+=rgba[q+2];cnt++;}}}let colorHex='#000000';if(cnt)colorHex=rgb2h(Math.round(rs/cnt),Math.round(gs/cnt),Math.round(bs/cnt));else if(rgba){const cx=Math.min(w-1,Math.max(0,Math.round((mnX+mxX)/2))),cy=Math.min(h-1,Math.max(0,Math.round((mnY+mxY)/2)));const q=(cy*w+cx)*4;colorHex=rgb2h(rgba[q],rgba[q+1],rgba[q+2]);}return deriveCm({px,geo,circularity:r3(circ),solidity:solid,bbox:{minX:mnX,maxX:mxX,minY:mnY,maxY:mxY},colorHex,borderPts:null});}
+function manMetrics(pts){const n=pts.length,w=pc.width,h=pc.height;let a=0;for(let i=0;i<n;i++){const j=(i+1)%n;a+=pts[i].ix*pts[j].iy-pts[j].ix*pts[i].iy;}const areaPx=Math.abs(a)/2;let perimPx=0;for(let i=0;i<n;i++){const j=(i+1)%n;perimPx+=Math.hypot(pts[j].ix-pts[i].ix,pts[j].iy-pts[i].iy);}const xs=pts.map(p=>p.ix),ys=pts.map(p=>p.iy);const mnX=Math.min(...xs),mxX=Math.max(...xs),mnY=Math.min(...ys),mxY=Math.max(...ys);const XY=pts.map(p=>[p.ix,p.iy]);const hull=convexHull(XY);const ej=ejeCaja(hull);const cu=ej?cuerdas(densifica(XY,0.5),ej.ux,ej.uy):null;const px={area:areaPx,perim:perimPx,L:cu?cu.L:0,W:cu?cu.W:0};const geo={axL:cu?cu.axL:null,axW:cu?cu.axW:null,box:ej?ej.box:null};return deriveCm({px,geo,bbox:{minX:mnX,maxX:mxX,minY:mnY,maxY:mxY},borderPts:null});}
 function confirmCrop(){const c=S.crop;if(!c.confirmed)return;const x0=Math.max(0,Math.round(Math.min(c.sx,c.ex)));const y0=Math.max(0,Math.round(Math.min(c.sy,c.ey)));const x1=Math.min(S.img.width,Math.round(Math.max(c.sx,c.ex)));const y1=Math.min(S.img.height,Math.round(Math.max(c.sy,c.ey)));const cw=x1-x0,ch=y1-y0;if(cw<10||ch<10){cancelCrop();return;}const tmp=document.createElement('canvas');tmp.width=cw;tmp.height=ch;const tc=tmp.getContext('2d');tc.drawImage(pc,x0,y0,cw,ch,0,0,cw,ch);const newImg=new Image();newImg.onload=()=>{S.img=newImg;pc.width=cw;pc.height=ch;pctx.clearRect(0,0,cw,ch);pctx.drawImage(tmp,0,0);const id=pctx.getImageData(0,0,cw,ch);S.grayCache=computeGray(id);S.rgba=id.data;S.otsuT=otsuCalc(S.grayCache,cw*ch);document.getElementById('otsuV').textContent=S.otsuT;S.sherds=[];S.manualSherds=[];S.manSeq=0;S.poly=[];S.polyClosed=false;S.calPts=S.calPts.map(p=>({ix:p.ix-x0,iy:p.iy-y0}));if(S.calPts.some(p=>p.ix<0||p.iy<0||p.ix>cw||p.iy>ch))S.calPts=[];
       /* Las zonas se mueven con el recorte y se recortan a él; las que quedan afuera se van. */
-      S.excl=S.excl.map(z=>({x0:Math.max(0,z.x0-x0),y0:Math.max(0,z.y0-y0),x1:Math.min(cw,z.x1-x0),y1:Math.min(ch,z.y1-y0)})).filter(z=>z.x1-z.x0>=6&&z.y1-z.y0>=6);exclUI();S.crop={on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false};document.getElementById('cropBar').classList.remove('v');document.getElementById('btnOrig').classList.remove('hidden');document.getElementById('imgBadge').textContent=`${cw}×${ch}`;renderResults();resizeVP();resetZoom();setDot('D','','Sin detección');ndot('s3','p');ndot('sM','p');setMsg(`Recortada a ${cw}×${ch}px.${S.pxPerCm?' Calibración conservada.':' Recalibrá la escala.'}`);setTool('pan');render();};newImg.src=tmp.toDataURL();}
+      S.excl=S.excl.map(z=>({x0:Math.max(0,z.x0-x0),y0:Math.max(0,z.y0-y0),x1:Math.min(cw,z.x1-x0),y1:Math.min(ch,z.y1-y0)})).filter(z=>z.x1-z.x0>=6&&z.y1-z.y0>=6);exclUI();S.crop={on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false};document.getElementById('cropBar').classList.remove('v');document.getElementById('btnOrig').classList.remove('hidden');document.getElementById('imgBadge').textContent=`${cw}×${ch}`;renderResults();resizeVP();resetZoom();setDot('D','',tr('Sin detección'));ndot('s3','p');ndot('sM','p');setMsg(`${tr('Recortada a')} ${cw}×${ch}px. ${S.pxPerCm?tr('Calibración conservada.'):tr('Recalibrá la escala.')}`);setTool('pan');render();};newImg.src=tmp.toDataURL();}
 function cancelCrop(){S.crop={on:false,sx:0,sy:0,ex:0,ey:0,dragging:false,confirmed:false};document.getElementById('cropBar').classList.remove('v');render();}
-function restoreOriginal(){if(!S.origImg||S.img===S.origImg)return;const img=S.origImg;S.img=img;pc.width=img.width;pc.height=img.height;pctx.drawImage(img,0,0);const id=pctx.getImageData(0,0,img.width,img.height);S.grayCache=computeGray(id);S.rgba=id.data;S.otsuT=otsuCalc(S.grayCache,img.width*img.height);document.getElementById('otsuV').textContent=S.otsuT;S.sherds=[];S.manualSherds=[];S.manSeq=0;S.poly=[];S.polyClosed=false;S.calPts=[];document.getElementById('imgBadge').textContent=`${img.width}×${img.height}`;document.getElementById('btnOrig').classList.add('hidden');renderResults();resizeVP();resetZoom();setDot('D','','Sin detección');ndot('s3','p');ndot('sM','p');disableExport();setMsg('Imagen original restaurada.'+(S.pxPerCm?' Calibración conservada.':''));setTool('pan');render();}
+function restoreOriginal(){if(!S.origImg||S.img===S.origImg)return;const img=S.origImg;S.img=img;pc.width=img.width;pc.height=img.height;pctx.drawImage(img,0,0);const id=pctx.getImageData(0,0,img.width,img.height);S.grayCache=computeGray(id);S.rgba=id.data;S.otsuT=otsuCalc(S.grayCache,img.width*img.height);document.getElementById('otsuV').textContent=S.otsuT;S.sherds=[];S.manualSherds=[];S.manSeq=0;S.poly=[];S.polyClosed=false;S.calPts=[];document.getElementById('imgBadge').textContent=`${img.width}×${img.height}`;document.getElementById('btnOrig').classList.add('hidden');renderResults();resizeVP();resetZoom();setDot('D','',tr('Sin detección'));ndot('s3','p');ndot('sM','p');disableExport();setMsg('Imagen original restaurada.'+(S.pxPerCm?' Calibración conservada.':''));setTool('pan');render();}
 function deleteSherd(k){
   const sh=[...S.sherds,...S.manualSherds].find(s=>s._k===k);
   S.sherds=S.sherds.filter(s=>s._k!==k);
   S.manualSherds=S.manualSherds.filter(s=>s._k!==k);
   renderResults();render();
   const all=[...S.sherds,...S.manualSherds];
-  setDot('D',all.length?'on':'',all.length?`${S.sherds.length} auto + ${S.manualSherds.length} manual`:'Sin detección');
+  setDot('D',all.length?'on':'',all.length?`${S.sherds.length} auto + ${S.manualSherds.length} manual`:tr('Sin detección'));
   if(!all.length)disableExport();
-  setMsg(`Tiesto "${sh?sh.id:''}" eliminado.`);
+  setMsg(`${tr('Tiesto')} "${sh?sh.id:''}" ${tr('eliminado.')}`);
 }
 
+/* ─── QUÉ MEDIDAS SE EXPORTAN ──────────────────────
+   Dos niveles. `S.cols` es la selección general, la que vale para todo el lote. Un tiesto
+   puede tener la suya en `sh.cols` y entonces deja de seguir a la general — que es el caso
+   real: cincuenta tiestos de los que solo interesa el área, y uno del que además se quiere
+   el largo y el ancho.
+   En la planilla la columna aparece si la pidió AL MENOS UN tiesto, y en los que no la
+   piden la celda queda vacía: así sigue siendo una tabla rectangular, una fila por tiesto.
+   Dos cosas que NO dependen de esto, a propósito: las cotas dibujadas sobre la imagen, que
+   las sigue mandando la casilla «Ejes de medición», y la ficha en pantalla, que muestra
+   siempre las cuatro medidas — hay que poder mirar el número antes de decidir si entra. */
+const COLS_DEF=[['area','área'],['perim','perímetro'],['largo','largo'],['ancho','ancho']];
+const COLS_VAL={area:s=>s.area_cm2,perim:s=>s.perimeter_cm,largo:s=>s.largo_cm,ancho:s=>s.ancho_cm};
+function colsDe(sh){return sh.cols||S.cols;}
+function setCol(k,v){S.cols[k]=v;renderResults();}
+/* Al primer clic sobre una casilla de la tarjeta el tiesto se queda con una COPIA de la
+   selección general y de ahí en más va por su cuenta: cambiar la general ya no lo pisa.
+   Es el mismo criterio que las cotas movidas a mano — tocar un tiesto no puede mover a los
+   otros, ni que los otros lo muevan a él. */
+function setColSh(k,v,key){const sh=[...S.sherds,...S.manualSherds].find(x=>x._k===key);if(!sh)return;if(!sh.cols)sh.cols={...S.cols};sh.cols[k]=v;renderResults();}
+function colsReset(key){const sh=[...S.sherds,...S.manualSherds].find(x=>x._k===key);if(!sh||!sh.cols)return;delete sh.cols;renderResults();setMsg(sh.id+' '+tr('— vuelve a seguir la selección general de medidas.'));}
+/* Las columnas de la exportación, en orden fijo: las que pidió al menos un tiesto. */
+function colsExp(all){return COLS_DEF.filter(([k])=>all.some(s=>colsDe(s)[k]));}
+/* Arma la tabla exportada. `etq` trae los encabezados, que cambian entre el .xlsx (con
+   acentos) y el CSV (sin). */
+function tablaExp(all,etq){
+  const cols=colsExp(all);
+  const hayL=cols.some(([k])=>k==='largo')&&all.some(s=>s.manAx&&s.manAx.L&&colsDe(s).largo);
+  const hayA=cols.some(([k])=>k==='ancho')&&all.some(s=>s.manAx&&s.manAx.A&&colsDe(s).ancho);
+  const mano=hayL||hayA;
+  const head=[tr(etq.cod),tr(etq.tipo)];if(mano)head.push(tr(etq.mano));
+  cols.forEach(([k])=>head.push(tr(etq[k])));
+  if(hayL)head.push(tr(etq.lcalc));
+  if(hayA)head.push(tr(etq.acalc));
+  const rows=all.map(s=>{const c=colsDe(s),r=[s.id,tr(s.type)];if(mano)r.push(tr(manLbl(s)));
+    cols.forEach(([k])=>r.push(c[k]?COLS_VAL[k](s):''));
+    if(hayL)r.push(c.largo?s.Lcalc_cm:'');
+    if(hayA)r.push(c.ancho?s.Acalc_cm:'');
+    return r;});
+  return{cols,head,rows};}
+/* Una fila de medida en la tarjeta. El valor se muestra SIEMPRE —tildado o no— porque hace
+   falta verlo para decidir si entra; la casilla dice si va a la exportación y el valor se
+   apaga cuando no va. */
+function filaMed(sh,k,etq,val,extra){const c=colsDe(sh)[k];etq=tr(etq);
+  return `<div class="rr"><span class="rk"><input type="checkbox" class="ck" ${c?'checked':''} onchange="setColSh('${k}',this.checked,${sh._k})" title="${tr('Incluir esta medida en la exportación de este tiesto')}">${etq}${extra||''}</span><span class="rv hi${c?'':' off'}">${val}</span></div>`;}
 function renderResults(){
   const all=[...S.sherds,...S.manualSherds];
   const list=document.getElementById('sherdList');list.innerHTML='';
   document.getElementById('noRes').classList.toggle('hidden',all.length>0);
   all.forEach(sh=>{
     const isM=sh.type==='manual',col=isM?MCOL:sh.color;
-    const otro=S.method==='caja'?{n:'contorno',L:sh.Lcont_cm,A:sh.Acont_cm}:{n:'caja',L:sh.Lcaja_cm,A:sh.Acaja_cm};
     const div=document.createElement('div');div.className='si-card';
     div.innerHTML=`
       <div class="sh">
         <span class="sid${isM?' m':''}">${esc(sh.id)}</span>
         <div style="display:flex;gap:5px;align-items:center">
-          <span class="tag" style="font-size:8.5px;${isM?'color:var(--manual)':''}">${sh.type}</span>
-          ${sh.manAx?`<span class="tag" style="font-size:8.5px;color:var(--amber);border-color:var(--amber)">${manLbl(sh)} a mano</span>`:''}
+          <span class="tag" style="font-size:8.5px;${isM?'color:var(--manual)':''}">${tr(sh.type)}</span>
+          ${sh.manAx?`<span class="tag" style="font-size:8.5px;color:var(--amber);border-color:var(--amber)">${tr(manLbl(sh))} ${tr('a mano')}</span>`:''}
+          ${sh.cols?`<span class="tag" style="font-size:8.5px;color:var(--teal);border-color:var(--line-2)">${tr('medidas propias')}</span>`:''}
           <div class="dot" style="background:${col}"></div>
-          ${sh.manAx?`<button class="sundo" style="border:none;background:transparent;cursor:pointer;padding:2px 4px;border-radius:4px;display:flex;align-items:center;color:var(--amber);transition:color .15s" title="Volver a la medida calculada">
+          ${sh.cols?`<button class="scols" style="border:none;background:transparent;cursor:pointer;padding:2px 4px;border-radius:4px;display:flex;align-items:center;color:var(--teal);transition:color .15s" title="${tr('Volver a la selección general de medidas')}">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
           </button>`:''}
-          <button class="sdel" style="border:none;background:transparent;cursor:pointer;padding:2px 4px;border-radius:4px;display:flex;align-items:center;color:var(--t3);transition:color .15s" title="Eliminar tiesto">
+          ${sh.manAx?`<button class="sundo" style="border:none;background:transparent;cursor:pointer;padding:2px 4px;border-radius:4px;display:flex;align-items:center;color:var(--amber);transition:color .15s" title="${tr('Volver a la medida calculada')}">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          </button>`:''}
+          <button class="sdel" style="border:none;background:transparent;cursor:pointer;padding:2px 4px;border-radius:4px;display:flex;align-items:center;color:var(--t3);transition:color .15s" title="${tr('Eliminar tiesto')}">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
           </button>
         </div>
       </div>
       <div class="rg">
-        <div class="rr"><span class="rk">Área (cm²)</span><span class="rv hi">${sh.area_cm2}</span></div>
-        <div class="rr"><span class="rk">Largo (cm)${sh.Lman_cm!=null?` <i style="font-style:normal;color:var(--amber)">· a mano</i>`:''}</span><span class="rv hi">${sh.largo_cm}</span></div>
-        <div class="rr"><span class="rk">Ancho (cm)${sh.Aman_cm!=null?` <i style="font-style:normal;color:var(--amber)">· a mano</i>`:''}</span><span class="rv hi">${sh.ancho_cm}</span></div>
-        <div class="rr"><span class="rk">Perímetro (cm)</span><span class="rv hi">${sh.perimeter_cm}</span></div>
-        <div class="dvd"></div>
-        ${sh.Lman_cm!=null?`<div class="rr"><span class="rk">Largo (${MET()})</span><span class="rv">${MET()==='caja'?sh.Lcaja_cm:sh.Lcont_cm} cm</span></div>`:''}
-        ${sh.Aman_cm!=null?`<div class="rr"><span class="rk">Ancho (${MET()})</span><span class="rv">${MET()==='caja'?sh.Acaja_cm:sh.Acont_cm} cm</span></div>`:''}
-        <div class="rr"><span class="rk">Largo (${otro.n})</span><span class="rv">${otro.L} cm</span></div>
-        <div class="rr"><span class="rk">Ancho (${otro.n})</span><span class="rv">${otro.A} cm</span></div>
-        <div class="rr"><span class="rk">Circularidad</span><span class="rv">${sh.circularity}</span></div>
-        <div class="rr"><span class="rk">Elongación</span><span class="rv">${sh.elongation}</span></div>
-        <div class="rr"><span class="rk">Solidez</span><span class="rv">${sh.solidity}</span></div>
-        ${sh.manAx&&sh.ancho_cm>sh.largo_cm?`<p class="tip" style="color:var(--amber);margin-top:5px">⚠ El ancho supera al largo — fijate si moviste la cota que querías.</p>`:''}
+        ${filaMed(sh,'area','Área (cm²)',sh.area_cm2)}
+        ${filaMed(sh,'largo','Largo (cm)',sh.largo_cm,sh.Lman_cm!=null?` <i style="font-style:normal;color:var(--amber)">${tr('· a mano')}</i>`:'')}
+        ${filaMed(sh,'ancho','Ancho (cm)',sh.ancho_cm,sh.Aman_cm!=null?` <i style="font-style:normal;color:var(--amber)">${tr('· a mano')}</i>`:'')}
+        ${filaMed(sh,'perim','Perímetro (cm)',sh.perimeter_cm)}
+        ${sh.manAx?`<div class="dvd"></div>`:''}
+        ${sh.Lman_cm!=null?`<div class="rr"><span class="rk">${tr('Largo calculado')}</span><span class="rv">${sh.Lcalc_cm} cm</span></div>`:''}
+        ${sh.Aman_cm!=null?`<div class="rr"><span class="rk">${tr('Ancho calculado')}</span><span class="rv">${sh.Acalc_cm} cm</span></div>`:''}
+        ${sh.manAx&&sh.ancho_cm>sh.largo_cm?`<p class="tip" style="color:var(--amber);margin-top:5px">${tr('⚠ El ancho supera al largo — fijate si moviste la cota que querías.')}</p>`:''}
       </div>`;
+    const cb=div.querySelector('.scols');
+    if(cb){cb.addEventListener('click',()=>colsReset(sh._k));
+      cb.addEventListener('mouseover',()=>cb.style.color='var(--t1)');
+      cb.addEventListener('mouseout',()=>cb.style.color='var(--teal)');}
     const ub=div.querySelector('.sundo');
     if(ub){ub.addEventListener('click',()=>axReset(sh._k));
       ub.addEventListener('mouseover',()=>ub.style.color='var(--teal)');
@@ -1322,52 +1553,48 @@ function renderResults(){
   document.getElementById('sumAa').textContent=n?r2(tA/n):'—';
   document.getElementById('sumL').textContent=n?r2(all.reduce((a,s)=>a+s.largo_cm,0)/n):'—';
   document.getElementById('sumPa').textContent=n?r2(all.reduce((a,s)=>a+s.perimeter_cm,0)/n):'—';
+  /* Aviso: con todo destildado la exportación sale con el código y nada más. */
+  const cw=document.getElementById('colsWarn');
+  if(cw){const ce=n?colsExp(all):COLS_DEF.filter(([k])=>S.cols[k]);
+    const propios=all.filter(x=>x.cols).length;
+    cw.textContent=!ce.length?tr('⚠ No hay ninguna medida tildada: la exportación saldría solo con el código y el tipo.')
+      :(propios?`${propios} ${tr('de')} ${n} ${tr('tiesto(s) llevan su propia selección de medidas.')}`:'');}
   /* La herramienta de cotas solo tiene sentido con tiestos ya medidos. */
   const bax=document.getElementById('tbAx');if(bax)bax.disabled=!n;
   if(!n&&S.tool==='cotas')setTool('pan');
 }
-function MET(){return S.method;}
 function expXLSX(){
   const all=[...S.sherds,...S.manualSherds];if(!all.length)return;
-  if(typeof XLSX==='undefined'){setMsg('⚠ SheetJS no disponible (falta xlsx.full.min.js junto al index.html) — exportá CSV o JSON.');return;}
+  if(typeof XLSX==='undefined'){setMsg(tr('⚠ SheetJS no disponible (falta xlsx.full.min.js junto al index.html) — exportá CSV o JSON.'));return;}
   const wb=XLSX.utils.book_new();
-  /* Una hoja por método, cada una completa, en vez de una sola planilla con las cuatro
-     columnas de largo y ancho: quien trabaja con un solo criterio se lleva su tabla sin
-     tener que borrar columnas. La hoja del método elegido va primero, que es la que Excel
-     abre al entrar. Elongación sale del par de esa misma hoja. */
-  const hoja=m=>{
-    const c=m==='caja';
-    /* Largo y Ancho traen la medida que manda para cada tiesto —la de la mano cuando la
-       hay—, y al lado quedan siempre las calculadas por el método de la hoja, así se puede
-       comparar sin abrir otra exportación. */
-    const d=[
-      ['Código','Tipo','Método','Editado a mano','Área (cm²)','Largo (cm)','Ancho (cm)','Largo calculado (cm)','Ancho calculado (cm)','Perímetro (cm)','Circularidad','Elongación','Solidez','Color hex'],
-      ...all.map(s=>{const Lc=c?s.Lcaja_cm:s.Lcont_cm,Ac=c?s.Acaja_cm:s.Acont_cm;
-        return [s.id,s.type,m,manLbl(s),s.area_cm2,s.Lman_cm!=null?s.Lman_cm:Lc,s.Aman_cm!=null?s.Aman_cm:Ac,Lc,Ac,s.perimeter_cm,s.circularity,c?s.elonEfCaja:s.elonEfCont,s.solidity,s.colorHex];})
-    ];
-    const w=XLSX.utils.aoa_to_sheet(d);
-    w['!cols']=[{wch:18},{wch:8},{wch:10},{wch:14},{wch:12},{wch:11},{wch:11},{wch:19},{wch:19},{wch:14},{wch:13},{wch:11},{wch:9},{wch:10}];
-    XLSX.utils.book_append_sheet(wb,w,c?'Por caja':'Por contorno');
-  };
-  hoja(MET());hoja(MET()==='caja'?'contorno':'caja');
+  /* Una sola hoja de tiestos. Las columnas salen de la selección de medidas —la general
+     del panel, o la propia de cada tiesto—: aparece la que pidió al menos uno, y en los que
+     no la piden la celda queda vacía, para que siga siendo una tabla con una fila por
+     tiesto. Largo y Ancho traen la medida que manda —la de la mano cuando la hay— y al lado
+     quedan las calculadas, solo si algún tiesto tiene una cota movida. */
+  const t=tablaExp(all,{cod:'Código',tipo:'Tipo',mano:'Editado a mano',area:'Área (cm²)',perim:'Perímetro (cm)',largo:'Largo (cm)',ancho:'Ancho (cm)',lcalc:'Largo calculado (cm)',acalc:'Ancho calculado (cm)'});
+  const ws=XLSX.utils.aoa_to_sheet([t.head,...t.rows]);
+  ws['!cols']=t.head.map(h=>({wch:Math.max(10,String(h).length+2)}));
+  XLSX.utils.book_append_sheet(wb,ws,tr('Tiestos'));
+  if(!t.cols.length)setMsg(tr('⚠ Ninguna medida tildada — el .xlsx sale solo con el código y el tipo.'));
   const meta=[
-    ['Aplicación','CeraMetric v1.2'],
-    ['Fecha',new Date().toISOString()],
-    ['Código de registro',document.getElementById('code').value||'—'],
-    ['Método de medición',MET()==='caja'?'Por caja (lados del rectángulo mínimo)':'Por contorno (entre puntos del borde, como con calibre)'],
-    ['Hojas','«Por caja» y «Por contorno», cada una completa; la del método elegido va primera'],
-    ['Tiestos medidos a mano',all.filter(x=>manLbl(x)!=='no').length+' de '+all.length+' — la columna «Editado a mano» dice qué se movió en cada uno; esa dimensión manda en Largo/Ancho y la automática queda en «Largo/Ancho calculado»'],
-    ['Zonas excluidas de la detección',S.excl.length?S.excl.map(z=>`${Math.round(z.x0)},${Math.round(z.y0)}–${Math.round(z.x1)},${Math.round(z.y1)} px`).join(' · '):'ninguna'],
-    ['Imagen (px)',S.img?`${S.img.width}×${S.img.height}`:'—'],
+    [tr('Aplicación'),'CeraMetric v1.3'],
+    [tr('Fecha'),new Date().toISOString()],
+    [tr('Largo y ancho'),tr('Cuerdas del tiesto: el eje es el lado largo del rectángulo mínimo; el largo, la cuerda más larga en esa dirección; el ancho, la cuerda perpendicular por el punto medio del largo. Las cuatro puntas apoyan en el contorno.')],
+    [tr('Medidas exportadas'),COLS_DEF.filter(([k])=>S.cols[k]).map(([,t2])=>tr(t2)).join(', ')||tr('ninguna')],
+    [tr('Tiestos con medidas propias'),(()=>{const q=all.filter(x=>x.cols);return q.length?q.length+' '+tr('de')+' '+all.length+' — '+q.map(x=>x.id+' ('+(COLS_DEF.filter(([k])=>x.cols[k]).map(([,t2])=>tr(t2)).join(', ')||tr('ninguna'))+')').join(' · ')+'. '+tr('Una columna aparece si al menos un tiesto la pidió; en los que no la piden la celda queda vacía.'):tr('ninguno');})()],
+    [tr('Tiestos medidos a mano'),all.filter(x=>manLbl(x)!=='no').length+' '+tr('de')+' '+all.length+' — '+tr('la columna «Editado a mano» dice qué se movió en cada uno; esa dimensión manda en Largo/Ancho y la automática queda en «Largo/Ancho calculado»')],
+    [tr('Zonas excluidas de la detección'),S.excl.length?S.excl.map(z=>`${Math.round(z.x0)},${Math.round(z.y0)}–${Math.round(z.x1)},${Math.round(z.y1)} px`).join(' · '):tr('ninguna')],
+    [tr('Imagen (px)'),S.img?`${S.img.width}×${S.img.height}`:'—'],
     ['px / cm',S.pxPerCm?r2(S.pxPerCm):'—'],
-    ['Umbral de binarización',document.getElementById('thrS').value],
-    ['Desenfoque gaussiano',document.getElementById('blurS').value],
-    ['Cierre morfológico (px)',document.getElementById('closeS').value],
-    ['Área mínima (cm²)',document.getElementById('minArea').value]
+    [tr('Umbral de binarización'),document.getElementById('thrS').value],
+    [tr('Desenfoque gaussiano'),document.getElementById('blurS').value],
+    [tr('Cierre morfológico (px)'),document.getElementById('closeS').value],
+    [tr('Área mínima (cm²)'),document.getElementById('minArea').value]
   ];
   const wsm=XLSX.utils.aoa_to_sheet(meta);wsm['!cols']=[{wch:22},{wch:30}];
-  XLSX.utils.book_append_sheet(wb,wsm,'Metadatos');
-  XLSX.writeFile(wb,'cerametric_v12.xlsx');
+  XLSX.utils.book_append_sheet(wb,wsm,tr('Metadatos'));
+  XLSX.writeFile(wb,'cerametric_v13.xlsx');
 }
 /* Entrecomillado RFC 4180: un código de registro con coma, comillas o punto y coma
    corría las columnas al abrir el CSV (v1.1). Los campos de texto que empiezan con
@@ -1375,8 +1602,28 @@ function expXLSX(){
    los numéricos pasan intactos. */
 function csvCell(v){let s=v==null?'':String(v);if(typeof v!=='number'&&/^[=+\-@\t\r]/.test(s))s="'"+s;return /[",;\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
 function csvRow(a){return a.map(csvCell).join(',');}
-function expCSV(){const all=[...S.sherds,...S.manualSherds];if(!all.length)return;const rows=[csvRow(['Código','Tipo','Metodo','Editado_a_mano','Area_cm2','Largo_cm','Ancho_cm','Perimetro_cm','Largo_caja_cm','Ancho_caja_cm','Largo_contorno_cm','Ancho_contorno_cm','Largo_mano_cm','Ancho_mano_cm','Circularidad','Elongacion','Solidez','Color_hex'])];all.forEach(s=>rows.push(csvRow([s.id,s.type,MET(),manLbl(s),s.area_cm2,s.largo_cm,s.ancho_cm,s.perimeter_cm,s.Lcaja_cm,s.Acaja_cm,s.Lcont_cm,s.Acont_cm,s.Lman_cm==null?'':s.Lman_cm,s.Aman_cm==null?'':s.Aman_cm,s.circularity,s.elongation,s.solidity,s.colorHex])));dl('cerametric_v12.csv','\uFEFF'+rows.join('\r\n'),'text/csv');}
-function expJSON(){const all=[...S.sherds,...S.manualSherds];if(!all.length)return;const out={aplicacion:'CeraMetric v1.2',fecha:new Date().toISOString(),codigo:document.getElementById('code').value||null,imagen_px:S.img?`${S.img.width}×${S.img.height}`:null,px_por_cm:S.pxPerCm?r2(S.pxPerCm):null,metodo_medicion:MET(),zonas_excluidas_px:S.excl.map(z=>({x0:r2(z.x0),y0:r2(z.y0),x1:r2(z.x1),y1:r2(z.y1)})),tiestos:all.map(s=>({id:s.id,type:s.type,area_cm2:s.area_cm2,largo_cm:s.largo_cm,ancho_cm:s.ancho_cm,perimeter_cm:s.perimeter_cm,largo_caja_cm:s.Lcaja_cm,ancho_caja_cm:s.Acaja_cm,largo_contorno_cm:s.Lcont_cm,ancho_contorno_cm:s.Acont_cm,editado_a_mano:manLbl(s),largo_mano_cm:s.Lman_cm,ancho_mano_cm:s.Aman_cm,circularity:s.circularity,elongation:s.elongation,solidity:s.solidity,color_hex:s.colorHex}))};dl('cerametric_v12.json',JSON.stringify(out,null,2),'application/json');}
+function expCSV(){const all=[...S.sherds,...S.manualSherds];if(!all.length)return;
+  const t=tablaExp(all,{cod:'Código',tipo:'Tipo',mano:'Editado_a_mano',area:'Area_cm2',perim:'Perimetro_cm',largo:'Largo_cm',ancho:'Ancho_cm',lcalc:'Largo_calculado_cm',acalc:'Ancho_calculado_cm'});
+  if(!t.cols.length)setMsg(tr('⚠ Ninguna medida tildada — el CSV sale solo con el código y el tipo.'));
+  const rows=[csvRow(t.head),...t.rows.map(csvRow)];
+  dl('cerametric_v13.csv','\uFEFF'+rows.join('\r\n'),'text/csv');}
+/* El JSON no es una tabla, así que no necesita celdas vacías: cada tiesto trae solo las
+   medidas que pidió, y `medidas_propias` deja constancia de los que no siguen la general. */
+function expJSON(){const all=[...S.sherds,...S.manualSherds];if(!all.length)return;
+  const lst=o=>COLS_DEF.filter(([k])=>o[k]).map(([k])=>k);
+  const out={aplicacion:'CeraMetric v1.3',fecha:new Date().toISOString(),imagen_px:S.img?`${S.img.width}×${S.img.height}`:null,px_por_cm:S.pxPerCm?r2(S.pxPerCm):null,
+    largo_y_ancho:'cuerdas del tiesto sobre el eje del rectángulo mínimo; el ancho, por el punto medio del largo',
+    medidas_exportadas:lst(S.cols),
+    zonas_excluidas_px:S.excl.map(z=>({x0:r2(z.x0),y0:r2(z.y0),x1:r2(z.x1),y1:r2(z.y1)})),
+    tiestos:all.map(s=>{const c=colsDe(s),o={id:s.id,type:s.type};
+      if(c.area)o.area_cm2=s.area_cm2;
+      if(c.perim)o.perimeter_cm=s.perimeter_cm;
+      if(c.largo){o.largo_cm=s.largo_cm;o.largo_calculado_cm=s.Lcalc_cm;if(s.Lman_cm!=null)o.largo_mano_cm=s.Lman_cm;}
+      if(c.ancho){o.ancho_cm=s.ancho_cm;o.ancho_calculado_cm=s.Acalc_cm;if(s.Aman_cm!=null)o.ancho_mano_cm=s.Aman_cm;}
+      if(s.manAx&&(c.largo||c.ancho))o.editado_a_mano=manLbl(s);
+      if(s.cols)o.medidas_propias=lst(s.cols);
+      return o;})};
+  dl('cerametric_v13.json',JSON.stringify(out,null,2),'application/json');}
 function expImg(){if(!S.img)return;S.expImg=true;const sv={tx:S.tx,ty:S.ty,sc:S.sc,w:oc.width,h:oc.height};oc.width=S.img.width;oc.height=S.img.height;S.tx=0;S.ty=0;S.sc=1;octx.clearRect(0,0,oc.width,oc.height);drawSherds();drawManualSherds();drawAxes();drawCal();const exp=document.createElement('canvas');exp.width=S.img.width;exp.height=S.img.height;const ec=exp.getContext('2d');ec.drawImage(S.img,0,0);ec.drawImage(oc,0,0);oc.width=sv.w;oc.height=sv.h;S.tx=sv.tx;S.ty=sv.ty;S.sc=sv.sc;S.expImg=false;render();exp.toBlob(b=>{const a=document.createElement('a');const u=URL.createObjectURL(b);a.href=u;a.download='cerametric_anotado.png';a.click();setTimeout(()=>URL.revokeObjectURL(u),10000);});}
 function dl(fn,c,t){const a=document.createElement('a');const u=URL.createObjectURL(new Blob([c],{type:t}));a.href=u;a.download=fn;a.click();setTimeout(()=>URL.revokeObjectURL(u),10000);}
 function enableBaseUI(){['tbZI','tbZO','tbFit','tbPan','tbCal','tbCrop','tbExcl','btnExcl'].forEach(id=>document.getElementById(id).disabled=false);}
@@ -1388,8 +1635,6 @@ function setDot(w,cls,txt){document.getElementById('d'+w).className='sd'+(cls===
 function ndot(id,st){const el=document.getElementById(id);el.className='snum'+({d:' d',p:' p',on:''}[st]||'');}
 function setMsg(t){document.getElementById('sMsg').textContent=t;}
 function r2(v){return Math.round(v*100)/100;}
-function r3(v){return Math.round(v*1000)/1000;}
-function rgb2h(r,g,b){return'#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');}
 </script>
 </body>
 </html>
