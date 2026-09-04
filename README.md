@@ -2,7 +2,8 @@
 
 **Análisis morfométrico de tiestos cerámicos desde fotografías, en el navegador.**
 
-[![Versión](https://img.shields.io/badge/versi%C3%B3n-1.2-2C5F6F)](CHANGELOG.md)
+[![Versión](https://img.shields.io/badge/versi%C3%B3n-1.3-2C5F6F)](CHANGELOG.md)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22312909.svg)](https://doi.org/10.5281/zenodo.22312909)
 [![Licencia](https://img.shields.io/badge/licencia-MIT-5BBFB0)](LICENSE)
 [![Sin instalación](https://img.shields.io/badge/sin%20instalaci%C3%B3n-100%25%20navegador-8A9BA8)](#uso)
 
@@ -196,7 +197,11 @@ JavaScript puro sobre HTML5 Canvas, sin frameworks ni build. Un solo archivo (`i
 
 ## Citación
 
-> Villafañez, E.A. (2026). *CeraMetric v1.3: herramienta de análisis morfométrico de tiestos cerámicos*. LATDAA, Escuela de Arqueología, Universidad Nacional de Catamarca. https://github.com/emilios81/cerametric
+> Villafañez, E.A. (2026). *CeraMetric v1.3: herramienta de análisis morfométrico de tiestos cerámicos*. LATDAA, Escuela de Arqueología, Universidad Nacional de Catamarca. Zenodo. https://doi.org/10.5281/zenodo.22312910
+
+Ese DOI es el de **esta versión**. Para un trabajo donde importa la reproducibilidad conviene citarlo así, porque garantiza que quien lo consulte vea exactamente el programa con el que se midió — y desde v1.3 el largo y el ancho no son comparables con los de versiones anteriores.
+
+Si en cambio querés apuntar siempre a la última versión publicada, cualquiera sea, usá el **DOI de concepto**: [10.5281/zenodo.22312909](https://doi.org/10.5281/zenodo.22312909).
 
 El repositorio incluye un [CITATION.cff](CITATION.cff): GitHub genera la cita en BibTeX o APA desde el botón **Cite this repository**.
 

@@ -6,6 +6,14 @@ authors:
   - family-names: "Villafañez"
     given-names: "Emilio A."
     affiliation: "LATDAA, Escuela de Arqueología, Universidad Nacional de Catamarca / CONICET / Fundación de Historia Natural Félix de Azara"
+doi: "10.5281/zenodo.22312910"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22312909"
+    description: "DOI de concepto: apunta siempre a la última versión publicada"
+  - type: doi
+    value: "10.5281/zenodo.22312910"
+    description: "DOI de la versión 1.3"
 repository-code: "https://github.com/emilios81/cerametric"
 url: "https://emilios81.github.io/cerametric/"
 abstract: >-
